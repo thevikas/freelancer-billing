@@ -12,7 +12,6 @@ $argv2 = $argv;
 unset($argv2[0]);
 $fullarg = implode(" ",$argv2);
 
-
 #Reading
 $L = fopen($logfile,"r");
 fseek($L,-200,SEEK_END);
@@ -34,17 +33,27 @@ while(!feof($L))
             continue;
         $last_time = strtotime($ss[0]);
         $last_comment = $ss[1];
+
+        if("last" == $argv[1])
+            $fullarg = $last_comment;
     }
 }
 fclose($L);
 
-if(empty($argv[1])) //if not arg given, we just show time spent doing the last item
+function difftime()
 {
+    global $last_time;
     $diff = time() - $last_time;
     $hh = gmdate("H",$diff);
     $mm = gmdate("i",$diff) . "m";
-    if($hh)
+    if(intval($hh)>0)
         $mm = "{$hh}h" . $mm;
+    return $mm;
+}
+
+if(empty($argv[1])) //if not arg given, we just show time spent doing the last item
+{
+    $mm = difftime();
     echo "$mm: $last_comment\n";
     return -1;
 }
@@ -54,11 +63,10 @@ $L = fopen($logfile,"a");
 fseek($L,-200,SEEK_END);
 
 $today_date = date('Y-m-d');
-echo "check $last_dt,$today_date\n";
 if(strstr($last_dt,$today_date) === false) //Not same day
     fputs($L,"\n");
 
 $newline = sprintf("%s: %s",date('Y-m-d H:i'),$fullarg);
-fputs($L,$newline);
-echo "$newline\n";
+fputs($L,$newline . "\n");
+echo difftime() . ": $fullarg\n";
 fclose($L);
