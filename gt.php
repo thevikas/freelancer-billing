@@ -1,6 +1,5 @@
-#!/usr/local/bin/php
+#!/usr/bin/env php
 <?php
-
 date_default_timezone_set('Asia/Kolkata');
 
 $logfile = getenv('HOME') . "/.gtimelog/timelog.txt";
@@ -8,10 +7,10 @@ if (!file_exists($logfile)) {
     fputs(STDERR,"$logfile: File not found\n");
     return -1;
 }
+$away=false;
 $argv2 = $argv;
 unset($argv2[0]);
 $fullarg = implode(" ",$argv2);
-
 #Reading
 $L = fopen($logfile,"r");
 fseek($L,-200,SEEK_END);
@@ -34,8 +33,16 @@ while(!feof($L))
         $last_time = strtotime($ss[0]);
         $last_comment = $ss[1];
 
-        if("last" == $argv[1])
-            $fullarg = $last_comment;
+        if(!empty($argv[1]))
+        {
+            if("last" == $argv[1])
+                $fullarg = $last_comment;
+            else if("away" == $argv[1])
+            {
+                $away = true;
+                $fullarg = $last_comment;
+            }
+        }
     }
 }
 fclose($L);
@@ -65,6 +72,13 @@ fseek($L,-200,SEEK_END);
 $today_date = date('Y-m-d');
 if(strstr($last_dt,$today_date) === false) //Not same day
     fputs($L,"\n");
+
+//mark a time period as away between last and this and resume the work
+if($away)
+{
+    $newline = sprintf("%s: away **",date('Y-m-d H:i'));
+    fputs($L,$newline . "\n");
+}
 
 $newline = sprintf("%s: %s",date('Y-m-d H:i'),$fullarg);
 fputs($L,$newline . "\n");
