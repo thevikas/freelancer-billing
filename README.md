@@ -1,6 +1,10 @@
 # gtimelog-php-cli
-a quick client for gtimelog to log work easily
+
+[Gtimelog](https://github.com/gtimelog/gtimelog) has been my fav time tracking app. Mostly cause its very simple and small. The data format is simplest possible, just a text file.
+
+A quick client for gtimelog to log work easily.
 It simple appends lines into `~/.gtimelog/timelog.txt` file in the same format as gtimelog does.
+
 
 Examples
 ==
