@@ -1,0 +1,8 @@
+{
+    "require-dev": {
+        "phpunit/phpunit": "^9"
+    },
+    "require": {
+        "nategood/commando": "^0.4.0"
+    }
+}

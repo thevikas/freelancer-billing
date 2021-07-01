@@ -1,4 +1,8 @@
 <?php
+require_once('Report.php');
+require_once('Project.php');
+require_once('Bill.php');
+$verbose = true;
 /**
  * @param  $info
  * @return mixed
@@ -19,14 +23,65 @@ function find_start_of_last_month($L)
     fseek($L, -200, SEEK_CUR);
     //find first line
     $info          = iterate($L, true);
+
+    # FIrst day of this month
     $firstDay      = strtotime(date('Y-m-01'));
+
+    $LastDayOfPrevMonth      = strtotime('yesterday',$firstDay);
+    $FirstDayOfPrevMonth      = strtotime(date('Y-m-01',$LastDayOfPrevMonth));
+
     $twoMonthsBack = strtotime('-3 months');
-    if ($firstDay < $info[0])
+
+    # keep going backward till before the prev month
+    if ($FirstDayOfPrevMonth < $info['last_time'])
     {
         return find_start_of_last_month($L);
     }
+    $info2 = [];
 
-    return $info;
+    # keep going forward till just after the first day of prev month
+    while(true) {
+        $info2 = iterate($L, true);
+        if($FirstDayOfPrevMonth < $info2['last_time'])
+            break;
+    }
+    return $info2;
+    //check month
+    //if
+}
+
+/**
+ * Finds start of prev month by default
+ *
+ * @param  $L
+ * @param  $FirstDayOfMonth
+ * @return mixed
+ */
+function find_start_of_month($L,$FirstDayOfMonth = 0)
+{
+    fseek($L, -2000, SEEK_CUR);
+    //find first line
+    $info          = iterate($L, true);
+
+    if(!$FirstDayOfMonth)
+    {
+        die("Need first day of month");
+    }
+
+    # keep going backward till before the prev month
+    if ($FirstDayOfMonth     < $info['last_time'])
+    {
+        return find_start_of_month($L,$FirstDayOfMonth);
+    }
+    $info2 = [];
+
+    # keep going forward till just after the first day of prev month
+    while(true) {
+        $info2 = iterate($L, true);
+        if($FirstDayOfMonth < $info2['last_time'])
+            break;
+    }
+    return $info2;
     //check month
     //if
 }
@@ -41,19 +96,6 @@ function find_start_of_this_month($L)
     return $info;
     //check month
     //if
-}
-
-function makeReport()
-{
-    global $all_lines, $logfile;
-
-    $L = fopen($logfile, 'r');
-    fseek($L, -200, SEEK_END);
-    $info = find_start_of_last_month($L);
-    $info = find_start_of_this_month($L);
-    fseek($L, -(strlen($info[1] + $info[2] + 5)), SEEK_CUR);
-    iterate($L);
-
 }
 
 function difftime()
@@ -82,6 +124,9 @@ function iterate($L, $only_first = false, $callback = null)
     global $last_comment;
     global $all_lines;
     global $lc;
+    if(feof($L))
+        return false;
+
     while (!feof($L))
     {
         $line = trim(fgets($L));
@@ -90,6 +135,7 @@ function iterate($L, $only_first = false, $callback = null)
         {
             //echo "$lc: $line\n";
             $ss = explode(' ', $line, 3);
+            $ss2 = explode(':', $line, 3);
             if (count($ss) < 3)
             {
                 continue;
@@ -97,7 +143,7 @@ function iterate($L, $only_first = false, $callback = null)
 
             list($last_dt, $comment) = $ss;
 
-            $ss = explode(': ', $line, 2);
+            $ss = explode(': ', $line, 3);
             if (count($ss) < 2)
             {
                 continue;
@@ -109,8 +155,15 @@ function iterate($L, $only_first = false, $callback = null)
             }
 
             $last_time             = strtotime($ss[0]);
-            $last_comment          = $ss[1];
-            $all_lines[$last_time] = [$last_time, $ss[0], $last_comment];
+            $last_comment          = trim($ss2[2]);
+            $all_lines[$last_time] = [
+                'last_time' => $last_time,
+                'given_ts' => $ss[0],
+                'project' => $ss[1],
+                'this_line_len' => strlen($line)
+            ];
+            if(!empty($ss[2]))
+                $all_lines[$last_time]['task'] = $ss[2];
             if ($only_first)
             {
                 break;
@@ -124,4 +177,13 @@ function iterate($L, $only_first = false, $callback = null)
         }
     }
     return $all_lines[$last_time];
+}
+
+function getHourMins($times)
+{
+    $mins = round($times/60);
+    $hours = $mins / 60;
+    $mins = $mins % 60;
+    return sprintf("%d:%02d",$hours,$mins);
+
 }
