@@ -1,0 +1,566 @@
+.row {
+  max-width: 1200px;
+}
+
+.clearfix:after {
+  content: ".";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
+}
+
+.clear-ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+* {
+  font-family: "Open Sans", sans-serif;
+}
+
+body {
+  font-family: "Open Sans", sans-serif;
+  color: #616262;
+}
+
+h1 {
+  font-family: "Open Sans", sans-serif;
+  font-size: 72px;
+  color: #afafb0;
+}
+
+h2 {
+  font-family: "Open Sans", sans-serif;
+  color: #616262;
+}
+
+h3 {
+  font-family: "Open Sans", sans-serif;
+  color: #616262;
+}
+
+h4 {
+  font-family: "Open Sans", sans-serif;
+}
+
+h5 {
+  font-family: "Open Sans", sans-serif;
+}
+
+h6 {
+  font-family: "Open Sans", sans-serif;
+}
+
+.header .large-5,
+.header .large-2 {
+  margin-top: 20px;
+}
+.header .large-2 {
+  min-height: 124px;
+  padding-left: 0;
+  border-bottom: 1px solid #e3e2e2;
+}
+.header .large-2 .header-contact {
+  min-height: 100px;
+  border-right: 1px solid #e3e2e2;
+}
+.header .medium-4 {
+  margin-top: 78px;
+}
+.header i {
+  font-size: 24px;
+  color: #7dbb77;
+}
+.header p {
+  color: #ababab;
+  font-size: 10px;
+  line-height: 16px;
+}
+.header .icon-mail {
+  width: 14%;
+  max-width: 30px;
+  margin-bottom: 13px;
+}
+.header .icon-telephone {
+  max-width: 30px;
+  margin-bottom: 5px;
+  width: 12%;
+}
+.header .icon-web {
+  max-width: 30px;
+  width: 12%;
+}
+
+.header-bottom i {
+  color: #7dbb77;
+}
+.header-bottom h2 {
+  font-size: 26px;
+  font-weight: bold;
+  color: #727478;
+  margin: 0;
+}
+.header-bottom h3 {
+  font-size: 18px;
+  color: #727478;
+}
+.header-bottom h3 i {
+  margin-right: 10px;
+  font-size: 36px;
+}
+.header-bottom p {
+  color: #727478;
+}
+.header-bottom p i {
+  display: inline-block;
+  width: 24px;
+  margin-right: 8px;
+  font-size: 28px;
+  text-align: center;
+}
+.header-bottom .header-bottom-left {
+  margin-top: 18px;
+}
+.header-bottom .header-bottom-left p {
+  margin-bottom: 0;
+  line-height: 16px;
+}
+.header-bottom .invoice-header table {
+  width: 100%;
+  border: none;
+}
+.header-bottom .invoice-header table i {
+  display: inline-block;
+  width: 58px;
+  padding: 10px;
+  font-size: 32px;
+  text-align: center;
+  border: 1px solid #afafb0;
+  border-radius: 36px 36px 36px 36px;
+  -moz-border-radius: 36px 36px 36px 36px;
+  -webkit-border-radius: 36px 36px 36px 36px;
+}
+.header-bottom .invoice-header table thead td {
+  background: #fff;
+  padding: 0 0 10px 8px;
+  vertical-align: bottom;
+}
+.header-bottom .invoice-header table tbody td {
+  padding: 20px;
+  background: url(images/arrow.png) no-repeat 20px top #88d3de;
+  font-size: 16px;
+  color: #fff;
+}
+.header-bottom .invoice-header table .circle {
+  background: url("images/circle.png") no-repeat scroll 0 0/100% auto rgba(0, 0, 0, 0);
+  height: 60px;
+  padding: 16px 3px;
+  text-align: center;
+  width: 60px;
+}
+.header-bottom .invoice-header table .icon-dollar {
+  width: 16px;
+}
+.header-bottom .invoice-header table .icon-calendar {
+  width: 26px;
+}
+.header-bottom .invoice-header table .icon-barcode {
+  width: 32px;
+}
+.header-bottom .invoice-header li {
+  float: right;
+}
+.header-bottom .invoice-header p {
+  padding: 20px 32px;
+  background: #7dbb77;
+  color: #fff;
+}
+.header-bottom .icon-invoice {
+  width: 5%;
+  min-width: 22px;
+}
+.header-bottom .icon-mail {
+  margin-right: 10px;
+  min-width: 22px;
+  width: 4%;
+}
+.header-bottom .icon-mobile {
+  margin-left: 5px;
+  margin-right: 16px;
+  width: 2%;
+  min-width: 12px;
+}
+
+.products-table {
+  width: 100%;
+  margin-top: 20px;
+  margin-bottom: 0;
+  border: none;
+}
+.products-table h5 {
+  margin: 0;
+  font-weight: bold;
+  color: #616262;
+}
+.products-table th {
+  padding: 20px;
+  background: #fff;
+  font-size: 22px;
+  color: #88d3de;
+  text-align: center;
+}
+.products-table th:first-child {
+  text-align: left;
+}
+.products-table tbody tr:nth-child(odd) td {
+  background: #e8e8e9;
+}
+.products-table tbody td {
+  padding: 20px;
+  vertical-align: middle;
+  color: #616262;
+  text-align: center;
+}
+.products-table tbody td:first-child {
+  text-align: left;
+}
+.products-table tbody p {
+  margin: 0;
+}
+
+.totals table {
+  width: 100%;
+  border: none;
+}
+.totals table tr td {
+  background: #fff;
+  font-size: 18px;
+  text-align: right;
+}
+.totals table tr td:last-child {
+  padding-right: 20px;
+}
+.totals table tfoot td {
+  padding: 16px 10px;
+  background: #88d3de;
+  color: #fff;
+  font-size: 24px;
+}
+.totals table .discount td {
+  font-weight: bold;
+  color: red;
+}
+.totals .signature {
+  text-align: center;
+}
+.totals .signature .icon-signature {
+  width: 40%;
+  margin-bottom: 20px;
+}
+.totals .signature p {
+  margin: 0;
+}
+
+.bottom-left {
+  font-size: 12px;
+}
+.bottom-left table {
+  border: none;
+}
+.bottom-left table thead th {
+  background: #acacac;
+  font-weight: normal;
+  color: #fff;
+  border-radius: 0px 0px 5px 5px;
+  -moz-border-radius: 0px 0px 5px 5px;
+  -webkit-border-radius: 0px 0px 5px 5px;
+}
+.bottom-left table tbody td {
+  padding-top: 30px;
+  padding-bottom: 0;
+  background: #fff;
+  font-size: 18px;
+  color: #8f8f8f;
+}
+.bottom-left p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 14px;
+}
+.bottom-left .icon-paypal {
+  width: 20%;
+}
+.bottom-left .icon-cc {
+  width: 6%;
+}
+.bottom-left .icon-western {
+  width: 23%;
+}
+.bottom-left.show-for-small-only {
+  text-align: center;
+}
+
+.terms {
+  margin-top: 100px;
+  font-size: 12px;
+}
+
+.footer {
+  padding: 30px 0;
+  background: url(images/footer.png) no-repeat top;
+  font-size: 14px;
+  color: #ababab;
+}
+.footer p {
+  height: 50px;
+  font-size: 11px;
+  line-height: 14px;
+  border-right: 1px solid #d4d2d2;
+}
+.footer img {
+  width: 60px;
+}
+
+.print .header {
+  width: 100%;
+  border: none;
+}
+.print .header img {
+  width: 230px;
+}
+.print .header td {
+  vertical-align: top;
+}
+.print .header td p {
+  font-size: 10px;
+}
+.print .header-bottom {
+  width: 100%;
+  border: none;
+}
+.print .header-bottom h1 {
+  font-size: 40px;
+}
+.print .header-bottom .header-bottom-left h3 {
+  margin: 0;
+}
+.print .header-bottom .header-bottom-left p {
+  font-size: 12px !important;
+}
+.print .header-bottom .invoice-header td {
+  vertical-align: bottom !important;
+}
+.print .header-bottom .invoice-header table {
+  width: 100%;
+  border: none;
+}
+.print .header-bottom .invoice-header table h1 {
+  margin: 0 !important;
+}
+.print .header-bottom .invoice-header table tbody td {
+  padding: 0;
+}
+.print .products-table th {
+  font-size: 16px !important;
+}
+.print .products-table h5 {
+  font-size: 13px !important;
+}
+.print .products-table p {
+  font-size: 12px !important;
+}
+.print .bottom {
+  width: 100%;
+  border: none;
+}
+.print .bottom-left {
+  font-size: 12px;
+}
+.print .bottom-left table {
+  border: none;
+}
+.print .bottom-left table tbody td {
+  padding-top: 30px;
+  padding-bottom: 0;
+  font-size: 18px;
+}
+.print .bottom-left p {
+  margin: 0;
+  font-size: 12px;
+}
+.print .totals table {
+  width: 100%;
+  border: none;
+}
+.print .totals table tr td {
+  font-size: 14px;
+  text-align: right;
+}
+.print .totals table tfoot td {
+  background: #7dbb77 !important;
+  color: #fff;
+  font-size: 20px;
+}
+.print .totals table .discount td {
+  font-weight: bold;
+  color: red !important;
+}
+.print .totals .signature {
+  text-align: center;
+}
+.print .totals .signature img {
+  margin-bottom: 10px;
+}
+.print .totals .signature p {
+  margin: 0;
+}
+.print .terms {
+  width: 100%;
+  margin: 0 !important;
+  border: none;
+}
+
+@media print {
+  .print-only .header {
+    width: 100%;
+    border: none;
+  }
+  .print-only .header img {
+    width: 230px;
+  }
+  .print-only .header td {
+    vertical-align: top;
+  }
+  .print-only .header td p {
+    font-size: 10px;
+  }
+  .print-only .header-bottom {
+    width: 100%;
+    border: none;
+  }
+  .print-only .header-bottom h1 {
+    font-size: 40px;
+  }
+  .print-only .header-bottom .header-bottom-left h3 {
+    margin: 0;
+  }
+  .print-only .header-bottom .header-bottom-left p {
+    font-size: 12px !important;
+  }
+  .print-only .header-bottom .invoice-header {
+    vertical-align: bottom !important;
+  }
+  .print-only .header-bottom .invoice-header table {
+    width: 100%;
+    margin: 0 !important;
+    border: none;
+  }
+  .print-only .header-bottom .invoice-header table h1 {
+    margin: 0 !important;
+  }
+  .print-only .header-bottom .invoice-header table tbody td {
+    padding: 0;
+  }
+  .print-only .products-table th {
+    font-size: 16px !important;
+  }
+  .print-only .products-table h5 {
+    font-size: 13px !important;
+  }
+  .print-only .products-table p {
+    font-size: 12px !important;
+  }
+  .print-only .bottom {
+    width: 100%;
+    border: none;
+  }
+  .print-only .bottom-left {
+    font-size: 12px;
+  }
+  .print-only .bottom-left table {
+    border: none;
+  }
+  .print-only .bottom-left table tbody td {
+    padding-top: 30px;
+    padding-bottom: 0;
+    font-size: 18px;
+  }
+  .print-only .bottom-left p {
+    margin: 0;
+    font-size: 12px;
+  }
+  .print-only .totals table {
+    width: 100%;
+    border: none;
+  }
+  .print-only .totals table tr td {
+    font-size: 14px;
+    text-align: right;
+  }
+  .print-only .totals table tfoot td {
+    background: #7dbb77 !important;
+    color: #fff;
+    font-size: 20px;
+  }
+  .print-only .totals table .discount td {
+    font-weight: bold;
+    color: red !important;
+  }
+  .print-only .totals .signature {
+    text-align: center;
+  }
+  .print-only .totals .signature img {
+    margin-bottom: 10px;
+  }
+  .print-only .totals .signature p {
+    margin: 0;
+  }
+  .print-only .terms {
+    width: 100%;
+    margin: 0 !important;
+    font-size: 10px;
+    border: none;
+  }
+  .print-only .footer {
+    width: 100%;
+    border: none !important;
+  }
+}
+@media only screen and (min-width: 40.063em) and (max-width: 64em) {
+  .header .large-2 {
+    padding-left: 20px;
+  }
+  .header .large-2 .header-contact {
+    min-height: 100px;
+    border-right: none;
+  }
+  .header .header-contact {
+    min-height: 100px;
+    border-right: none;
+  }
+
+  .footer {
+    padding: 30px 0;
+    background: url(images/footer.png) no-repeat top;
+    font-size: 14px;
+    color: #ababab;
+  }
+}
+@media only screen and (max-width: 40em) {
+  .header .large-2 {
+    padding-left: 20px;
+  }
+  .header .large-2 .header-contact {
+    min-height: 100px;
+    border-right: none;
+  }
+
+  .footer {
+    padding: 30px 0;
+    background: url(images/footer.png) no-repeat top;
+    font-size: 14px;
+    color: #ababab;
+  }
+}
