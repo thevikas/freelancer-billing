@@ -1,0 +1,652 @@
+$grey: #afafb0;
+$grey-light: #e8e8e9;
+$green: #7dbb77;
+$total-columns: 12;
+
+.row {
+	max-width: 1200px;
+}
+
+.clearfix:after {
+	content: ".";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
+}
+
+.clear-ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+* {
+	font-family: 'Open Sans', sans-serif;
+}
+body {
+	font-family: 'Open Sans', sans-serif;
+	color: #616262;
+}
+
+h1 {
+	font-family: 'Open Sans', sans-serif;
+	font-size: 72px;
+	color: #afafb0;
+}
+h2 {
+	font-family: 'Open Sans', sans-serif;
+	color: #616262;
+}
+h3 {
+	font-family: 'Open Sans', sans-serif;
+	color: #616262;
+}
+h4 {
+	font-family: 'Open Sans', sans-serif;
+}
+h5 {
+	font-family: 'Open Sans', sans-serif;
+}
+h6 {
+	font-family: 'Open Sans', sans-serif;
+}
+
+.header {
+	.large-5,
+	.large-2 {
+		margin-top: 20px;
+	}
+	.large-2 {
+		min-height: 124px;
+		padding-left: 0;
+		border-bottom: 1px solid #e3e2e2;
+		.header-contact {
+			min-height: 100px;
+			border-right: 1px solid #e3e2e2;
+		}
+	}
+	.medium-4 {
+		margin-top: 78px;
+	}
+	i {
+		font-size: 24px;
+		color: $green;
+	}
+	p {
+		color: #ababab;
+		font-size: 13px;
+		line-height: 16px;
+	}
+	.icon-mail {
+		width: 14%;
+		max-width: 30px;
+		margin-bottom: 13px;
+	}
+	.icon-telephone {
+		max-width: 30px;
+		margin-bottom: 5px;
+		width: 12%;
+	}
+	.icon-web {
+		max-width: 30px;
+		width: 12%;
+	}
+}
+
+
+.header-bottom {
+	i {
+		color: $green;
+	}
+	h2 {
+		font-size: 26px;
+		font-weight: bold;
+		color: #727478;
+		margin: 0;
+	}
+	h3 {
+		font-size: 18px;
+		color: #727478;
+		i {
+			margin-right: 10px;
+			font-size: 36px;
+		}
+	}
+	p {
+		color: #727478;
+		i {
+			display: inline-block;
+			width: 24px;
+			margin-right: 8px;
+			font-size: 28px;
+			text-align: center;
+		}
+	}
+	.header-bottom-left {
+		margin-top: 18px;
+		p {
+			margin-bottom: 0;
+			line-height: 16px;
+		}
+	}
+	.invoice-header {
+		table {
+			width: 100%;
+			border: none;
+			i {
+				display: inline-block;
+				width: 58px;
+				padding: 10px;
+				font-size: 32px;
+				text-align: center;
+				border: 1px solid $grey;
+				border-radius: 36px 36px 36px 36px;
+				-moz-border-radius: 36px 36px 36px 36px;
+				-webkit-border-radius: 36px 36px 36px 36px;
+			}
+			thead {
+				td {
+					background: #fff;
+					padding: 0 0 10px 8px;
+					vertical-align: bottom;
+				}
+			}
+			tbody {
+				td {
+					padding: 20px;
+					background: url(images/arrow.png) no-repeat 20px top $green;
+					font-size: 16px;
+					color: #fff;
+				}
+			}
+			.circle {
+				background: url("images/circle.png") no-repeat scroll 0 0 / 100% auto rgba(0, 0, 0, 0);
+				height: 60px;
+				padding: 16px 3px;
+				text-align: center;
+				width: 60px;
+			}
+			.icon-dollar {
+				width: 16px;
+			}
+			.icon-calendar {
+				width: 26px;
+			}
+			.icon-barcode {
+				width: 32px;
+			}
+		}
+		li {
+			float: right;
+		}
+		p {
+			padding: 20px 32px;
+			background: $green;
+			color: #fff;
+		}
+	}
+	.icon-invoice {
+		width: 5%;
+		min-width: 22px;
+	}
+	.icon-mail {
+		margin-right: 10px;
+		min-width: 22px;
+		width: 4%;
+	}
+	.icon-mobile {
+		margin-left: 5px;
+		margin-right: 16px;
+		width: 2%;
+		min-width: 12px
+	}
+}
+
+
+.products-table {
+	width: 100%;
+	margin-top: 20px;
+	margin-bottom: 0;
+	border: none;
+	h5 {
+		margin: 0;
+		font-weight: bold;
+		color: #616262;
+	}
+	th {
+		padding: 20px;
+		background: #fff;
+		font-size: 22px;
+		color: $green;
+		text-align: center;
+		&:first-child {
+			text-align: left;
+		}
+	}
+	tbody {
+		tr:nth-child(odd) {
+			td {
+				background: $grey-light;
+			}
+		}
+		td {
+			padding: 20px;
+			vertical-align: middle;
+			color: #616262;
+			text-align: center;
+			&:first-child {
+				text-align: left;
+			}
+		}
+		p {
+			margin: 0;
+		}
+	}
+}
+
+
+.totals {
+	table {
+		width: 100%;
+		border: none;
+		tr {
+			td {
+				background: #fff;
+				font-size: 18px;
+				text-align: right;
+				&:last-child {
+					padding-right: 20px;
+				}
+			}
+		}
+		tfoot {
+			td {
+				padding: 16px 10px;
+				background: $green;
+				color: #fff;
+				font-size: 24px;
+			}
+		}
+		.discount {
+			td {
+				font-weight: bold;
+				color: red;
+			}
+		}
+	}
+	.signature {
+		text-align: center;
+		.icon-signature {
+			width: 40%;
+			margin-bottom: 20px;
+		}
+		p {
+			margin: 0;
+		}
+	}
+}
+
+
+.bottom-left {
+	font-size: 12px;
+	table {
+		border: none;
+		thead {
+			th {
+				background: #acacac;
+				font-weight: normal;
+				color: #fff;
+				border-radius: 0px 0px 5px 5px;
+				-moz-border-radius: 0px 0px 5px 5px;
+				-webkit-border-radius: 0px 0px 5px 5px;
+			}
+		}
+		tbody {
+			td {
+				padding-top: 30px;
+				padding-bottom: 0;
+				background: #fff;
+				font-size: 18px;
+				color: #8f8f8f;
+			}
+		}
+	}
+	p {
+		margin: 0;
+		font-size: 12px;
+		line-height: 14px;
+	}
+	.icon-paypal {
+		width: 20%;
+	}
+	.icon-cc {
+		width: 6%;
+	}
+	.icon-western {
+		width: 23%;
+	}
+	&.show-for-small-only {
+		text-align: center;
+	}
+}
+
+
+.terms {
+	margin-top: 100px;
+	font-size: 12px;
+}
+
+
+.footer {
+	padding: 30px 0;
+	background: url(images/footer.png) no-repeat top;
+	font-size: 14px;
+	color: #ababab;
+	p {
+		height: 50px;
+		font-size: 12px;
+		line-height: 14px;
+		border-right: 1px solid #d4d2d2;
+	}
+	img {
+		width: 60px;
+	}
+}
+
+
+
+.print {
+	.header {
+		width: 100%;
+		border: none;
+		img {
+			width: 230px;
+		}
+		td {
+			vertical-align: top;
+			p {
+				font-size: 10px;
+			}
+		}
+	}
+	.header-bottom {
+		width: 100%;
+		border: none;
+		h1 {
+			font-size: 40px;
+		}
+		.header-bottom-left {
+			h3 {
+				margin: 0;
+			}
+			p {
+				font-size: 12px !important;
+			}
+		}
+		.invoice-header {
+			td {
+				vertical-align: bottom !important;
+			}
+			table {
+				width: 100%;
+				border: none;
+				h1 {
+					margin: 0 !important;
+				}
+				tbody {
+					td {
+						padding: 0;
+					}
+				}
+			}
+		}
+	}
+	.products-table {
+		th {
+			font-size: 16px !important;
+		}
+		h5 {
+			font-size: 13px !important;
+		}
+		p {
+			font-size: 12px !important;
+		}
+	}
+	.bottom {
+		width: 100%;
+		border: none;
+	}
+	.bottom-left {
+		font-size: 12px;
+		table {
+			border: none;
+			tbody {
+				td {
+					padding-top: 30px;
+					padding-bottom: 0;
+					font-size: 18px;
+				}
+			}
+		}
+		p {
+			margin: 0;
+			font-size: 12px;
+		}
+	}
+	.totals {
+		table { 
+			width: 100%;
+			border: none;
+			tr {
+				td {
+					font-size: 14px;
+					text-align: right;
+				}
+			}
+			tfoot {
+				td {
+					background: $green !important;
+					color: #fff;
+					font-size: 20px;
+				}
+			}
+			.discount {
+				td {
+					font-weight: bold; 
+					color: #FF0000 !important;
+				}
+			}
+		}
+		.signature {
+			text-align: center;
+			img {
+				margin-bottom: 10px;
+			}
+			p {
+				margin: 0;
+			}
+		}
+	}
+	.terms {
+		width: 100%;
+		margin: 0 !important;
+		border: none;
+	}
+}
+
+
+
+
+// This would make the large grid function like a print grid
+@media print {
+	.print-only {
+		.header {
+			width: 100%;
+			border: none;
+			img {
+				width: 230px;
+			}
+			td {
+				vertical-align: top;
+				p {
+					font-size: 10px;
+				}
+			}
+		}
+		.header-bottom {
+			width: 100%;
+			border: none;
+			h1 {
+				font-size: 40px;
+			}
+			.header-bottom-left {
+				h3 {
+					margin: 0;
+				}
+				p {
+					font-size: 12px !important;
+				}
+			}
+			.invoice-header {
+				vertical-align: bottom !important;
+				table {
+					width: 100%;
+					margin: 0 !important;
+					border: none;
+					h1 {
+						margin: 0 !important;
+					}
+					tbody {
+						td {
+							padding: 0;
+						}
+					}
+				}
+			}
+		}
+		.products-table {
+			th {
+				font-size: 16px !important;
+			}
+			h5 {
+				font-size: 13px !important;
+			}
+			p {
+				font-size: 12px !important;
+			}
+		}
+		.bottom {
+			width: 100%;
+			border: none;
+		}
+		.bottom-left {
+			font-size: 12px;
+			table {
+				border: none;
+				tbody {
+					td {
+						padding-top: 30px;
+						padding-bottom: 0;
+						font-size: 18px;
+					}
+				}
+			}
+			p {
+				margin: 0;
+				font-size: 12px;
+			}
+		}
+		.totals {
+			table {
+				width: 100%;
+				border: none;
+				tr {
+					td {
+						font-size: 14px;
+						text-align: right;
+					}
+				}
+				tfoot {
+					td {
+						background: $green !important;
+						color: #fff;
+						font-size: 20px;
+					}
+				}
+				.discount {
+					td {
+						font-weight: bold;
+						color: #FF0000 !important;
+					}
+				}
+			}
+			.signature {
+				text-align: center;
+				img {
+					margin-bottom: 10px;
+				}
+				p {
+					margin: 0;
+				}
+			}
+		}
+		.terms {
+			width: 100%;
+			margin: 0 !important;
+			font-size: 10px;
+			border: none;
+		}
+		.footer {
+			width: 100%;
+			border: none !important;
+		}
+	}
+}
+
+
+
+@media only screen and (min-width: 40.063em) and (max-width: 64em) { 
+	
+	.header {
+		.large-2 {
+			padding-left: 20px;
+			.header-contact {
+				min-height: 100px;
+				border-right: none;
+			}
+		}
+		.header-contact {
+			min-height: 100px;
+			border-right: none;
+		}
+	}
+	.footer {
+		padding: 30px 0;
+		background: url(images/footer.png) no-repeat top;
+		font-size: 14px;
+		color: #ababab;
+	}
+}
+
+
+
+@media only screen and (max-width: 40em) {
+
+	.header {
+		.large-2 {
+			padding-left: 20px;
+			.header-contact {
+				min-height: 100px;
+				border-right: none;
+			}
+		}
+	}
+	.footer {
+		padding: 30px 0;
+		background: url(images/footer.png) no-repeat top;
+		font-size: 14px;
+		color: #ababab;
+	}
+
+}
