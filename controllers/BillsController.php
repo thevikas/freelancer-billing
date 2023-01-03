@@ -62,11 +62,12 @@ class BillsController extends Controller
         else
             $this->layout = $project['layout'];
 
-        $invoice['total'] = $invoice['hours'] * $project['per_hour'];
+        if(empty($invoice['total']))
+            $invoice['total'] = $invoice['hours'] * $project['per_hour'];
         $invoice['items'][0] = [
             'name' => 'Software development',
             'price' => $project['per_hour'],
-            'quantity' => $invoice['hours'],
+            'quantity' => $invoice['hours'] ?? "",
             'amount' => $invoice['total']
         ];
         if(!empty($invoice['extra_items']))
@@ -74,11 +75,13 @@ class BillsController extends Controller
             foreach($invoice['extra_items'] as &$item)
             {
 
+                $item['quantity'] = $item['price'] = " ";
                 if(!empty($item['overtime']))
+                {
                     $item['amount'] = ($item['overtime']*$project['overtime_per_hour']);
-
-                $item['price'] = $project['overtime_per_hour'];
-                $item['quantity'] = $item['overtime'];
+                    $item['price'] = $project['overtime_per_hour'];
+                    $item['quantity'] = $item['overtime'];
+                }
 
                 if(!empty($item['amount']))
                     $invoice['total'] += $item['amount'];

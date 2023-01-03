@@ -229,6 +229,10 @@ h6 {
 .products-table tbody p {
   margin: 0;
 }
+.products-table th.t,
+.products-table tbody td.t {
+  text-align: right;
+}
 
 .totals table {
   width: 100%;
