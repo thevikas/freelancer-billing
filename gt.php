@@ -3,6 +3,8 @@
     require __DIR__ . "/vendor/autoload.php";
     require_once 'functions.php';
 
+    $logfile = getenv('HOME') . '/.local/share/gtimelog/timelog.txt';
+    
     $hello_cmd = new Commando\Command();
 
     $hello_cmd->option()
@@ -34,7 +36,6 @@
     date_default_timezone_set('Asia/Kolkata');
     $all_lines = [];
 
-    $logfile = getenv('HOME') . '/.gtimelog/timelog.txt';
     if (!file_exists($logfile))
     {
         fputs(STDERR, "$logfile: File not found\n");

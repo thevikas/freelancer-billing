@@ -37,7 +37,11 @@ if(!empty($project['conversion_in_invoice']) && $project['conversion_in_invoice'
 
 function prefix_ccy($project,$amount)
 {
-	$symbols = ['INR' => '&#x20B9;', 'USD' => '$'];
+	$symbols = [
+		'INR' => '&#x20B9;',
+		'USD' => '$',
+		'BTC' => 'BTC',
+		'Sats' => '(BTC) Satoshis'];
 	if(is_array($project))
 		$rate = $symbols[$project['ccy']];
 	else if(is_string($project))
@@ -99,13 +103,15 @@ function prefix_ccy($project,$amount)
 
 <div class="row">
 	<div class="large-12 columns">
-		<table class="products-table">
+		<table class="products-table" border=1>
 			<thead>
 				<tr>
 					<th>Item Description</th>
+					<?php if(!empty($invoice['items'][0]['quantity'])): ?>
 					<th>Unit Price</th>
 					<th>Hours</th>
-					<th>Total</th>
+					<?php endif; ?>
+					<th class="t">Total</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -118,9 +124,11 @@ function prefix_ccy($project,$amount)
 								<h5><?=$item['name']?></h5>
 								<p><?=!empty($item['des']) ? $item['des'] : ''?></p>
 							</td>
-							<td><?=!empty($item['price']) ? prefix_ccy($project,$item['price']) : ''?></td>
+							<?php if(!empty($item['quantity'])): ?>
+							<td><?=!empty(trim($item['price'])) ? prefix_ccy($project,$item['price']) : ''?></td>
 							<td><?=!empty($item['quantity']) ? $item['quantity'] : ''?></td>
-							<td><?=prefix_ccy($project,$item['amount'])?></td>
+							<?php endif; ?>
+							<td class="t"><?=prefix_ccy($project,$item['amount'])?></td>
 						</tr>
 
 						<?php
@@ -141,6 +149,12 @@ function prefix_ccy($project,$amount)
 				</tr>
 			</thead>
 			<tbody>
+				<?php if(!empty($invoice['note'])): ?>
+				<tr>
+					<td><?=$invoice['note']?></p>
+					</td>
+				</tr>
+				<?php endif; ?>
 				<tr>
 					<td><?php /*<p><strong>payments@websitename.com</strong> */ ?></p>
 					</td>
