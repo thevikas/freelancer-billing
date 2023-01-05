@@ -10,6 +10,14 @@ use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
 
+use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\Encoding\Encoding;
+use Endroid\QrCode\ErrorCorrectionLevel\ErrorCorrectionLevelHigh;
+use Endroid\QrCode\Label\Alignment\LabelAlignmentCenter;
+use Endroid\QrCode\Label\Font\NotoSans;
+use Endroid\QrCode\RoundBlockSizeMode\RoundBlockSizeModeMargin;
+use Endroid\QrCode\Writer\PngWriter;
+
 class SiteController extends Controller
 {
     /**
@@ -62,6 +70,33 @@ class SiteController extends Controller
     public function actionIndex()
     {
         return $this->render('index');
+    }
+
+    public function actionQr1($addr, $size = 300)
+    {
+        //$png1 =  __DIR__ . "/../web/images/logo-no-background.png";
+        $result = Builder::create()
+            ->writer(new PngWriter())
+            ->writerOptions([])
+            ->data($addr)
+            ->encoding(new Encoding('UTF-8'))
+            ->errorCorrectionLevel(new ErrorCorrectionLevelHigh())
+            ->size($size)
+            ->margin(10)
+            ->roundBlockSizeMode(new RoundBlockSizeModeMargin())
+            //->logoPath($png1)
+            //->labelText('This is the label')
+            //->labelFont(new NotoSans(20))
+            //->labelAlignment(new LabelAlignmentCenter())
+            ->validateResult(false)
+            ->build();
+
+        // Directly output the QR code
+        $mime = $result->getMimeType();
+        $this->layout = false;
+        Yii::$app->response->format = Response::FORMAT_RAW;
+        Yii::$app->response->headers->add('Content-Type', $mime);
+        echo $result->getString();
     }
 
     /**
