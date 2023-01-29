@@ -35,12 +35,14 @@ class BillsController extends Controller
      */
     public function actionIndex()
     {
+        $clients = json_decode(file_get_contents(Yii::getAlias('@app/config/client-projects.json')), true);
         $dataProvider = new ArrayDataProvider([
             'allModels' => Bill::loadfiles(),
         ]);
 
         return $this->render('index', [
-            'dataProvider' => $dataProvider,
+            'dataProvider'  => $dataProvider,
+            'ccy_precision' => $clients['precision']['default'],
         ]);
     }
 
