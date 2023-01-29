@@ -21,6 +21,7 @@
             "per_hour": 1000
         },
         "care4life-btc": {
+            "aliases": ["care4life"],
             "ccy": "BTC",
             "billing": {
                 "name": "CARE4LIFE HEALTHCARE SOLUTIONS LLP.",
@@ -30,7 +31,8 @@
             },
             "per_hour": 0.00032000
         },
-        "revelio": {
+        "truebroker": {
+            "aliases": ["truebroker"],
             "ccy": "INR",
             "billing": {
                 "name": "Revelio Technologies Pvt. Ltd.",
@@ -38,7 +40,7 @@
                 "email": "lh.abhishek@gmail.com",
                 "phone": "+91 9810547417"
             },
-            "per_hour": 1500
+            "per_hour": 625
         },
         "revelio-btc": {
             "ccy": "BTC",
