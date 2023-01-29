@@ -3,10 +3,10 @@
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
-
 $billing = $project['billing'];
 
-if (0) {
+if (0)
+{
 
     /* @var $this yii\web\View */
     /* @var $model app\models\Bill3 */
@@ -15,40 +15,50 @@ if (0) {
     $this->params['breadcrumbs'][] = ['label' => 'Bills', 'url' => ['index']];
     $this->params['breadcrumbs'][] = $this->title;
     \yii\web\YiiAsset::register($this);
-?>
+    ?>
     <div class="bill3-view">
 
-        <h1><?= Html::encode($this->title) ?></h1>
+        <h1><?=Html::encode($this->title)?></h1>
 
-        <?= DetailView::widget([
-            'model' => $model,
-            'attributes' => [
-                'id_invoice',
-                'client',
-                'dated',
-                'hours',
-            ],
-        ]) ?>
+        <?=DetailView::widget([
+        'model'      => $model,
+        'attributes' => [
+            'id_invoice',
+            'client',
+            'dated',
+            'hours',
+        ],
+    ])?>
 
     </div>
 <?php }
 $conversion = false;
 if (!empty($project['conversion_in_invoice']) && $project['conversion_in_invoice'])
+{
     $conversion = true;
+}
+
+$project['ccyp'] = $ccy_precision;
 
 function prefix_ccy($project, $amount)
 {
+    $ccyp = $project['ccyp'];
     $symbols = [
-        'INR' => '&#x20B9;',
-        'USD' => '$',
-        'BTC' => 'BTC',
-        'Sats' => '(BTC) Satoshis'
+        'INR'  => '&#x20B9;',
+        'USD'  => '$',
+        'BTC'  => 'BTC',
+        'Sats' => '(BTC) Satoshis',
     ];
     if (is_array($project))
+    {
         $rate = $symbols[$project['ccy']];
+    }
     else if (is_string($project))
+    {
         $rate = $symbols[$project];
-    return $rate .  " " . $amount;
+    }
+
+    return $rate . " " . round($amount, $ccyp);
 }
 ?>
 
@@ -58,13 +68,13 @@ function prefix_ccy($project, $amount)
     <div class="large-6 medium-6 columns header-bottom-left">
 
         <h3><img class="icon-invoice" src="/images/invoice.png"></i>INVOICE TO</h3>
-        <h2><?= $billing['name'] ?></h2>
+        <h2><?=$billing['name']?></h2>
         <p style="margin-bottom:10px;line-height:22px;">
-            <?= str_replace("\n", "<br/>", $billing['address']) ?>
+            <?=str_replace("\n", "<br/>", $billing['address'])?>
         </p>
 
-        <p style="margin-bottom:10px;"><img class="icon-mail" src="/images/mail.png"></i><?= $billing['email'] ?></p>
-        <p><img class="icon-mobile" src="/images/mobile.png"></i><?= $billing['phone'] ?></p>
+        <p style="margin-bottom:10px;"><img class="icon-mail" src="/images/mail.png"></i><?=$billing['email']?></p>
+        <p><img class="icon-mobile" src="/images/mobile.png"></i><?=$billing['phone']?></p>
 
     </div>
 
@@ -90,15 +100,15 @@ function prefix_ccy($project, $amount)
                 <tr>
                     <td>
                         Total Due:<br>
-                        <strong><?= !$conversion ? prefix_ccy($project, $invoice['total']) : prefix_ccy('INR', $invoice['total_inr']) ?></strong>
+                        <strong><?=!$conversion ? prefix_ccy($project, $invoice['total']) : prefix_ccy('INR', $invoice['total_inr'])?></strong>
                     </td>
                     <td>
                         Invoice Date:<br>
-                        <strong><?= date('F j, Y', strtotime($invoice['dated'])) ?></strong>
+                        <strong><?=date('F j, Y', strtotime($invoice['dated']))?></strong>
                     </td>
                     <td>
                         Invoice #:<br>
-                        <strong><?= $id_invoice ?></strong>
+                        <strong><?=$id_invoice?></strong>
                     </td>
                 </tr>
             </tbody>
@@ -115,32 +125,33 @@ function prefix_ccy($project, $amount)
             <thead>
                 <tr>
                     <th>Item Description</th>
-                    <?php if (!empty($invoice['items'][0]['quantity'])) : ?>
+                    <?php if (!empty($invoice['items'][0]['quantity'])): ?>
                         <th>Unit Price</th>
                         <th>Hours</th>
-                    <?php endif; ?>
+                    <?php endif;?>
                     <th class="t">Total</th>
                 </tr>
             </thead>
             <tbody>
                 <?php
-                foreach ($invoice['items'] as $item) {
-                ?>
+foreach ($invoice['items'] as $item)
+{
+    ?>
                     <tr>
                         <td>
-                            <h5><?= $item['name'] ?></h5>
-                            <p><?= !empty($item['des']) ? $item['des'] : '' ?></p>
+                            <h5><?=$item['name']?></h5>
+                            <p><?=!empty($item['des']) ? $item['des'] : ''?></p>
                         </td>
-                        <?php if (!empty($item['quantity'])) : ?>
-                            <td><?= !empty(trim($item['price'])) ? prefix_ccy($project, $item['price']) : '' ?></td>
-                            <td><?= !empty($item['quantity']) ? $item['quantity'] : '' ?></td>
-                        <?php endif; ?>
-                        <td class="t"><?= prefix_ccy($project, $item['amount']) ?></td>
+                        <?php if (!empty($item['quantity'])): ?>
+                            <td><?=!empty(trim($item['price'])) ? prefix_ccy($project, $item['price']) : ''?></td>
+                            <td><?=!empty($item['quantity']) ? $item['quantity'] : ''?></td>
+                        <?php endif;?>
+                        <td class="t"><?=prefix_ccy($project, $item['amount'])?></td>
                     </tr>
 
                 <?php
-                }
-                ?>
+}
+?>
             </tbody>
         </table>
     </div>
@@ -156,36 +167,39 @@ function prefix_ccy($project, $amount)
                 </tr>
             </thead>
             <tbody>
-                <?php if (!empty($invoice['note'])) : ?>
+                <?php if (!empty($invoice['note'])): ?>
                     <tr>
-                        <td><?= $invoice['note'] ?></p>
+                        <td><?=$invoice['note']?></p>
                         </td>
                     </tr>
-                <?php endif; ?>
+                <?php endif;?>
                 <tr>
-                    <td><?php /*<p><strong>payments@websitename.com</strong> */ ?></p>
+                    <td><?php /*<p><strong>payments@websitename.com</strong> */?></p>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                        <?php if (1) { ?>
+                        <?php if (1)
+{
+    ?>
                             <img class="icon-cc" src="/images/cc.png">
                             <p><strong>Payment</strong></p>
                             <p>Lightning invoice on request</p>
-                        <?php } ?>
-                        <?php if (!empty($invoice['unused_pay2addr'])) {
-                            //massive privacy breach bro tro leak out addresses
-                            //echo Html::img("/site/qr1?size=150&addr=" . $invoice['unused_pay2addr']);
-                        } ?>
+                        <?php }?>
+                        <?php if (!empty($invoice['unused_pay2addr']))
+{
+    //massive privacy breach bro tro leak out addresses
+    //echo Html::img("/site/qr1?size=150&addr=" . $invoice['unused_pay2addr']);
+}?>
                     </td>
                 </tr>
                 <tr>
                     <td><?php /*<p>
-					<strong>Active Interactive</strong><br>
-							256 highland garden,<br>
-							london SW1235,<br>
-							United Kingdom
-						</p>*/ ?>
+<strong>Active Interactive</strong><br>
+256 highland garden,<br>
+london SW1235,<br>
+United Kingdom
+</p>*/?>
                     </td>
                 </tr>
             </tbody>
@@ -196,32 +210,33 @@ function prefix_ccy($project, $amount)
             <tbody>
                 <tr>
                     <td>SUB TOTAL:</td>
-                    <td><?= prefix_ccy($project, $invoice['total']) ?></td>
+                    <td><?=prefix_ccy($project, $invoice['total'])?></td>
                 </tr>
                 <?php /*<tr>
-					<td>Tax: VAT 20%</td>
-					<td>$460.40</td>
-				</tr>
-				<tr class="discount">
-					<td><span>DISCOUNT 5%:</span></td>
-					<td><span>-$138.12</span></td>
-				</tr>*/ ?>
-                <?php if ($conversion) {
+<td>Tax: VAT 20%</td>
+<td>$460.40</td>
+</tr>
+<tr class="discount">
+<td><span>DISCOUNT 5%:</span></td>
+<td><span>-$138.12</span></td>
+</tr>*/?>
+                <?php if ($conversion)
+{
 
-                ?>
+    ?>
                     <tr>
-                        <td><span>Currency conversion @ INR <?= $invoice['ccy'][$project['ccy']] ?>:</span></td>
-                        <td><span><?= prefix_ccy('INR', $invoice['total_inr']); ?></span></td>
+                        <td><span>Currency conversion @ INR <?=$invoice['ccy'][$project['ccy']]?>:</span></td>
+                        <td><span><?=prefix_ccy('INR', $invoice['total_inr']);?></span></td>
                     </tr><?php
-                        } ?>
+}?>
 
             </tbody>
             <tfoot>
                 <tr>
                     <td>Total Due:</td>
                     <td><?php
-                        echo !$conversion ? prefix_ccy($project, $invoice['total']) : prefix_ccy('INR', $invoice['total_inr']);
-                        ?></td>
+echo !$conversion ? prefix_ccy($project, $invoice['total']) : prefix_ccy('INR', $invoice['total_inr']);
+?></td>
                 </tr>
             </tfoot>
         </table>
@@ -233,7 +248,9 @@ function prefix_ccy($project, $amount)
     </div>
 </div>
 
-<?php if (1) { ?>
+<?php if (1)
+{
+    ?>
     <!--This section enables for smaller screens and phones-->
     <div class="large-5 medium-5 small-12 columns bottom-left show-for-small-only">
         <table>
@@ -251,34 +268,34 @@ function prefix_ccy($project, $amount)
                 <tr>
                     <td>
                         <?php /*
-					<img class="icon-cc" src="/images/cc.png">
-					<p><strong>Card Payment</strong></p>
-					<p>We Accept:</p>
-					<p>Visa, Master card, American Express</p>
-					*/ ?>
+    <img class="icon-cc" src="/images/cc.png">
+    <p><strong>Card Payment</strong></p>
+    <p>We Accept:</p>
+    <p>Visa, Master card, American Express</p>
+     */?>
                     </td>
                 </tr>
                 <tr>
                     <td>
                         <p>
                             <?php /*
-				<strong>Active Interactive</strong><br>
-						256 highland garden,<br>
-						london SW1235,<br>
-						United Kingdom
-					</p>
-				<*/ ?>
+    <strong>Active Interactive</strong><br>
+    256 highland garden,<br>
+    london SW1235,<br>
+    United Kingdom
+    </p>
+    <*/?>
                     </td>
                 </tr>
             </tbody>
         </table>
     </div>
-<?php } ?>
+<?php }?>
 
 <div class="row terms">
     <div class="large-12 columns">
-        <?php if (!empty($project['terms'])) : ?>
-            <p><strong>Terms:</strong> <?= $project['terms'] ?></p>
-        <?php endif; ?>
+        <?php if (!empty($project['terms'])): ?>
+            <p><strong>Terms:</strong> <?=$project['terms']?></p>
+        <?php endif;?>
     </div>
 </div>
