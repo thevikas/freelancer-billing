@@ -19,7 +19,8 @@
         "yiisoft/yii2-bootstrap": "~2.0.0",
         "nategood/commando": "*",
         "yiisoft/yii2-swiftmailer": "~2.0.0 || ~2.1.0",
-        "endroid/qr-code": "^4.7"
+        "endroid/qr-code": "^4.7",
+        "vlucas/phpdotenv": "^5.5"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",
