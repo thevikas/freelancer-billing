@@ -5,12 +5,16 @@
         "BTC": 1.0,
         "USD": 81.66
     },
+    "precision":{
+        "default": 2,
+        "BTC": 5
+    },
     "projects": {
         "default": {
             "ccy": "USD",
             "per_hour": 30.0
         },
-        "care4life": {
+        "care4life_inr": {
             "ccy": "INR",
             "billing": {
                 "name": "CARE4LIFE HEALTHCARE SOLUTIONS LLP.",
@@ -20,7 +24,7 @@
             },
             "per_hour": 1000
         },
-        "care4life-btc": {
+        "care4life": {
             "aliases": ["care4life"],
             "ccy": "BTC",
             "billing": {

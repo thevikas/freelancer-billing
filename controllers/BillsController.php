@@ -2,13 +2,12 @@
 
 namespace app\controllers;
 
-use Yii;
 use app\models\Bill;
-use yii\data\ActiveDataProvider;
+use Yii;
+use yii\data\ArrayDataProvider;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
-use yii\data\ArrayDataProvider;
 
 /**
  * BillsController implements the CRUD actions for Bill model.
@@ -22,7 +21,7 @@ class BillsController extends Controller
     {
         return [
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class'   => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
                 ],
@@ -37,7 +36,7 @@ class BillsController extends Controller
     public function actionIndex()
     {
         $dataProvider = new ArrayDataProvider([
-            'allModels' => Bill::loadfiles()
+            'allModels' => Bill::loadfiles(),
         ]);
 
         return $this->render('index', [
@@ -54,48 +53,70 @@ class BillsController extends Controller
     public function actionView($id)
     {
         $bills = Bill::loadfiles();
-        $clients = json_decode(file_get_contents(Yii::getAlias('@app/config/client-projects.json')),true);
+        $clients = json_decode(file_get_contents(Yii::getAlias('@app/config/client-projects.json')), true);
         $invoice = $bills[$id];
         $project = $clients['projects'][$bills[$id]['client']];
-        if(empty($project['layout']))
-            $this->layout = 'blue-invoice';
-        else
-            $this->layout = $project['layout'];
-
-        if(empty($invoice['total']))
-            $invoice['total'] = $invoice['hours'] * $project['per_hour'];
-        $invoice['items'][0] = [
-            'name' => 'Software development',
-            'price' => $project['per_hour'],
-            'quantity' => $invoice['hours'] ?? "",
-            'amount' => $invoice['total']
-        ];
-        if(!empty($invoice['extra_items']))
+        if (empty($project['layout']))
         {
-            foreach($invoice['extra_items'] as &$item)
+            $this->layout = 'blue-invoice';
+        }
+        else
+        {
+            $this->layout = $project['layout'];
+        }
+
+        if (empty($invoice['total']))
+        {
+            $invoice['total'] = $invoice['hours'] * $project['per_hour'];
+        }
+
+        $ccy_precision = $clients['precision']['default'];
+        if (!empty($clients['precision'][$project['ccy']]))
+        {
+            $ccy_precision = $clients['precision'][$project['ccy']];
+        }
+
+        $invoice['hours'] = round($invoice['hours'], $clients['precision']['default']);
+        $invoice['total'] = round($invoice['total'], $ccy_precision);
+
+        $invoice['items'][0] = [
+            'name'     => 'Software development',
+            'price'    => $project['per_hour'],
+            'quantity' => $invoice['hours'] ?: "",
+            'amount'   => $invoice['total'],
+        ];
+        if (!empty($invoice['extra_items']))
+        {
+            foreach ($invoice['extra_items'] as &$item)
             {
 
                 $item['quantity'] = $item['price'] = " ";
-                if(!empty($item['overtime']))
+                if (!empty($item['overtime']))
                 {
-                    $item['amount'] = ($item['overtime']*$project['overtime_per_hour']);
+                    $item['amount'] = ($item['overtime'] * $project['overtime_per_hour']);
                     $item['price'] = $project['overtime_per_hour'];
                     $item['quantity'] = $item['overtime'];
                 }
 
-                if(!empty($item['amount']))
+                if (!empty($item['amount']))
+                {
                     $invoice['total'] += $item['amount'];
+                }
                 else
-                    throw new Exception("Do not know how to include extra item in calc");
+                {
+                    throw new \Exception("Do not know how to include extra item in calc");
+                }
 
                 $invoice['items'][] = $item;
             }
         }
         $invoice['total_inr'] = round($invoice['total'] * $clients['ccy'][$project['ccy']]);
+
         return $this->render('view', [
-            'id_invoice' => $id,
-            'invoice' => $invoice,
-            'project' => $project
+            'ccy_precision' => $ccy_precision,
+            'id_invoice'    => $id,
+            'invoice'       => $invoice,
+            'project'       => $project,
         ]);
     }
 
@@ -108,7 +129,8 @@ class BillsController extends Controller
     {
         $model = new Bill();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->save())
+        {
             return $this->redirect(['view', 'id' => $model->id_bill]);
         }
 
@@ -128,7 +150,8 @@ class BillsController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->save())
+        {
             return $this->redirect(['view', 'id' => $model->id_bill]);
         }
 
@@ -160,7 +183,8 @@ class BillsController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Bill::findOne($id)) !== null) {
+        if (($model = Bill::findOne($id)) !== null)
+        {
             return $model;
         }
 

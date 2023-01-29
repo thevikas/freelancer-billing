@@ -39,8 +39,7 @@ $hello_cmd->option('e')
 
 $hello_cmd->option('p')
     ->aka('project')
-    ->describedAs('Generate monthly bill json')
-    ->boolean();
+    ->describedAs('Generate monthly bill json');
 
 $hello_cmd->option('i')
     ->aka('inum')
@@ -100,6 +99,12 @@ if ($hello_cmd['report'] || $hello_cmd['bill'] || $hello_cmd['earning'])
         if ($hello_cmd['earning'])
         {
             echo sprintf("%d", round($rep['TotalEarning'])) . "\n";
+        }
+        else if ($hello_cmd['project'])
+        {
+            $proj = $hello_cmd['project'];
+            $bill->saveJson($rep[$proj], $proj);
+            print_r($rep[$proj]);
         }
         else
         {

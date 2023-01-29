@@ -65,9 +65,29 @@ class Bill
         }
     }
 
-    public function saveJson()
+    public function saveJson($rep, $project_name)
     {
+        $json_file = $_ENV['BILLS_JSON_DIR'] . "/" . $this->getNextInvoiceNumber() . "-" . $project_name . ".json";
+        if (file_exists($json_file))
+        {
+            die("$json_file already exists");
+        }
 
+        echo "Writing $json_file...\n";
+
+        /*
+        {
+        "client": "care4life-btc",
+        "hours": 82,
+        "dated": "2023-01-01",
+        }
+         */
+        $json = [
+            'hours'  => $rep['hours'],
+            'client' => $project_name,
+            'dated'  => date('Y-m-d'),
+        ];
+        file_put_contents($json_file, json_encode($json, JSON_PRETTY_PRINT));
     }
 
     /**
@@ -105,6 +125,7 @@ class Bill
             }
             $quantity = $items['Total'];
             $items['TotalAmount'] = $quantity * $rate['per_hour'];
+            $rep[$proj]['hours'] = $quantity;
             $rep[$proj]['TotalAmount_' . $rate['ccy']] = $items['TotalAmount'];
             $rep[$proj]['TotalAmount_' . $base_ccy] = $items['TotalAmount'] * $this->rates['ccy'][$rate['ccy']];
             if (!$rep[$proj]['default'])
