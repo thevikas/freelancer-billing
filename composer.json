@@ -1,5 +1,5 @@
 {
-    "name": "yiisoft/yii2-app-basic",
+    "name": "thevikas/freelaners-billing",
     "description": "Yii 2 Basic Project Template",
     "keywords": ["yii2", "framework", "basic", "project template"],
     "homepage": "http://www.yiiframework.com/",
@@ -14,7 +14,6 @@
     },
     "minimum-stability": "stable",
     "require": {
-        "php": ">=5.6.0",
         "yiisoft/yii2": "~2.0.14",
         "yiisoft/yii2-bootstrap": "~2.0.0",
         "nategood/commando": "*",
@@ -31,7 +30,7 @@
         "codeception/specify": "~0.4.6",
         "symfony/browser-kit": ">=2.7 <=4.2.4",
         "codeception/module-filesystem": "^1.0.0",
-        "codeception/module-yii2": "^1.0.0",
+        "codeception/module-yii2": "*",
         "phpunit/phpunit": "*",
         "codeception/module-asserts": "^1.0.0"
     },
