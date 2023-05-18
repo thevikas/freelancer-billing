@@ -4,11 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-<<<<<<< HEAD
-    "content-hash": "7484ea1b83a9ab9da9eaa3a2eaa89b97",
-=======
-    "content-hash": "791489acd43b283706628fa2c35293a3",
->>>>>>> 332b422c22946fc35024094db96bd8655f33547f
+    "content-hash": "f99cda0fc768103b523e842350a4a83f",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -69,11 +65,7 @@
             "version": "v3.4.1",
             "source": {
                 "type": "git",
-<<<<<<< HEAD
-                "url": "git@github.com:twbs/bootstrap.git",
-=======
                 "url": "https://github.com/twbs/bootstrap.git",
->>>>>>> 332b422c22946fc35024094db96bd8655f33547f
                 "reference": "68b0d231a13201eb14acd3dc84e51543d16e5f7e"
             },
             "dist": {
@@ -94,11 +86,7 @@
             "version": "3.3.11",
             "source": {
                 "type": "git",
-<<<<<<< HEAD
-                "url": "git@github.com:RobinHerbots/Inputmask.git",
-=======
                 "url": "https://github.com/RobinHerbots/Inputmask.git",
->>>>>>> 332b422c22946fc35024094db96bd8655f33547f
                 "reference": "5e670ad62f50c738388d4dcec78d2888505ad77b"
             },
             "dist": {
@@ -116,18 +104,6 @@
         },
         {
             "name": "bower-asset/jquery",
-<<<<<<< HEAD
-            "version": "3.6.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/jquery/jquery-dist.git",
-                "reference": "da0f228131a578aea168b799fe4d7fe01764c98b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/jquery/jquery-dist/zipball/da0f228131a578aea168b799fe4d7fe01764c98b",
-                "reference": "da0f228131a578aea168b799fe4d7fe01764c98b"
-=======
             "version": "3.6.4",
             "source": {
                 "type": "git",
@@ -138,7 +114,6 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/jquery/jquery-dist/zipball/91ef2d8836342875f2519b5815197ea0f23613cf",
                 "reference": "91ef2d8836342875f2519b5815197ea0f23613cf"
->>>>>>> 332b422c22946fc35024094db96bd8655f33547f
             },
             "type": "bower-asset",
             "license": [
@@ -150,20 +125,12 @@
             "version": "v1.3.2",
             "source": {
                 "type": "git",
-<<<<<<< HEAD
-                "url": "git@github.com:bestiejs/punycode.js.git",
-=======
                 "url": "https://github.com/mathiasbynens/punycode.js.git",
->>>>>>> 332b422c22946fc35024094db96bd8655f33547f
                 "reference": "38c8d3131a82567bfef18da09f7f4db68c84f8a3"
             },
             "dist": {
                 "type": "zip",
-<<<<<<< HEAD
-                "url": "https://api.github.com/repos/bestiejs/punycode.js/zipball/38c8d3131a82567bfef18da09f7f4db68c84f8a3",
-=======
                 "url": "https://api.github.com/repos/mathiasbynens/punycode.js/zipball/38c8d3131a82567bfef18da09f7f4db68c84f8a3",
->>>>>>> 332b422c22946fc35024094db96bd8655f33547f
                 "reference": "38c8d3131a82567bfef18da09f7f4db68c84f8a3"
             },
             "type": "bower-asset"
@@ -254,8 +221,6 @@
             "time": "2018-03-26T11:24:36+00:00"
         },
         {
-<<<<<<< HEAD
-=======
             "name": "cypresslab/gitelephant",
             "version": "v4.5.0",
             "source": {
@@ -319,7 +284,6 @@
             "time": "2022-10-08T12:56:52+00:00"
         },
         {
->>>>>>> 332b422c22946fc35024094db96bd8655f33547f
             "name": "dasprid/enum",
             "version": "1.0.4",
             "source": {
@@ -368,6 +332,49 @@
                 "source": "https://github.com/DASPRiD/Enum/tree/1.0.4"
             },
             "time": "2023-03-01T18:44:03+00:00"
+        },
+        {
+            "name": "deployer/deployer",
+            "version": "v7.3.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/deployphp/deployer.git",
+                "reference": "c5c5e79d4e57445918ed24a9cdd3d85b0f261de3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/deployphp/deployer/zipball/c5c5e79d4e57445918ed24a9cdd3d85b0f261de3",
+                "reference": "c5c5e79d4e57445918ed24a9cdd3d85b0f261de3",
+                "shasum": ""
+            },
+            "bin": [
+                "dep"
+            ],
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Anton Medvedev",
+                    "email": "anton@medv.io"
+                }
+            ],
+            "description": "Deployment Tool",
+            "homepage": "https://deployer.org",
+            "support": {
+                "docs": "https://deployer.org/docs",
+                "issues": "https://github.com/deployphp/deployer/issues",
+                "source": "https://github.com/deployphp/deployer"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/sponsors/antonmedv",
+                    "type": "github"
+                }
+            ],
+            "time": "2023-04-05T09:24:30+00:00"
         },
         {
             "name": "doctrine/deprecations",
@@ -911,8 +918,6 @@
             "time": "2020-10-15T08:29:30+00:00"
         },
         {
-<<<<<<< HEAD
-=======
             "name": "phpcollection/phpcollection",
             "version": "0.6.0",
             "source": {
@@ -968,7 +973,6 @@
             "time": "2022-03-21T13:02:41+00:00"
         },
         {
->>>>>>> 332b422c22946fc35024094db96bd8655f33547f
             "name": "phpoption/phpoption",
             "version": "1.9.1",
             "source": {
@@ -1120,8 +1124,6 @@
             "time": "2021-10-18T15:26:12+00:00"
         },
         {
-<<<<<<< HEAD
-=======
             "name": "symfony/deprecation-contracts",
             "version": "v3.2.1",
             "source": {
@@ -1315,7 +1317,6 @@
             "time": "2023-02-16T09:33:00+00:00"
         },
         {
->>>>>>> 332b422c22946fc35024094db96bd8655f33547f
             "name": "symfony/polyfill-ctype",
             "version": "v1.27.0",
             "source": {
@@ -1894,8 +1895,6 @@
             "time": "2022-11-03T14:55:06+00:00"
         },
         {
-<<<<<<< HEAD
-=======
             "name": "symfony/process",
             "version": "v6.2.10",
             "source": {
@@ -1957,39 +1956,6 @@
             "time": "2023-04-18T13:56:57+00:00"
         },
         {
-            "name": "thevikas/gtimelog",
-            "version": "dev-main",
-            "dist": {
-                "type": "path",
-                "url": "../gtimelog-package",
-                "reference": "030258bb962fadd7622aef33a4ae665a4b9cdc6f"
-            },
-            "require": {
-                "php": ">=7.2.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "thevikas\\gtimelog\\": "src/"
-                }
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Vikas Yadav",
-                    "email": "vikas@thevikas.com"
-                }
-            ],
-            "description": "Read/write the gtimelog timelog.txt file",
-            "transport-options": {
-                "symlink": true,
-                "relative": true
-            }
-        },
-        {
->>>>>>> 332b422c22946fc35024094db96bd8655f33547f
             "name": "vlucas/phpdotenv",
             "version": "v5.5.0",
             "source": {
@@ -2449,8 +2415,6 @@
                 }
             ],
             "time": "2021-12-30T08:48:48+00:00"
-<<<<<<< HEAD
-=======
         },
         {
             "name": "yiithings/yii2-dotenv",
@@ -2504,7 +2468,6 @@
                 "source": "https://github.com/panlatent/yii2-dotenv/tree/1.1.0"
             },
             "time": "2022-10-11T10:44:55+00:00"
->>>>>>> 332b422c22946fc35024094db96bd8655f33547f
         }
     ],
     "packages-dev": [
@@ -3199,16 +3162,16 @@
         },
         {
             "name": "fakerphp/faker",
-            "version": "v1.21.0",
+            "version": "v1.22.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FakerPHP/Faker.git",
-                "reference": "92efad6a967f0b79c499705c69b662f738cc9e4d"
+                "reference": "f85772abd508bd04e20bb4b1bbe260a68d0066d2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FakerPHP/Faker/zipball/92efad6a967f0b79c499705c69b662f738cc9e4d",
-                "reference": "92efad6a967f0b79c499705c69b662f738cc9e4d",
+                "url": "https://api.github.com/repos/FakerPHP/Faker/zipball/f85772abd508bd04e20bb4b1bbe260a68d0066d2",
+                "reference": "f85772abd508bd04e20bb4b1bbe260a68d0066d2",
                 "shasum": ""
             },
             "require": {
@@ -3261,9 +3224,9 @@
             ],
             "support": {
                 "issues": "https://github.com/FakerPHP/Faker/issues",
-                "source": "https://github.com/FakerPHP/Faker/tree/v1.21.0"
+                "source": "https://github.com/FakerPHP/Faker/tree/v1.22.0"
             },
-            "time": "2022-12-13T13:54:32+00:00"
+            "time": "2023-05-14T12:31:37+00:00"
         },
         {
             "name": "guzzlehttp/psr7",
@@ -4372,7 +4335,6 @@
         },
         {
             "name": "sebastian/diff",
-<<<<<<< HEAD
             "version": "3.0.4",
             "source": {
                 "type": "git",
@@ -4383,18 +4345,6 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/sebastianbergmann/diff/zipball/6296a0c086dd0117c1b78b059374d7fcbe7545ae",
                 "reference": "6296a0c086dd0117c1b78b059374d7fcbe7545ae",
-=======
-            "version": "3.0.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sebastianbergmann/diff.git",
-                "reference": "14f72dd46eaf2f2293cbe79c93cc0bc43161a211"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/diff/zipball/14f72dd46eaf2f2293cbe79c93cc0bc43161a211",
-                "reference": "14f72dd46eaf2f2293cbe79c93cc0bc43161a211",
->>>>>>> 332b422c22946fc35024094db96bd8655f33547f
                 "shasum": ""
             },
             "require": {
@@ -4439,11 +4389,7 @@
             ],
             "support": {
                 "issues": "https://github.com/sebastianbergmann/diff/issues",
-<<<<<<< HEAD
                 "source": "https://github.com/sebastianbergmann/diff/tree/3.0.4"
-=======
-                "source": "https://github.com/sebastianbergmann/diff/tree/3.0.3"
->>>>>>> 332b422c22946fc35024094db96bd8655f33547f
             },
             "funding": [
                 {
@@ -4451,11 +4397,7 @@
                     "type": "github"
                 }
             ],
-<<<<<<< HEAD
             "time": "2023-05-07T05:30:20+00:00"
-=======
-            "time": "2020-11-30T07:59:04+00:00"
->>>>>>> 332b422c22946fc35024094db96bd8655f33547f
         },
         {
             "name": "sebastian/environment",
@@ -5226,76 +5168,6 @@
             "time": "2023-02-14T08:03:56+00:00"
         },
         {
-<<<<<<< HEAD
-            "name": "symfony/deprecation-contracts",
-            "version": "v3.2.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/deprecation-contracts.git",
-                "reference": "e2d1534420bd723d0ef5aec58a22c5fe60ce6f5e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/e2d1534420bd723d0ef5aec58a22c5fe60ce6f5e",
-                "reference": "e2d1534420bd723d0ef5aec58a22c5fe60ce6f5e",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=8.1"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-main": "3.3-dev"
-                },
-                "thanks": {
-                    "name": "symfony/contracts",
-                    "url": "https://github.com/symfony/contracts"
-                }
-            },
-            "autoload": {
-                "files": [
-                    "function.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Nicolas Grekas",
-                    "email": "p@tchwork.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "A generic function and convention to trigger deprecation notices",
-            "homepage": "https://symfony.com",
-            "support": {
-                "source": "https://github.com/symfony/deprecation-contracts/tree/v3.2.1"
-            },
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2023-03-01T10:25:55+00:00"
-        },
-        {
-=======
->>>>>>> 332b422c22946fc35024094db96bd8655f33547f
             "name": "symfony/dom-crawler",
             "version": "v4.4.45",
             "source": {
@@ -5534,72 +5406,6 @@
             "time": "2023-03-01T10:32:47+00:00"
         },
         {
-<<<<<<< HEAD
-            "name": "symfony/finder",
-            "version": "v5.4.21",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/finder.git",
-                "reference": "078e9a5e1871fcfe6a5ce421b539344c21afef19"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/finder/zipball/078e9a5e1871fcfe6a5ce421b539344c21afef19",
-                "reference": "078e9a5e1871fcfe6a5ce421b539344c21afef19",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.2.5",
-                "symfony/deprecation-contracts": "^2.1|^3",
-                "symfony/polyfill-php80": "^1.16"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Component\\Finder\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Tests/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Finds files and directories via an intuitive fluent interface",
-            "homepage": "https://symfony.com",
-            "support": {
-                "source": "https://github.com/symfony/finder/tree/v5.4.21"
-            },
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2023-02-16T09:33:00+00:00"
-        },
-        {
-=======
->>>>>>> 332b422c22946fc35024094db96bd8655f33547f
             "name": "symfony/polyfill-intl-grapheme",
             "version": "v1.27.0",
             "source": {
@@ -6288,13 +6094,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-<<<<<<< HEAD
     "stability-flags": [],
-=======
-    "stability-flags": {
-        "thevikas/gtimelog": 20
-    },
->>>>>>> 332b422c22946fc35024094db96bd8655f33547f
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],

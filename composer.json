@@ -17,7 +17,7 @@
         "yiisoft/yii2": "~2.0.14",
         "yiisoft/yii2-bootstrap": "~2.0.0",
         "nategood/commando": "*",
-        "thevikas/gtimelog": "dev-main",
+        "deployer/deployer": "*",
         "yiisoft/yii2-swiftmailer": "~2.0.0 || ~2.1.0",
         "endroid/qr-code": "^4.7",
         "cypresslab/gitelephant": "*",
@@ -74,13 +74,6 @@
         {
             "type": "composer",
             "url": "https://asset-packagist.org"
-        },
-        {
-            "type": "path",
-            "url": "../gtimelog-package",
-            "options": {
-                "symlink": true
-            }
         }
     ]
 }
