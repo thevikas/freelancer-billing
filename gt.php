@@ -1,15 +1,16 @@
 #!/usr/bin/env php
 <?php
-
 namespace gtimelogphp;
+
+ini_set('xdebug.log_level',0);
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED);
 
 require __DIR__ . "/vendor/autoload.php";
 require_once 'functions.php';
 
 $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
-
-$logfile = getenv('HOME') . '/.local/share/gtimelog/timelog.txt';
+$logfile = $_ENV['LOGFILE'];// . '/.local/share/gtimelog/timelog.txt';
 
 $hello_cmd = new \Commando\Command();
 
