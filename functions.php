@@ -313,7 +313,9 @@ function pull_updated_logfile($logfile,$gitrepo,$pcname)
         //if logfile line count same or more than git repo line count, means a big mess somewhere
         if(count_lines_in_file($logfile) >= count_lines_in_file($gitrepofile))
         {
-            fprintf(STDERR, __LINE__ . ":Did line counts decrease after git pull?\n");
+            $ctr1 = count_lines_in_file($logfile);
+            $ctr2 = count_lines_in_file($gitrepofile);
+            fprintf(STDERR, __LINE__ . ":Did line counts decrease after git pull? local $ctr1 vs $ctr2 repo\n");
             return false;
         }
 
