@@ -236,6 +236,8 @@ function do_git_pull()
 function count_lines_in_file($logfile)
 {
     $linecount = 0;
+    if(is_dir($logfile))
+        throw new Exception("dir what $logfile");
     $handle = fopen($logfile, "r");
     while(!feof($handle)){
       $line = fgets($handle);
@@ -295,12 +297,13 @@ function verify_gitrepo_is_clean($gitrepo)
 
 function pull_updated_logfile($logfile,$gitrepo,$PCNAME)
 {
+    $gitrepofile = $gitrepo . '/' . basename($logfile);
     if(!verify_gitrepo_is_clean($gitrepo))
     {
         fprintf(STDERR, "Git repo is not clean\n");
         return false;
     }
-    if(count_lines_in_file($logfile) != count_lines_in_file($gitrepo))
+    if(count_lines_in_file($logfile) != count_lines_in_file($gitrepofile))
     {
         fprintf(STDERR, "Line counts do not match\n");
         return false;
@@ -315,13 +318,13 @@ function pull_updated_logfile($logfile,$gitrepo,$PCNAME)
         }
 
         //if logfile line count same or more than git repo line count, means a big mess somewhere
-        if(count_lines_in_file($logfile) >= count_lines_in_file($gitrepo))
+        if(count_lines_in_file($logfile) >= count_lines_in_file($gitrepofile))
         {
             fprintf(STDERR, "Did line counts decrease after git pull?\n");
             return false;
         }
 
-        copy_timelog_back_to_pc($gitrepo,$logfile,$PCNAME);
+        copy_timelog_back_to_pc($gitrepofile,$logfile);
 
         echo "Logfile updated from git repo\n";
     }
