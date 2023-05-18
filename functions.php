@@ -186,8 +186,9 @@ function getHourMins($times)
 }
 
 
-function push_logfile_to_git($logfile,$gitrepo,$PCNAME)
+function push_logfile_to_git($logfile,$gitrepo,$pcname)
 {
+    $gitrepofile = $gitrepo . '/' . basename($logfile);
     #copy file $logfgile to $gitrepo directory
     //verify git repo is clean
     if(!verify_gitrepo_is_clean($gitrepo))
@@ -196,20 +197,20 @@ function push_logfile_to_git($logfile,$gitrepo,$PCNAME)
         return false;
     }
 
-    if(count_lines_in_file($logfile) != count_lines_in_file($gitrepo))
+    if(count_lines_in_file($logfile) != count_lines_in_file($gitrepofile))
     {
         fprintf(STDERR, "Line counts do not match\n");
         return false;
     }    
     
     //copy file
-    copy($logfile, $gitrepo . '/' . basename($logfile));
+    copy($logfile, $gitrepofile);
 
     //git add
     exec("cd \"$gitrepo\" && git add " . basename($logfile));
 
     //git commit
-    exec("cd \"$gitrepo\" && git commit -m 'auto commit $PCNAME'");
+    exec("cd \"$gitrepo\" && git commit -m 'auto commit $pcname'");
 
     //git push
     $rt = exec("cd \"$gitrepo\" && git push");
@@ -233,25 +234,17 @@ function do_git_pull()
     return true;
 }
 
-function count_lines_in_file($logfile)
+function count_lines_in_file($filepath)
 {
-    $linecount = 0;
-    if(is_dir($logfile))
-        throw new Exception("dir what $logfile");
-    $handle = fopen($logfile, "r");
-    while(!feof($handle)){
-      $line = fgets($handle);
-      $linecount++;
-    }
-    fclose($handle);
-    return $linecount;
+    $ctr = count(file($filepath));
+    echo "$filepath lines $ctr\n";
 }
-function copy_timelog_back_to_pc($gitrepo,$logfile,$PCNAME)
+function copy_timelog_back_to_pc($gitrepofile,$logfile)
 {
     //copy file
-    if(!copy($gitrepo . '/' . basename($logfile), $logfile))
+    if(!copy($gitrepofile, $logfile))
     {
-        throw new Exception("Failed to copy file from $gitrepo to $logfile");
+        throw new Exception("Failed to copy file from $gitrepofile to $logfile");
     }
 }
 
@@ -276,9 +269,9 @@ function check_if_git_behind($gitrepo)
     if(strstr($output, 'Your branch is behind') !== false)
     {
         fprintf(STDERR, "Git branch is behind\n");
-        return false;
+        return true;
     }
-    return true;
+    return false;
 }
 
 /**
@@ -295,32 +288,32 @@ function verify_gitrepo_is_clean($gitrepo)
     return $ret == 0;
 }
 
-function pull_updated_logfile($logfile,$gitrepo,$PCNAME)
+function pull_updated_logfile($logfile,$gitrepo,$pcname)
 {
     $gitrepofile = $gitrepo . '/' . basename($logfile);
     if(!verify_gitrepo_is_clean($gitrepo))
     {
-        fprintf(STDERR, "Git repo is not clean\n");
+        fprintf(STDERR, __LINE__ . ":Git repo is not clean\n");
         return false;
     }
     if(count_lines_in_file($logfile) != count_lines_in_file($gitrepofile))
     {
-        fprintf(STDERR, "Line counts do not match\n");
-        return false;
+        //fprintf(STDERR, __LINE__ . ":Line counts do not match\n");
+        throw new Exception("Line counts do not match while preparing");
     }
     if(check_if_git_behind($gitrepo))
     {
-    
+        echo __LINE__ . ":Git repo is behind\n";
         if(!do_git_pull())
         {
-            fprintf(STDERR, "Git pull failed\n");
+            fprintf(STDERR, __LINE__ . ":Git pull failed\n");
             return false;
         }
 
         //if logfile line count same or more than git repo line count, means a big mess somewhere
         if(count_lines_in_file($logfile) >= count_lines_in_file($gitrepofile))
         {
-            fprintf(STDERR, "Did line counts decrease after git pull?\n");
+            fprintf(STDERR, __LINE__ . ":Did line counts decrease after git pull?\n");
             return false;
         }
 
