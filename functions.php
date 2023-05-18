@@ -238,6 +238,7 @@ function count_lines_in_file($filepath)
 {
     $ctr = count(file($filepath));
     echo "$filepath lines $ctr\n";
+    return $ctr;
 }
 function copy_timelog_back_to_pc($gitrepofile,$logfile)
 {
