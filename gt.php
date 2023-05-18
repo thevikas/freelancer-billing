@@ -10,7 +10,29 @@ require_once 'functions.php';
 
 $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
-$logfile = $_ENV['LOGFILE'];// . '/.local/share/gtimelog/timelog.txt';
+
+$pcname = $_ENV['TIMELOG_PCNAME'] ?? "MyPc";
+$gitrepo = $_ENV['TIMELOG_GITREPO'] ?? "";
+//getenv('HOME') . '/.local/share/gtimelog/timelog.txt';
+$logfile = $_ENV['TIMELOG_FILEPATH'] ?? "";
+
+if(empty($logfile))
+{
+    echo "Please set TIMELOG_FILEPATH in .env file\n";
+    exit(1);
+}
+if(empty($gitrepo))
+{
+    echo "Please set TIMELOG_GITREPO in .env file\n";
+    exit(1);
+}
+
+if(empty($pcname))
+{
+    echo "Please set TIMELOG_PCNAME in .env file\n";
+    exit(1);
+}
+
 
 $hello_cmd = new \Commando\Command();
 
@@ -152,6 +174,12 @@ if (empty($argv[1]))
     return -1;
 }
 
+if(!pull_updated_logfile($logfile,$gitrepo,$PCNAME))
+{
+    fprintf(STDERR, "Failed to pull updated logfile\n");
+    return -1;
+}
+
 #Writing
 $L = fopen($logfile, 'a');
 #fseek($L, -200, SEEK_END);
@@ -175,3 +203,4 @@ $newline = sprintf('%s: %s', date('Y-m-d H:i'), $fullarg);
 fputs($L, $newline . "\n");
 echo difftime() . ": $fullarg\n";
 fclose($L);
+push_logfile_to_git($logfile,$gitrepo,$PCNAME);
