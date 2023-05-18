@@ -174,7 +174,7 @@ if (empty($argv[1]))
     return -1;
 }
 
-if(!pull_updated_logfile($logfile,$gitrepo,$PCNAME))
+if(!pull_updated_logfile($logfile,$gitrepo,$pcname))
 {
     fprintf(STDERR, "Failed to pull updated logfile\n");
     return -1;
@@ -203,4 +203,4 @@ $newline = sprintf('%s: %s', date('Y-m-d H:i'), $fullarg);
 fputs($L, $newline . "\n");
 echo difftime() . ": $fullarg\n";
 fclose($L);
-push_logfile_to_git($logfile,$gitrepo,$PCNAME);
+push_logfile_to_git($logfile,$gitrepo,$pcname);
