@@ -197,10 +197,12 @@ function push_logfile_to_git($logfile,$gitrepo,$pcname)
         return false;
     }
 
-    if(count_lines_in_file($logfile) != count_lines_in_file($gitrepofile))
+    if(count_lines_in_file($logfile) < count_lines_in_file($gitrepofile))
     {
-        fprintf(STDERR, "Line counts do not match\n");
-        return false;
+        $ctr1 = count_lines_in_file($logfile);
+        $ctr2 = count_lines_in_file($gitrepofile);
+        //fprintf(STDERR, __LINE__ . ":Line counts do not match\n");
+        throw new Exception("Line counts do not match while preparing $ctr1 < $ctr2");
     }    
     
     //copy file
@@ -299,8 +301,10 @@ function pull_updated_logfile($logfile,$gitrepo,$pcname)
     }
     if(count_lines_in_file($logfile) != count_lines_in_file($gitrepofile))
     {
+        $ctr1 = count_lines_in_file($logfile);
+        $ctr2 = count_lines_in_file($gitrepofile);
         //fprintf(STDERR, __LINE__ . ":Line counts do not match\n");
-        throw new Exception("Line counts do not match while preparing");
+        throw new Exception("Line counts do not match while preparing $ctr1 != $ctr2");
     }
     if(check_if_git_behind($gitrepo))
     {
