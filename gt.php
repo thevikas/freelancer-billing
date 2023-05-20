@@ -42,7 +42,7 @@ $hello_cmd->option()
 // Define a boolean flag "-c" aka "--capitalize"
 $hello_cmd->option('r')
     ->aka('report')
-    ->describedAs('Report')
+    ->describedAs('Report on last months projects and the times')
     ->boolean();
 
 $hello_cmd->option('u')
@@ -114,6 +114,7 @@ if ($hello_cmd['report'] || $hello_cmd['bill'] || $hello_cmd['earning'])
     if ($hello_cmd['report'])
     {
         print_r($report_data);
+        print_r($rep->summary());
     }
     else if ($hello_cmd['bill'] || $hello_cmd['earning'])
     {

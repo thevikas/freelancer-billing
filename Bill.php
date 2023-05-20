@@ -18,7 +18,7 @@ class Bill
     public function __construct($report_data)
     {
         $this->data = $report_data;
-        $json = \file_get_contents($_ENV['RATES_JSON_FILE']); //\getenv('HOME')  . "/.gtimelog/client-projects.json","r");
+        $json = \file_get_contents($_ENV['RATES_JSON_FILE']);
         $this->rates = json_decode($json, true);
         $this->syncAliases();
     }

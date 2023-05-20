@@ -16,6 +16,14 @@ class MonthReport
      */
     public $last_time;
     public $last_info;
+
+    /**
+     * Holds cache or parsed report for a certain month
+     *
+     * @var array
+     */
+    public $reportData;
+
     /**
      * @param $logfile
      */
@@ -88,6 +96,54 @@ class MonthReport
         {
             $rep[$project_name] = $project->report();
         }
+        return $this->reportData = $rep;
+    }
+
+    /**
+     * Will total all projects and show summary of hours spent in whole month 
+     * along with productivity based on which are billable hours
+     *
+     * @return void
+     */
+    public function summary()
+    {
+        if(empty($this->reportData))
+            $this->report();
+        $bill = new Bill($this->reportData);
+        
+        $total = 0;
+        $billable = 0;
+        $income = 0;
+        $billable_projects = [];
+        foreach($this->reportData as $project_name => $project)
+        {
+            $total += $project['Total'];
+            if(isset($bill->rates['projects'][$project_name]))
+            {
+                $billable += $project['Total'];
+                $hour_inr_rate = $bill->rates['projects'][$project_name]['per_hour'];
+                if($bill->rates['projects'][$project_name]['ccy'] != 'INR')
+                {
+                    $hour_inr_rate = $bill->rates['projects'][$project_name]['per_hour'] * $bill->rates['ccy'][
+                        $bill->rates['projects'][$project_name]['ccy']
+                    ];
+                }   
+                $project['Total'] * $hour_inr_rate;
+                $project['Income'] = round($project['Total'] * $hour_inr_rate);
+                $income += $project['Income'];
+                $billable_projects[$project_name] = $project;
+
+            }
+            else
+            {
+                echo "$project_name: " . round($project['Total']) . " hours is not billed\n";
+            }
+        }
+        $rep['BillableProjects'] = $billable_projects;
+        $rep['Total'] = round($total);
+        $rep['Billable'] = round($billable);
+        $rep['Income'] = round($income);
+        $rep['Productivity'] = (round($billable/$total,2) * 100) . "%";
         return $rep;
     }
 }
