@@ -39,15 +39,9 @@ $hello_cmd = new \Commando\Command();
 $hello_cmd->option()
     ->describedAs('Log entry');
 
-// Define a boolean flag "-c" aka "--capitalize"
-$hello_cmd->option('r')
-    ->aka('report')
-    ->describedAs('Report on last months projects and the times')
-    ->boolean();
-
-$hello_cmd->option('u')
-    ->aka('undo')
-    ->describedAs('Undo the last log')
+$hello_cmd->option('s')
+    ->aka('sync')
+    ->describedAs('Just pull from git')
     ->boolean();
 
 $hello_cmd->option('b')
@@ -60,20 +54,30 @@ $hello_cmd->option('e')
     ->describedAs('Just report this months earnings')
     ->boolean();
 
-$hello_cmd->option('p')
-    ->aka('project')
-    ->describedAs('Generate monthly bill json');
-
 $hello_cmd->option('i')
     ->aka('inum')
     ->describedAs('Get next invoice num')
     ->boolean();
 
-// Define a boolean flag "-c" aka "--capitalize"
+    // Define a boolean flag "-c" aka "--capitalize"
 $hello_cmd->option('m')
     ->aka('month')
     ->describedAs('Report for Month (last_month, this_month or YYYY-MM0)')
     ->default("last_month");
+
+$hello_cmd->option('p')
+    ->aka('project')
+    ->describedAs('Generate monthly bill json');
+
+$hello_cmd->option('r')
+    ->aka('report')
+    ->describedAs('Report on last months projects and the times')
+    ->boolean();
+
+$hello_cmd->option('u')
+    ->aka('undo')
+    ->describedAs('Undo the last log')
+    ->boolean();
 
 date_default_timezone_set('Asia/Kolkata');
 $all_lines = [];
@@ -90,6 +94,12 @@ if ($hello_cmd['inum'])
 {
     $num = Bill::getNextInvoiceNumber();
     echo "Next invoice num:" . $num;
+    return 0;
+}
+
+if ($hello_cmd['sync'])
+{
+    do_git_pull($gitrepo);
     return 0;
 }
 

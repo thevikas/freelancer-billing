@@ -223,10 +223,16 @@ function push_logfile_to_git($logfile,$gitrepo,$pcname)
     }
 }
 
-function do_git_pull()
+/**
+ * Do a git pull. Yeah, very helpful comment
+ *
+ * @return void
+ */
+function do_git_pull($gitrepo)
 {
     $output = [];
     $ret = 0;
+    chdir($gitrepo);
     exec("git pull", $output, $ret);
     if($ret != 0)
     {
@@ -299,6 +305,7 @@ function pull_updated_logfile($logfile,$gitrepo,$pcname)
         fprintf(STDERR, __LINE__ . ":Git repo is not clean\n");
         return false;
     }
+    //if logfile line count less than git repo line count, means a big mess somewhere
     if(count_lines_in_file($logfile) != count_lines_in_file($gitrepofile))
     {
         $ctr1 = count_lines_in_file($logfile);
@@ -309,7 +316,7 @@ function pull_updated_logfile($logfile,$gitrepo,$pcname)
     if(check_if_git_behind($gitrepo))
     {
         echo __LINE__ . ":Git repo is behind\n";
-        if(!do_git_pull())
+        if(!do_git_pull($gitrepo))
         {
             fprintf(STDERR, __LINE__ . ":Git pull failed\n");
             return false;
