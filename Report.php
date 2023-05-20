@@ -128,6 +128,7 @@ class MonthReport
                         $bill->rates['projects'][$project_name]['ccy']
                     ];
                 }   
+                $project['name'] = $project_name;
                 $project['Total'] * $hour_inr_rate;
                 $project['Income'] = round($project['Total'] * $hour_inr_rate);
                 $income += $project['Income'];

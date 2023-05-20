@@ -39,14 +39,14 @@ $hello_cmd = new \Commando\Command();
 $hello_cmd->option()
     ->describedAs('Log entry');
 
-$hello_cmd->option('s')
-    ->aka('sync')
-    ->describedAs('Just pull from git')
-    ->boolean();
-
 $hello_cmd->option('b')
     ->aka('bill')
     ->describedAs('Generate monthly bill report')
+    ->boolean();
+
+$hello_cmd->option('c')
+    ->aka('cache')
+    ->describedAs('Cache and parse data')
     ->boolean();
 
 $hello_cmd->option('e')
@@ -72,6 +72,11 @@ $hello_cmd->option('p')
 $hello_cmd->option('r')
     ->aka('report')
     ->describedAs('Report on last months projects and the times')
+    ->boolean();
+
+$hello_cmd->option('s')
+    ->aka('sync')
+    ->describedAs('Just pull from git')
     ->boolean();
 
 $hello_cmd->option('u')
@@ -103,7 +108,7 @@ if ($hello_cmd['sync'])
     return 0;
 }
 
-if ($hello_cmd['report'] || $hello_cmd['bill'] || $hello_cmd['earning'])
+if ($hello_cmd['report'] || $hello_cmd['bill'] || $hello_cmd['earning']|| $hello_cmd['cache'])
 {
     $rep = new MonthReport($logfile);
     if ('last_month' == $hello_cmd['month'])
@@ -121,12 +126,25 @@ if ($hello_cmd['report'] || $hello_cmd['bill'] || $hello_cmd['earning'])
 
     #echo "FirstDayOfMonth = " . date('Y-m-d',$FirstDayOfMonth) . "\n";
     $report_data = $rep->report($FirstDayOfMonth);
-    if ($hello_cmd['report'])
+    if ($hello_cmd['report'] || $hello_cmd['cache'])
     {
+        $summary = $rep->summary();
+        if($hello_cmd['cache'])
+        {
+            //create file name using month and year from $FirstDayOfMonth
+            $cacheJsonFileName =$_ENV['TIMELOG_GITREPO'] . '/' . date('Y-m-d',$FirstDayOfMonth) . ".json";
+            $data = [
+                'dated' => date('Y-m-d H:i:s'),
+                'summary'=>$summary,
+                'report_data'=>$report_data
+            ];
+            file_put_contents($cacheJsonFileName,json_encode($data,JSON_PRETTY_PRINT));
+            addGitFile($cacheJsonFileName,$gitrepo);
+        }
         print_r($report_data);
         print_r($rep->summary());
     }
-    else if ($hello_cmd['bill'] || $hello_cmd['earning'])
+    else if ($hello_cmd['bill'] || $hello_cmd['earning'] || $hello_cmd['cache'])
     {
         $bill = new Bill($report_data);
         $rep = $bill->report();

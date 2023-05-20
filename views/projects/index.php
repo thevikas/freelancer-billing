@@ -17,18 +17,35 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a('Create Project', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
-
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
-            'name',
-
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'format'  => 'raw',
+                'label' => 'Name',
+                'content' => function ($data)
+                {
+                    return Html::a($data['name'],['view','project' => $data['name']]);
+                },
+            ],
+            [
+                'format'  => 'raw',
+                'label' => 'Hours',
+                'content' => function ($data)
+                {
+                    return round($data['Total']);
+                },
+            ],
+            [
+                'format'  => 'raw',
+                'label' => 'Income',
+                'content' => function ($data)
+                {
+                    return round($data['Income']);
+                },
+            ],
         ],
     ]); ?>
-
 
 </div>

@@ -337,3 +337,13 @@ function pull_updated_logfile($logfile,$gitrepo,$pcname)
     }
     return true;
 }
+
+function addGitFile($file,$gitrepo)
+{
+    $gitrepofile = $gitrepo . '/' . basename($file);
+    chdir($gitrepo);
+    //git add
+    exec("git add " . basename($file));
+    exec("git commit -m 'caching summary'");
+    exec("git push");
+}

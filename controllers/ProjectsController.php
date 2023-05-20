@@ -5,6 +5,7 @@ namespace app\controllers;
 use Yii;
 use app\models\Project;
 use yii\data\ActiveDataProvider;
+use yii\data\ArrayDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -35,12 +36,22 @@ class ProjectsController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Project::find(),
+        $dotenv = \Dotenv\Dotenv::createImmutable(Yii::getAlias('@app'));
+        $dotenv->load();
+        $proj = new Project();
+        
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => $proj->cache['summary']['BillableProjects'],
+            'pagination' => [
+                'pageSize' => 10,
+            ],
+            'sort' => [
+                'attributes' => ['Name','Hours','Income'],
+            ],
         ]);
-
         return $this->render('index', [
             'dataProvider' => $dataProvider,
+            'summary' => $proj->cache['summary'],
         ]);
     }
 
@@ -50,10 +61,44 @@ class ProjectsController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($id)
+    public function actionView($project)
     {
+        $dotenv = \Dotenv\Dotenv::createImmutable(Yii::getAlias('@app'));
+        $dotenv->load();
+        $proj = new Project();
+        $proj->load($project);
+
+        $tasks  = $proj->cache['summary']['BillableProjects'][$project];
+        unset($tasks['name']);
+        unset($tasks['Income']);
+        unset($tasks['Total']);
+
+        $result = array();
+
+        foreach ($tasks as $key => $value) {
+
+            $ss = explode(':',$value);
+            $mins = $ss[0]*60 + $ss[1];
+
+            $result[] = array(
+                'task' => $key,
+                'spent' => $mins,
+            );
+        }
+
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => $result,
+            'pagination' => [
+                'pageSize' => 50,
+            ],
+            'sort' => [
+                'attributes' => ['task','spent'],
+            ],
+        ]);
+        
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'data' => $result,
+            'dataProvider' => $dataProvider,
         ]);
     }
 
