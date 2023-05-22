@@ -105,12 +105,11 @@ class MonthReport
      *
      * @return void
      */
-    public function summary()
+    public function summary($FirstDayOfMonth)
     {
         if(empty($this->reportData))
             $this->report();
         $bill = new Bill($this->reportData);
-        
         $total = 0;
         $billable = 0;
         $income = 0;
@@ -145,6 +144,26 @@ class MonthReport
         $rep['Billable'] = round($billable);
         $rep['Income'] = round($income);
         $rep['Productivity'] = (round($billable/$total,2) * 100) . "%";
+        $rep['EarningDays'] = round(100*($rep['Billable']/8)/$this->getWOrkingDaysTillTOday($FirstDayOfMonth)) . "%";
+        $rep['EffectiveHourlyRateINR'] = round($income/$billable);
         return $rep;
+    }
+
+    public function getWOrkingDaysTillTOday($FirstDayOfMonth)
+    {
+        $firstDay = $FirstDayOfMonth;
+        $mon = date('m',$FirstDayOfMonth);
+        echo "mon:$mon $FirstDayOfMonth=$FirstDayOfMonth, " . date('d-m-Y',$FirstDayOfMonth) . "\n";
+        $today = strtotime(date('Y-m-d'));
+        $workingDays = 0;
+        while($firstDay < $today)
+        {
+            $firstDay = strtotime('+1 day',$firstDay);
+            if($mon != date('m',$firstDay))
+                break;
+            if(date('N',$firstDay) < 6)
+                $workingDays++;
+        }
+        return $workingDays;
     }
 }

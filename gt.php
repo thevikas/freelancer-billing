@@ -128,7 +128,7 @@ if ($hello_cmd['report'] || $hello_cmd['bill'] || $hello_cmd['earning']|| $hello
     $report_data = $rep->report($FirstDayOfMonth);
     if ($hello_cmd['report'] || $hello_cmd['cache'])
     {
-        $summary = $rep->summary();
+        $summary = $rep->summary($FirstDayOfMonth);
         if($hello_cmd['cache'])
         {
             //create file name using month and year from $FirstDayOfMonth
@@ -142,12 +142,12 @@ if ($hello_cmd['report'] || $hello_cmd['bill'] || $hello_cmd['earning']|| $hello
             addGitFile($cacheJsonFileName,$gitrepo);
         }
         print_r($report_data);
-        print_r($rep->summary());
+        print_r($rep->summary($FirstDayOfMonth));
     }
     else if ($hello_cmd['bill'] || $hello_cmd['earning'] || $hello_cmd['cache'])
     {
         $bill = new Bill($report_data);
-        $rep = $bill->report();
+        $rep = $bill->report($FirstDayOfMonth);
         if ($hello_cmd['earning'])
         {
             echo sprintf("%d", round($rep['TotalEarning'])) . "\n";
