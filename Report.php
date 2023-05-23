@@ -139,14 +139,31 @@ class MonthReport
                 echo "$project_name: " . round($project['Total']) . " hours is not billed\n";
             }
         }
-        $rep['BillableProjects'] = $billable_projects;
         $rep['Total'] = round($total);
         $rep['Billable'] = round($billable);
         $rep['Income'] = round($income);
         $rep['Productivity'] = (round($billable/$total,2) * 100) . "%";
         $rep['EarningDays'] = round(100*($rep['Billable']/8)/$this->getWOrkingDaysTillTOday($FirstDayOfMonth)) . "%";
         $rep['EffectiveHourlyRateINR'] = round($income/$billable);
+        $rep['ThisMonthHourlyRateINR'] = round($income/(20*8));
+        $this->saveStats($rep);
+        $rep['BillableProjects'] = $billable_projects;
         return $rep;
+    }
+
+    /**
+     * Save stats by date in a json file
+     *
+     * @param [type] $rep
+     * @return void
+     */
+    public function saveStats($rep)
+    {
+        $stats_file = __DIR__ . '/stats.json';
+        $stats = json_decode(file_get_contents($stats_file),true);
+        $stats[date('Y-m-d')] = $rep;
+        $stats[date('Y-m')] = $rep;
+        return file_put_contents($stats_file,json_encode($stats,JSON_PRETTY_PRINT));
     }
 
     public function getWOrkingDaysTillTOday($FirstDayOfMonth)
