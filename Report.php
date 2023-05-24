@@ -126,6 +126,7 @@ class MonthReport
                     $hour_inr_rate = $bill->rates['projects'][$project_name]['per_hour'] * $bill->rates['ccy'][
                         $bill->rates['projects'][$project_name]['ccy']
                     ];
+                    $project['Income' . $bill->rates['projects'][$project_name]['ccy']] = $bill->rates['projects'][$project_name]['per_hour'] * $project['Total'];
                 }   
                 $project['name'] = $project_name;
                 $project['Total'] * $hour_inr_rate;
@@ -146,7 +147,7 @@ class MonthReport
         $rep['EarningDays'] = round(100*($rep['Billable']/8)/$this->getWOrkingDaysTillTOday($FirstDayOfMonth)) . "%";
         $rep['EffectiveHourlyRateINR'] = round($income/$billable);
         $rep['ThisMonthHourlyRateINR'] = round($income/(20*8));
-        $this->saveStats($rep);
+        $this->saveStats($rep,$FirstDayOfMonth);
         $rep['BillableProjects'] = $billable_projects;
         return $rep;
     }
@@ -157,12 +158,13 @@ class MonthReport
      * @param [type] $rep
      * @return void
      */
-    public function saveStats($rep)
+    public function saveStats($rep,$FirstDayOfMonth)
     {
         $stats_file = __DIR__ . '/stats.json';
         $stats = json_decode(file_get_contents($stats_file),true);
-        $stats[date('Y-m-d')] = $rep;
-        $stats[date('Y-m')] = $rep;
+        if(date('Y-m',$FirstDayOfMonth) == date('Y-m'))
+            $stats[date('Y-m-d')] = $rep;
+        $stats[date('Y-m',$FirstDayOfMonth)] = $rep;
         return file_put_contents($stats_file,json_encode($stats,JSON_PRETTY_PRINT));
     }
 
