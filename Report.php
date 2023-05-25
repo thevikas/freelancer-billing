@@ -137,7 +137,7 @@ class MonthReport
             }
             else
             {
-                echo "$project_name: " . round($project['Total']) . " hours is not billed\n";
+                //echo "$project_name: " . round($project['Total']) . " hours is not billed\n";
             }
         }
         $rep['Total'] = round($total);

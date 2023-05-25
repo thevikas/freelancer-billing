@@ -62,7 +62,7 @@ $hello_cmd->option('i')
     // Define a boolean flag "-c" aka "--capitalize"
 $hello_cmd->option('m')
     ->aka('month')
-    ->describedAs('Report for Month (last_month, this_month or YYYY-MM0)')
+    ->describedAs('Report for Month (last_month, this_month or str-2 months format')
     ->default("last_month");
 
 $hello_cmd->option('p')
@@ -121,10 +121,13 @@ if ($hello_cmd['report'] || $hello_cmd['bill'] || $hello_cmd['earning']|| $hello
     }
     else
     {
-        $FirstDayOfMonth = strtotime(date('Y-m-01', strtotime($hello_cmd['month'])));
+        $ss = $hello_cmd['month'];
+        if(preg_match('/^str(?<str1>.*)$/',$ss,$mats))
+            $FirstDayOfMonth = strtotime(date('Y-m-01', strtotime($mats['str1'])));
+
     }
 
-    #echo "FirstDayOfMonth = " . date('Y-m-d',$FirstDayOfMonth) . "\n";
+    echo "FirstDayOfMonth = " . date('Y-m-d',$FirstDayOfMonth) . "\n";
     $report_data = $rep->report($FirstDayOfMonth);
     if ($hello_cmd['report'] || $hello_cmd['cache'])
     {
@@ -141,7 +144,7 @@ if ($hello_cmd['report'] || $hello_cmd['bill'] || $hello_cmd['earning']|| $hello
             file_put_contents($cacheJsonFileName,json_encode($data,JSON_PRETTY_PRINT));
             addGitFile($cacheJsonFileName,$gitrepo);
         }
-        print_r($report_data);
+        //print_r($report_data);
         print_r($rep->summary($FirstDayOfMonth));
     }
     else if ($hello_cmd['bill'] || $hello_cmd['earning'] || $hello_cmd['cache'])
