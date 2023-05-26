@@ -3,6 +3,13 @@ namespace gtimelogphp;
 
 class Project
 {
+
+    /**
+     * 
+     * @var mixed
+     */
+    public $last_datetime;
+
     /**
      * @var mixed
      */
@@ -25,7 +32,7 @@ class Project
      * @param $info
      * @param $spent_time_secs
      */
-    public function parse($info, $spent_time_secs)
+    public function parse($info, $spent_time_secs,$tasktime)
     {
         $task = $info['task'] ?? 'default';
         if (empty($this->task_times[$task]))
@@ -34,6 +41,7 @@ class Project
         }
 
         $this->task_times[$task] += $spent_time_secs;
+        $this->last_datetime = $tasktime;
     }
 
     public function report()
@@ -49,6 +57,7 @@ class Project
         list($hours,$mins) = explode(':',getHourMins($total));
         $hours += $mins/60;
         $rep['Total'] = $hours;
+        $rep['Dated'] = $this->last_datetime;
         return $rep;
     }
 }

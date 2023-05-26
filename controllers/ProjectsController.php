@@ -39,14 +39,21 @@ class ProjectsController extends Controller
         $dotenv = \Dotenv\Dotenv::createImmutable(Yii::getAlias('@app'));
         $dotenv->load();
         $proj = new Project();
-        
+
+        //create a array of projects and stats
+        $stats = [];
+        foreach($proj->cache['summary']['BillableProjects'] as $projname => $data)
+        {
+            $stats[$projname] = $data['stats'];
+        }
+
         $dataProvider = new ArrayDataProvider([
-            'allModels' => $proj->cache['summary']['BillableProjects'],
+            'allModels' => $stats,
             'pagination' => [
                 'pageSize' => 10,
             ],
             'sort' => [
-                'attributes' => ['Name','Hours','Income'],
+                'attributes' => ['Name','Hours','Income','Updated'],
             ],
         ]);
         return $this->render('index', [

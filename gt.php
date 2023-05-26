@@ -135,7 +135,7 @@ if ($hello_cmd['report'] || $hello_cmd['bill'] || $hello_cmd['earning']|| $hello
         if($hello_cmd['cache'])
         {
             //create file name using month and year from $FirstDayOfMonth
-            $cacheJsonFileName =$_ENV['TIMELOG_GITREPO'] . '/' . date('Y-m-d',$FirstDayOfMonth) . ".json";
+            $cacheJsonFileName =$_ENV['TIMELOG_GITREPO'] . '/cache/' . date('Y-m-d',$FirstDayOfMonth) . ".json";
             $data = [
                 'dated' => date('Y-m-d H:i:s'),
                 'summary'=>$summary,
