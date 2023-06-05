@@ -20,7 +20,7 @@ class Project extends Model
         parent::init();
         //find cache file
         $FirstDayOfMonth = strtotime(date('Y-m-01'));
-        $cacheJsonFileName =$_ENV['TIMELOG_GITREPO'] . '/' . date('Y-m-d',$FirstDayOfMonth) . ".json";
+        $cacheJsonFileName =$_ENV['TIMELOG_GITREPO'] . '/cache/' . date('Y-m-d',$FirstDayOfMonth) . ".json";
         if(!file_exists($cacheJsonFileName))
             $jsondata = $this->updateCache();
         //verify it is todays date
@@ -41,14 +41,17 @@ class Project extends Model
     function updateCache()
     {
         $cmd = Yii::getAlias('@app') . "/gt.php --cache -m this_month";
-        echo "Running $cmd\n";
+        #echo "Running $cmd\n";
         $output = [];
         $ret = 0;
-        $ret = system("php81 $cmd");
-        if($ret)
+        //run command and see output
+        $cmd = $_ENV['PHP_BIN'] . " $cmd";
+        $last_line = exec($cmd,$output,$ret);
+        #echo "output=" . print_r($output,true);
+        if($ret != 0)
             die("Error running $cmd");
         $FirstDayOfMonth = strtotime(date('Y-m-01'));
-        $cacheJsonFileName =$_ENV['TIMELOG_GITREPO'] . '/' . date('Y-m-d',$FirstDayOfMonth) . ".json";
+        $cacheJsonFileName =$_ENV['TIMELOG_GITREPO'] . '/cache/' . date('Y-m-d',$FirstDayOfMonth) . ".json";
         return json_decode(file_get_contents($cacheJsonFileName),true);
     }
     /**

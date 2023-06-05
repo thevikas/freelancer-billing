@@ -76,7 +76,7 @@ class MonthReport
                 }
                 $next['spent_time_secs'] = $spent_time_secs;
                 //print_r($next);
-                $this->projects[$next['project']]->parse($next, $spent_time_secs);
+                $this->projects[$next['project']]->parse($next, $spent_time_secs, $this->last_time);
             }
             $this->last_time = $next['last_time'];
             $this->last_info = $next;
@@ -120,18 +120,23 @@ class MonthReport
             $total += $project['Total'];
             if (isset($bill->rates['projects'][$project_name]))
             {
+                $stats = [];
                 $billable += $project['Total'];
                 $hour_inr_rate = $bill->rates['projects'][$project_name]['per_hour'];
                 if ($bill->rates['projects'][$project_name]['ccy'] != 'INR')
                 {
-                    $hour_inr_rate = $bill->rates['projects'][$project_name]['per_hour'] * $bill->rates['ccy'][$bill->rates['projects'][$project_name]['ccy']];
-                    $project['Income' . $bill->rates['projects'][$project_name]['ccy']] = $bill->rates['projects'][$project_name]['per_hour'] * $project['Total'];
-                }
-                $project['name'] = $project_name;
-                $project['Total'] * $hour_inr_rate;
-                $project['Income'] = round($project['Total'] * $hour_inr_rate);
-                $income += $project['Income'];
-                $billable_projects[$project_name] = $project;
+                    $hour_inr_rate = $bill->rates['projects'][$project_name]['per_hour'] * $bill->rates['ccy'][
+                        $bill->rates['projects'][$project_name]['ccy']
+                    ];
+                    $stats['Income' . $bill->rates['projects'][$project_name]['ccy']] = $bill->rates['projects'][$project_name]['per_hour'] * $project['Total'];
+                }   
+                $stats['Total'] = $project['Total'];
+                $stats['Dated'] = date('Y-m-d H:i', $project['Dated']);
+                $stats['name'] = $project_name;
+                $stats['Income'] = round($project['Total'] * $hour_inr_rate);
+                $income += $stats['Income'];
+                $billable_projects[$project_name]['times'] = $project;
+                $billable_projects[$project_name]['stats'] = $stats;
             }
             else
             {
