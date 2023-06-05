@@ -1,4 +1,5 @@
 <?php
+
 namespace gtimelogphp;
 
 class MonthReport
@@ -43,22 +44,22 @@ class MonthReport
     public function parse($FirstDayOfMonth)
     {
         fseek($this->fHandle, -200, SEEK_END);
-        $info_prev_month = find_start_of_month($this->fHandle,$FirstDayOfMonth);
+        $info_prev_month = find_start_of_month($this->fHandle, $FirstDayOfMonth);
         #echo "Found: " . print_r($info_prev_month,true) . "\n";
         $current_month = '';
         $current_date = '';
         while (true)
         {
             $next = iterate($this->fHandle, true);
-            if(!$next)
+            if (!$next)
                 break;
-            if($current_date != date('Y-m-d',$next['last_time']))
+            if ($current_date != date('Y-m-d', $next['last_time']))
                 $this->last_time = 0;
-            if(empty($current_month))
-                $current_month = date('Y-m',$next['last_time']);
-            if($current_month != date('Y-m',$next['last_time']))
+            if (empty($current_month))
+                $current_month = date('Y-m', $next['last_time']);
+            if ($current_month != date('Y-m', $next['last_time']))
                 break;
-            if(false == $next)
+            if (false == $next)
                 break;
 
             if (substr($next['project'], -2) != '**')
@@ -79,7 +80,7 @@ class MonthReport
             }
             $this->last_time = $next['last_time'];
             $this->last_info = $next;
-            $current_date = date('Y-m-d',$next['last_time']);
+            $current_date = date('Y-m-d', $next['last_time']);
             continue;
         }
         //$info_this_month = find_start_of_this_month($L);
@@ -92,7 +93,7 @@ class MonthReport
     {
         $this->parse($FirstDayOfMonth);
         $rep = [];
-        foreach($this->projects as $project_name => $project)
+        foreach ($this->projects as $project_name => $project)
         {
             $rep[$project_name] = $project->report();
         }
@@ -107,33 +108,30 @@ class MonthReport
      */
     public function summary($FirstDayOfMonth)
     {
-        if(empty($this->reportData))
+        if (empty($this->reportData))
             $this->report();
         $bill = new Bill($this->reportData);
         $total = 0;
         $billable = 0;
         $income = 0;
         $billable_projects = [];
-        foreach($this->reportData as $project_name => $project)
+        foreach ($this->reportData as $project_name => $project)
         {
             $total += $project['Total'];
-            if(isset($bill->rates['projects'][$project_name]))
+            if (isset($bill->rates['projects'][$project_name]))
             {
                 $billable += $project['Total'];
                 $hour_inr_rate = $bill->rates['projects'][$project_name]['per_hour'];
-                if($bill->rates['projects'][$project_name]['ccy'] != 'INR')
+                if ($bill->rates['projects'][$project_name]['ccy'] != 'INR')
                 {
-                    $hour_inr_rate = $bill->rates['projects'][$project_name]['per_hour'] * $bill->rates['ccy'][
-                        $bill->rates['projects'][$project_name]['ccy']
-                    ];
+                    $hour_inr_rate = $bill->rates['projects'][$project_name]['per_hour'] * $bill->rates['ccy'][$bill->rates['projects'][$project_name]['ccy']];
                     $project['Income' . $bill->rates['projects'][$project_name]['ccy']] = $bill->rates['projects'][$project_name]['per_hour'] * $project['Total'];
-                }   
+                }
                 $project['name'] = $project_name;
                 $project['Total'] * $hour_inr_rate;
                 $project['Income'] = round($project['Total'] * $hour_inr_rate);
                 $income += $project['Income'];
                 $billable_projects[$project_name] = $project;
-
             }
             else
             {
@@ -142,13 +140,17 @@ class MonthReport
         }
         $rep['Total'] = round($total);
         $rep['Billable'] = round($billable);
-        $rep['Income'] = round($income);
-        $rep['Productivity'] = (round($billable/$total,2) * 100) . "%";
-        $rep['EarningDays'] = round(100*($rep['Billable']/8)/$this->getWOrkingDaysTillTOday($FirstDayOfMonth)) . "%";
-        $rep['EffectiveHourlyRateINR'] = round($income/$billable);
-        $rep['ThisMonthHourlyRateINR'] = round($income/(20*8));
-        $this->saveStats($rep,$FirstDayOfMonth);
-        $rep['BillableProjects'] = $billable_projects;
+        if ($rep['Billable'])
+        {
+            $rep['Income'] = round($income);
+            $rep['Productivity'] = (round($billable / $total, 2) * 100) . "%";
+            $rep['EarningDays'] = round(100 * ($rep['Billable'] / 8) / $this->getWOrkingDaysTillTOday($FirstDayOfMonth)) . "%";
+
+            $rep['EffectiveHourlyRateINR'] = round($income / $billable);
+            $rep['ThisMonthHourlyRateINR'] = round($income / (20 * 8));
+            $this->saveStats($rep, $FirstDayOfMonth);
+            $rep['BillableProjects'] = $billable_projects;
+        }
         return $rep;
     }
 
@@ -158,29 +160,29 @@ class MonthReport
      * @param [type] $rep
      * @return void
      */
-    public function saveStats($rep,$FirstDayOfMonth)
+    public function saveStats($rep, $FirstDayOfMonth)
     {
         $stats_file = __DIR__ . '/stats.json';
-        $stats = json_decode(file_get_contents($stats_file),true);
-        if(date('Y-m',$FirstDayOfMonth) == date('Y-m'))
+        $stats = json_decode(file_get_contents($stats_file), true);
+        if (date('Y-m', $FirstDayOfMonth) == date('Y-m'))
             $stats[date('Y-m-d')] = $rep;
-        $stats[date('Y-m',$FirstDayOfMonth)] = $rep;
-        return file_put_contents($stats_file,json_encode($stats,JSON_PRETTY_PRINT));
+        $stats[date('Y-m', $FirstDayOfMonth)] = $rep;
+        return file_put_contents($stats_file, json_encode($stats, JSON_PRETTY_PRINT));
     }
 
     public function getWOrkingDaysTillTOday($FirstDayOfMonth)
     {
         $firstDay = $FirstDayOfMonth;
-        $mon = date('m',$FirstDayOfMonth);
-        echo "mon:$mon $FirstDayOfMonth=$FirstDayOfMonth, " . date('d-m-Y',$FirstDayOfMonth) . "\n";
+        $mon = date('m', $FirstDayOfMonth);
+        echo "mon:$mon $FirstDayOfMonth=$FirstDayOfMonth, " . date('d-m-Y', $FirstDayOfMonth) . "\n";
         $today = strtotime(date('Y-m-d'));
         $workingDays = 0;
-        while($firstDay < $today)
+        while ($firstDay < $today)
         {
-            $firstDay = strtotime('+1 day',$firstDay);
-            if($mon != date('m',$firstDay))
+            $firstDay = strtotime('+1 day', $firstDay);
+            if ($mon != date('m', $firstDay))
                 break;
-            if(date('N',$firstDay) < 6)
+            if (date('N', $firstDay) < 6)
                 $workingDays++;
         }
         return $workingDays;
