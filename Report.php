@@ -192,4 +192,28 @@ class MonthReport
         }
         return $workingDays;
     }
+
+    public function makeGraph($summary)
+    {
+        //use termgraph command to make graphs
+        $termgraph = getenv('HOME') . '/.local/bin/termgraph';
+        $file1dat = __DIR__ . '/file1.dat';
+        $F1 = fopen($file1dat, 'w');
+        fwrite($F1, "Total," . $summary['Total'] . "\n");
+        fwrite($F1, "Billable," . $summary['Billable'] . "\n");
+        fclose($F1);
+        $cmd = "$termgraph $file1dat --title \"Month Report\"";
+        system($cmd);  
+        
+        $file2dat = __DIR__ . '/file2.dat';
+        $F2 = fopen($file2dat, 'w');
+        foreach ($summary['BillableProjects'] as $project_name => $project)
+        {
+            fwrite($F2, $project_name . "," . round($project['stats']['Total']) . "\n");
+        }
+        fclose($F2);
+        $cmd = "$termgraph $file2dat --title \"Billable Projects\"";
+        system($cmd);
+
+    }
 }

@@ -84,7 +84,12 @@ $hello_cmd->option('u')
     ->describedAs('Undo the last log')
     ->boolean();
 
-date_default_timezone_set('Asia/Kolkata');
+$hello_cmd->option('g')
+    ->aka('graph')
+    ->describedAs('Make a bar graph of all billable projects')
+    ->boolean();
+
+    date_default_timezone_set('Asia/Kolkata');
 $all_lines = [];
 
 if (!file_exists($logfile))
@@ -145,7 +150,12 @@ if ($hello_cmd['report'] || $hello_cmd['bill'] || $hello_cmd['earning']|| $hello
             addGitFile($cacheJsonFileName,$gitrepo);
         }
         //print_r($report_data);
-        print_r($rep->summary($FirstDayOfMonth));
+        $summary = $rep->summary($FirstDayOfMonth);
+        print_r($summary);
+        if($hello_cmd['graph'])
+        {
+            $rep->makeGraph($summary);
+        }   
     }
     else if ($hello_cmd['bill'] || $hello_cmd['earning'] || $hello_cmd['cache'])
     {
