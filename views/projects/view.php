@@ -18,6 +18,10 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
+    <?php 
+        echo $this->render("_proj_header",['proj' => $proj,'projcode' => $projcode]); 
+    ?>
+
 <?=GridView::widget([
     'dataProvider' => $dataProvider,
     'columns'      => [

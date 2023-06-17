@@ -26,7 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => 'Name',
                 'content' => function ($data)
                 {
-                    return Html::a($data['name'],['view','project' => $data['name']]);
+                    return Html::a($data['name'],['view','projcode' => $data['name']]);
                 },
             ],
             [

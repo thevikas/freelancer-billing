@@ -68,14 +68,15 @@ class ProjectsController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($project)
-    {
+    public function actionView($projcode)
+    {        
         $dotenv = \Dotenv\Dotenv::createImmutable(Yii::getAlias('@app'));
         $dotenv->load();
-        $proj = new Project();
-        $proj->load($project);
+        $proj = new Project([
+            'project' => $projcode
+        ]);
 
-        $tasks  = $proj->cache['summary']['BillableProjects'][$project];
+        $tasks  = $proj->cache['summary']['BillableProjects'][$projcode];
         unset($tasks['name']);
         unset($tasks['Income']);
         unset($tasks['Total']);
@@ -97,19 +98,23 @@ class ProjectsController extends Controller
             $result[] = array(
                 'task' => $key,
                 'times' => $value,
+                'projcode' => $projcode,
                 'spent' => round($mins / 60, 2),
             );
         }
 
         $result[] = array(
             'task' => 'Total1',
-            'spent' => $tasks['times']['Total'],
+            'spent' => round($tasks['times']['Total'],2),
         );
 
         $result[] = array(
             'task' => 'Total2',
-            'spent' => $total/60,
+            'spent' => round($total/60,2),
         );
+
+        $proj->data['current']['hours'] = round($total/60,2);
+        $proj->data['current']['amount'] = $proj->data['current']['hours'] * $proj->data['per_hour'];
 
         $dataProvider = new ArrayDataProvider([
             'allModels' => $result,
@@ -124,6 +129,8 @@ class ProjectsController extends Controller
         return $this->render('view', [
             'data' => $result,
             'dataProvider' => $dataProvider,
+            'projcode' => $projcode,
+            'proj' => $proj,
         ]);
     }
 

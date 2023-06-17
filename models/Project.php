@@ -14,21 +14,31 @@ use yii\base\Model;
 class Project extends Model
 {
     public $cache;
-    
+
+    public $project;
+
+    public $data;
+
     function init()
     {
         parent::init();
+
+        if (!empty($this->project))
+        {
+            $ratesJson = json_decode(file_get_contents($_ENV['RATES_JSON_FILE']), true);
+            $this->data = $ratesJson['projects'][$this->project];
+        }
         //find cache file
         $FirstDayOfMonth = strtotime(date('Y-m-01'));
-        $dmy = date('Y-m-d',$FirstDayOfMonth);
-        $cacheJsonFileName =$_ENV['TIMELOG_GITREPO'] . '/cache/' . $dmy . ".json";
-        if(!file_exists($cacheJsonFileName))
+        $dmy = date('Y-m-d', $FirstDayOfMonth);
+        $cacheJsonFileName = $_ENV['TIMELOG_GITREPO'] . '/cache/' . $dmy . ".json";
+        if (!file_exists($cacheJsonFileName))
             $jsondata = $this->updateCache();
         //verify it is todays date
         else
         {
-            $jsondata = json_decode(file_get_contents($cacheJsonFileName),true);
-            if(date('Y-m-d',strtotime($jsondata['dated'])) != date('Y-m-d'))
+            $jsondata = json_decode(file_get_contents($cacheJsonFileName), true);
+            if (date('Y-m-d', strtotime($jsondata['dated'])) != date('Y-m-d'))
                 $jsondata = $this->updateCache();
         }
         $this->cache = $jsondata;
@@ -47,13 +57,13 @@ class Project extends Model
         $ret = 0;
         //run command and see output
         $cmd = $_ENV['PHP_BIN'] . " $cmd";
-        $last_line = exec($cmd,$output,$ret);
+        $last_line = exec($cmd, $output, $ret);
         #echo "output=" . print_r($output,true);
-        if($ret != 0)
+        if ($ret != 0)
             die("Error running $cmd");
         $FirstDayOfMonth = strtotime(date('Y-m-01'));
-        $cacheJsonFileName =$_ENV['TIMELOG_GITREPO'] . '/cache/' . date('Y-m-d',$FirstDayOfMonth) . ".json";
-        return json_decode(file_get_contents($cacheJsonFileName),true);
+        $cacheJsonFileName = $_ENV['TIMELOG_GITREPO'] . '/cache/' . date('Y-m-d', $FirstDayOfMonth) . ".json";
+        return json_decode(file_get_contents($cacheJsonFileName), true);
     }
     /**
      * {@inheritdoc}
