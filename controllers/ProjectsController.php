@@ -42,7 +42,7 @@ class ProjectsController extends Controller
 
         //create a array of projects and stats
         $stats = [];
-        foreach($proj->cache['summary']['BillableProjects'] as $projname => $data)
+        foreach ($proj->cache['summary']['BillableProjects'] as $projname => $data)
         {
             $stats[$projname] = $data['stats'];
         }
@@ -53,7 +53,7 @@ class ProjectsController extends Controller
                 'pageSize' => 10,
             ],
             'sort' => [
-                'attributes' => ['Name','Hours','Income','Updated'],
+                'attributes' => ['Name', 'Hours', 'Income', 'Dated'],
             ],
         ]);
         return $this->render('index', [
@@ -80,18 +80,36 @@ class ProjectsController extends Controller
         unset($tasks['Income']);
         unset($tasks['Total']);
 
+        $total = 0;
+
         $result = array();
 
-        foreach ($tasks as $key => $value) {
+        foreach ($tasks['times'] as $key => $value)
+        {
 
-            $ss = explode(':',$value);
-            $mins = $ss[0]*60 + $ss[1];
+            if ('Total' == $key || 'Dated' == $key)
+                continue;
+
+            $ss = explode(':', $value . ":0");
+            $mins = $ss[0] * 60 + $ss[1];
+            $total += $mins;
 
             $result[] = array(
                 'task' => $key,
-                'spent' => $mins,
+                'times' => $value,
+                'spent' => round($mins / 60, 2),
             );
         }
+
+        $result[] = array(
+            'task' => 'Total1',
+            'spent' => $tasks['times']['Total'],
+        );
+
+        $result[] = array(
+            'task' => 'Total2',
+            'spent' => $total/60,
+        );
 
         $dataProvider = new ArrayDataProvider([
             'allModels' => $result,
@@ -99,10 +117,10 @@ class ProjectsController extends Controller
                 'pageSize' => 50,
             ],
             'sort' => [
-                'attributes' => ['task','spent'],
+                'attributes' => ['task', 'spent'],
             ],
         ]);
-        
+
         return $this->render('view', [
             'data' => $result,
             'dataProvider' => $dataProvider,
@@ -118,7 +136,8 @@ class ProjectsController extends Controller
     {
         $model = new Project();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->save())
+        {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -138,7 +157,8 @@ class ProjectsController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->save())
+        {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -170,7 +190,8 @@ class ProjectsController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Project::findOne($id)) !== null) {
+        if (($model = Project::findOne($id)) !== null)
+        {
             return $model;
         }
 
