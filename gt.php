@@ -89,7 +89,8 @@ $hello_cmd->option('g')
     ->describedAs('Make a bar graph of all billable projects')
     ->boolean();
 
-    date_default_timezone_set('Asia/Kolkata');
+date_default_timezone_set($_ENV['TIMEZONE'] ?? 'Asia/Kolkata' );
+
 $all_lines = [];
 
 if (!file_exists($logfile))
@@ -139,8 +140,14 @@ if ($hello_cmd['report'] || $hello_cmd['bill'] || $hello_cmd['earning']|| $hello
         $summary = $rep->summary($FirstDayOfMonth);
         if($hello_cmd['cache'])
         {
+            $cache_dir = $_ENV['TIMELOG_GITREPO'] . '/cache/';
+            if(!file_exists($cache_dir))
+            {
+                mkdir($cache_dir,0777,true);
+            }
+
             //create file name using month and year from $FirstDayOfMonth
-            $cacheJsonFileName =$_ENV['TIMELOG_GITREPO'] . '/cache/' . date('Y-m-d',$FirstDayOfMonth) . ".json";
+            $cacheJsonFileName = $cache_dir . date('Y-m-d',$FirstDayOfMonth) . ".json";
             $data = [
                 'dated' => date('Y-m-d H:i:s'),
                 'summary'=>$summary,

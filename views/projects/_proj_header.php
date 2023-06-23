@@ -52,7 +52,7 @@ if(0)
             <?php
                 echo _box(__("Currency"), $data['ccy'] );
                 echo _box(__("Per Hour"), $data['per_hour'] );
-                echo _box(__("Access"), $data['accesstoken'][0] );
+                echo _box(__("Access"), $data['accesstoken'][0] ?? "Not granted" );
             ?>
         </div>
         <h4>Last Invoice</h4>
@@ -60,7 +60,7 @@ if(0)
             <?php
                 echo _box(__("Invoice#"), $data['ccy'] );
                 echo _box(__("Date"), $data['per_hour'] );
-                echo _box(__("Amount"), $data['accesstoken'][0] );
+                echo _box(__("Amount"), 'TODO' );  //#TODO
             ?>
         </div>
         <h4>Current Period</h4>

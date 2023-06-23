@@ -2,6 +2,11 @@
 
 namespace app\models;
 
+/*/**
+ * 
+ * @property int $id
+ * 
+ */
 class User extends \yii\base\BaseObject implements \yii\web\IdentityInterface
 {
     public $id;
