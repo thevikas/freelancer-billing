@@ -167,7 +167,7 @@ class MonthReport
      */
     public function saveStats($rep, $FirstDayOfMonth)
     {
-        $stats_file = __DIR__ . '/stats.json';
+        $stats_file = $_ENV['TIMELOG_GITREPO'] . '/stats.json';
         $stats = json_decode(file_get_contents($stats_file), true);
         if (date('Y-m', $FirstDayOfMonth) == date('Y-m'))
             $stats[date('Y-m-d')] = $rep;

@@ -32,6 +32,7 @@ class Project extends Model
         $FirstDayOfMonth = strtotime(date('Y-m-01'));
         $dmy = date('Y-m-d', $FirstDayOfMonth);
         $cacheJsonFileName = $_ENV['TIMELOG_GITREPO'] . '/cache/' . $dmy . ".json";
+        Yii::info("cacheJsonFileName=$cacheJsonFileName");
         if (!file_exists($cacheJsonFileName))
             $jsondata = $this->updateCache();
         //verify it is todays date
@@ -52,6 +53,7 @@ class Project extends Model
     function updateCache()
     {
         $cmd = Yii::getAlias('@app') . "/gt.php --cache -m this_month";
+        Yii::info("Running $cmd");
         #echo "Running $cmd\n";
         $output = [];
         $ret = 0;

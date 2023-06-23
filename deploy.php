@@ -18,6 +18,7 @@ set('keep_releases', 5);
 
 // Shared files/dirs between deploys
 add('shared_files', [
+    '.env',
     'config/db.php',
     'config/client-projects.json'
 ]);
@@ -29,7 +30,9 @@ add('shared_dirs', [
 ]);
 
 // Writable dirs by web server
-add('writable_dirs', ['web/assets', 'runtime']);
+add('writable_dirs', [
+    #NO NEED 'web/assets', 
+    'runtime']);
 
 // Hosts
 
@@ -66,7 +69,7 @@ task('fulldeploy', [
 task('copyfiles', function ()
 {
     $sharedPath = "{{deploy_path}}/shared";
-    run("cp $sharedPath/frontend/web/index.php {{release_path}}/frontend/web");
+    run("cp $sharedPath/web/index.php {{release_path}}/web");
 });
 
 after('deploy:vendors', 'copyfiles');
