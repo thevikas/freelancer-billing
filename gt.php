@@ -1,8 +1,9 @@
 #!/usr/bin/env php
 <?php
+
 namespace gtimelogphp;
 
-ini_set('xdebug.log_level',0);
+ini_set('xdebug.log_level', 0);
 error_reporting(E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED);
 
 require __DIR__ . "/vendor/autoload.php";
@@ -16,18 +17,18 @@ $gitrepo = $_ENV['TIMELOG_GITREPO'] ?? "";
 //getenv('HOME') . '/.local/share/gtimelog/timelog.txt';
 $logfile = $_ENV['TIMELOG_FILEPATH'] ?? "";
 
-if(empty($logfile))
+if (empty($logfile))
 {
     echo "Please set TIMELOG_FILEPATH in .env file\n";
     exit(1);
 }
-if(empty($gitrepo))
+if (empty($gitrepo))
 {
     echo "Please set TIMELOG_GITREPO in .env file\n";
     exit(1);
 }
 
-if(empty($pcname))
+if (empty($pcname))
 {
     echo "Please set TIMELOG_PCNAME in .env file\n";
     exit(1);
@@ -59,7 +60,7 @@ $hello_cmd->option('i')
     ->describedAs('Get next invoice num')
     ->boolean();
 
-    // Define a boolean flag "-c" aka "--capitalize"
+// Define a boolean flag "-c" aka "--capitalize"
 $hello_cmd->option('m')
     ->aka('month')
     ->describedAs('Report for Month (last_month, this_month or str-2 months format')
@@ -89,7 +90,7 @@ $hello_cmd->option('g')
     ->describedAs('Make a bar graph of all billable projects')
     ->boolean();
 
-date_default_timezone_set($_ENV['TIMEZONE'] ?? 'Asia/Kolkata' );
+date_default_timezone_set($_ENV['TIMEZONE'] ?? 'Asia/Kolkata');
 
 $all_lines = [];
 
@@ -114,7 +115,7 @@ if ($hello_cmd['sync'])
     return 0;
 }
 
-if ($hello_cmd['report'] || $hello_cmd['bill'] || $hello_cmd['earning']|| $hello_cmd['cache'])
+if ($hello_cmd['report'] || $hello_cmd['bill'] || $hello_cmd['earning'] || $hello_cmd['cache'])
 {
     $rep = new MonthReport($logfile);
     if ('last_month' == $hello_cmd['month'])
@@ -128,41 +129,40 @@ if ($hello_cmd['report'] || $hello_cmd['bill'] || $hello_cmd['earning']|| $hello
     else
     {
         $ss = $hello_cmd['month'];
-        if(preg_match('/^str(?<str1>.*)$/',$ss,$mats))
+        if (preg_match('/^str(?<str1>.*)$/', $ss, $mats))
             $FirstDayOfMonth = strtotime(date('Y-m-01', strtotime($mats['str1'])));
-
     }
 
-    echo "FirstDayOfMonth = " . date('Y-m-d',$FirstDayOfMonth) . "\n";
+    echo "FirstDayOfMonth = " . date('Y-m-d', $FirstDayOfMonth) . "\n";
     $report_data = $rep->report($FirstDayOfMonth);
     if ($hello_cmd['report'] || $hello_cmd['cache'])
     {
         $summary = $rep->summary($FirstDayOfMonth);
-        if($hello_cmd['cache'])
+        if ($hello_cmd['cache'])
         {
             $cache_dir = $_ENV['TIMELOG_GITREPO'] . '/cache/';
-            if(!file_exists($cache_dir))
+            if (!file_exists($cache_dir))
             {
-                mkdir($cache_dir,0777,true);
+                mkdir($cache_dir, 0777, true);
             }
 
             //create file name using month and year from $FirstDayOfMonth
-            $cacheJsonFileName = $cache_dir . date('Y-m-d',$FirstDayOfMonth) . ".json";
+            $cacheJsonFileName = $cache_dir . date('Y-m-d', $FirstDayOfMonth) . ".json";
             $data = [
                 'dated' => date('Y-m-d H:i:s'),
-                'summary'=>$summary,
-                'report_data'=>$report_data
+                'summary' => $summary,
+                'report_data' => $report_data
             ];
-            file_put_contents($cacheJsonFileName,json_encode($data,JSON_PRETTY_PRINT));
-            addGitFile($cacheJsonFileName,$gitrepo);
+            file_put_contents($cacheJsonFileName, json_encode($data, JSON_PRETTY_PRINT));
+            addGitFile($cacheJsonFileName, $gitrepo);
         }
         //print_r($report_data);
         $summary = $rep->summary($FirstDayOfMonth);
         print_r($summary);
-        if($hello_cmd['graph'])
+        if ($hello_cmd['graph'])
         {
             $rep->makeGraph($summary);
-        }   
+        }
     }
     else if ($hello_cmd['bill'] || $hello_cmd['earning'] || $hello_cmd['cache'])
     {
@@ -182,7 +182,6 @@ if ($hello_cmd['report'] || $hello_cmd['bill'] || $hello_cmd['earning']|| $hello
         {
             print_r($rep);
         }
-
     }
     return;
 }
@@ -223,7 +222,7 @@ if (empty($argv[1]))
     return -1;
 }
 
-if(!pull_updated_logfile($logfile,$gitrepo,$pcname))
+if (!pull_updated_logfile($logfile, $gitrepo, $pcname))
 {
     fprintf(STDERR, "Failed to pull updated logfile\n");
     return -1;
@@ -252,4 +251,4 @@ $newline = sprintf('%s: %s', date('Y-m-d H:i'), $fullarg);
 fputs($L, $newline . "\n");
 echo difftime() . ": $fullarg\n";
 fclose($L);
-push_logfile_to_git($logfile,$gitrepo,$pcname);
+push_logfile_to_git($logfile, $gitrepo, $pcname);
