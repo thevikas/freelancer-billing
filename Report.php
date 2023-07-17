@@ -113,6 +113,7 @@ class MonthReport
         $bill = new Bill($this->reportData);
         $total = 0;
         $billable = 0;
+        $totalestimatedincome = 0;
         $income = 0;
         $billable_projects = [];
         foreach ($this->reportData as $project_name => $project)
@@ -141,6 +142,7 @@ class MonthReport
                 $stats['name'] = $project_name;
                 $stats['Income'] = round($project['Total'] * $hour_inr_rate);
                 $stats['EstimatedIncome'] = round($stats['EstimatedTotalHours'] * $hour_inr_rate);
+                $totalestimatedincome += $stats['EstimatedIncome'];
 
                 //sory array by keys
                 ksort($stats);
@@ -158,6 +160,7 @@ class MonthReport
         $rep['Billable'] = round($billable);
         if ($rep['Billable'])
         {
+            $rep['EstimatedIncome'] = round($totalestimatedincome);
             $rep['Income'] = round($income);
             $rep['Productivity'] = (round($billable / $total, 2) * 100) . "%";
             $rep['EarningDays'] = round(100 * ($rep['Billable'] / 8) / $this->getWOrkingDaysTillTOday($FirstDayOfMonth)) . "%";
