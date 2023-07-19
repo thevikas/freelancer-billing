@@ -121,33 +121,44 @@ class MonthReport
             $total += $project['Total'];
             if (isset($bill->rates['projects'][$project_name]))
             {
+                $projectinfo = $bill->rates['projects'][$project_name];
+
+                $billing = true;
+
+                if(isset($projectinfo['billing']) && !$projectinfo['billing'])
+                    $billing = false;
+
                 $stats = [];
 
                 //calculate estimate for whole month based on current total
                 $avgHoursPerDay = $project['Total'] / date('d');
                 $stats['EstimatedTotalHours'] = round($avgHoursPerDay * 30);
 
-                $billable += $project['Total'];
-                $hour_inr_rate = $bill->rates['projects'][$project_name]['per_hour'];
-                if ($bill->rates['projects'][$project_name]['ccy'] != 'INR')
+                if($billing)
+                    $billable += $project['Total'];
+
+                $hour_inr_rate = $projectinfo['per_hour'];
+                if ($projectinfo['ccy'] != 'INR')
                 {
-                    $hour_inr_rate = $bill->rates['projects'][$project_name]['per_hour'] * $bill->rates['ccy'][
-                        $bill->rates['projects'][$project_name]['ccy']
+                    $hour_inr_rate = $projectinfo['per_hour'] * $bill->rates['ccy'][
+                        $projectinfo['ccy']
                     ];
-                    $stats['Income' . $bill->rates['projects'][$project_name]['ccy']] = $bill->rates['projects'][$project_name]['per_hour'] * $project['Total'];
-                    $stats['EstimatedIncome' . $bill->rates['projects'][$project_name]['ccy']] = $bill->rates['projects'][$project_name]['per_hour'] * $stats['EstimatedTotalHours'];
+                    $stats['Income' . $projectinfo['ccy']] = $projectinfo['per_hour'] * $project['Total'];
+                    $stats['EstimatedIncome' . $projectinfo['ccy']] = $projectinfo['per_hour'] * $stats['EstimatedTotalHours'];
                 }   
                 $stats['Total'] = $project['Total'];
                 $stats['Dated'] = date('Y-m-d H:i', $project['Dated']);
                 $stats['name'] = $project_name;
                 $stats['Income'] = round($project['Total'] * $hour_inr_rate);
                 $stats['EstimatedIncome'] = round($stats['EstimatedTotalHours'] * $hour_inr_rate);
-                $totalestimatedincome += $stats['EstimatedIncome'];
-
                 //sory array by keys
                 ksort($stats);
 
-                $income += $stats['Income'];
+                if($billing)
+                {
+                    $totalestimatedincome += $stats['EstimatedIncome'];
+                    $income += $stats['Income'];
+                }
                 $billable_projects[$project_name]['times'] = $project;
                 $billable_projects[$project_name]['stats'] = $stats;
             }
