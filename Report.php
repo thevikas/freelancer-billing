@@ -160,6 +160,14 @@ class MonthReport
                     $income += $stats['Income'];
                 }
                 $billable_projects[$project_name]['times'] = $project;
+
+                //check monthlyTargetHours
+                if(!empty($projectinfo['monthlyTargetHours']))
+                {
+                    $stats['monthlyTargetHours'] = $projectinfo['monthlyTargetHours'];
+                    $stats['remainingTargetHours'] = $projectinfo['monthlyTargetHours'] - $stats['EstimatedTotalHours'];
+                }
+
                 $billable_projects[$project_name]['stats'] = $stats;
             }
             else
