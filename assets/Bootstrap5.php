@@ -15,18 +15,16 @@ use yii\web\AssetBundle;
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
  */
-class AppAsset extends AssetBundle
+class Bootstrap5 extends AssetBundle
 {
-    public $basePath = '@webroot';
-    public $baseUrl = '@web';
+    public $sourcePath = '@npm/bootstrap/dist';
+    //public $baseUrl = '@web/css/blue-invoice';
     public $css = [
-        'css/site.css',
+        'css/bootstrap.min.css',
     ];
     public $js = [
+        'js/bootstrap.bundle.min.js'
     ];
     public $depends = [
-        'yii\web\YiiAsset',
-        //'yii\bootstrap\BootstrapAsset',
-        'app\assets\Bootstrap5'
     ];
 }

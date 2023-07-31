@@ -12,6 +12,9 @@ $config = [
         '@npm'   => '@vendor/npm-asset',
     ],
     'components' => [
+        'assetManager' => [
+            'linkAssets' => true, // Set this to true to publish symbolic links instead of actual asset files (Optional)
+        ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'OPpcodyd-hJLCdMLVQsnRXCGL3hdnrDI',
