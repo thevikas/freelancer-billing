@@ -12,6 +12,23 @@ $config = [
         '@npm'   => '@vendor/npm-asset',
     ],
     'components' => [
+        //'assetManager' => [
+        //    'linkAssets' => true, // Set this to true to publish symbolic links instead of actual asset files (Optional)
+        //],
+
+
+        'assetManager' => [
+            'bundles' => [
+                'yii\bootstrap\BootstrapPluginAsset' => [
+                    'js'=>[]
+                ],
+                'yii\bootstrap\BootstrapAsset' => [
+                    'css' => [],
+                ],
+
+            ],
+        ],
+
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'OPpcodyd-hJLCdMLVQsnRXCGL3hdnrDI',

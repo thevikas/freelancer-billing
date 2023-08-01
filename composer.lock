@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f99cda0fc768103b523e842350a4a83f",
+    "content-hash": "04df32f7d5ba4c06c3cfc204c7886909",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -866,6 +866,18 @@
                 "source": "https://github.com/nategood/commando/tree/v0.4.0"
             },
             "time": "2019-07-10T02:37:11+00:00"
+        },
+        {
+            "name": "npm-asset/bootstrap",
+            "version": "5.3.1",
+            "dist": {
+                "type": "tar",
+                "url": "https://registry.npmjs.org/bootstrap/-/bootstrap-5.3.1.tgz"
+            },
+            "type": "npm-asset",
+            "license": [
+                "MIT"
+            ]
         },
         {
             "name": "paragonie/random_compat",

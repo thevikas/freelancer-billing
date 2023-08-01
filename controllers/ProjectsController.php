@@ -68,15 +68,8 @@ class ProjectsController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($projcode)
-    {        
-        $dotenv = \Dotenv\Dotenv::createImmutable(Yii::getAlias('@app'));
-        $dotenv->load();
-        $proj = new Project([
-            'project' => $projcode
-        ]);
-
-        $tasks  = $proj->cache['summary']['BillableProjects'][$projcode];
+    public function makeDataProvider($proj,$tasks)
+    {                
         unset($tasks['name']);
         unset($tasks['Income']);
         unset($tasks['Total']);
@@ -85,31 +78,39 @@ class ProjectsController extends Controller
 
         $result = array();
 
-        foreach ($tasks['times'] as $key => $value)
+        foreach ($tasks as $key => $value)
         {
 
-            if ('Total' == $key || 'Dated' == $key)
+            if ('Total' == $key || 'Dated' == $key || 'Weeks' == $key)
                 continue;
 
+            if(is_numeric($value))
+            {
+                $mins = round($value/60,2);
+                //$mins = $value/60;
+            }
+            else
+            {
             $ss = explode(':', $value . ":0");
             $mins = $ss[0] * 60 + $ss[1];
+            }
+                        
             $total += $mins;
 
             $result[] = array(
                 'task' => $key,
                 'times' => $value,
-                'projcode' => $projcode,
                 'spent' => round($mins / 60, 2),
             );
         }
 
-        $result[] = array(
-            'task' => 'Total1',
+        /*$result[] = array(
+            'task' => 'Total',
             'spent' => round($tasks['times']['Total'],2),
-        );
+        );*/
 
         $result[] = array(
-            'task' => 'Total2',
+            'task' => 'Total',
             'spent' => round($total/60,2),
         );
 
@@ -125,10 +126,39 @@ class ProjectsController extends Controller
                 'attributes' => ['task', 'spent'],
             ],
         ]);
+        return $dataProvider;
+    }
 
+    /**
+     * Displays a single Project model.
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionView($projcode)
+    {        
+        $dotenv = \Dotenv\Dotenv::createImmutable(Yii::getAlias('@app'));
+        $dotenv->load();
+        $proj = new Project([
+            'project' => $projcode
+        ]);
+
+        $tasks  = $proj->cache['summary']['BillableProjects'][$projcode];        
+        $dataProviderAll = $this->makeDataProvider($proj,$tasks['times']);
+        $dataProviderWeeks = [];
+        $n = 0;
+        foreach($tasks['times']['Weeks'] as $week => $weektimes)
+        {
+            $dataProviderWeeks[$n++] = $this->makeDataProvider($proj,$weektimes);
+        }
+
+        $dataProviderWeeks = array_reverse($dataProviderWeeks);
+        $weekNames = array_reverse(array_keys($tasks['times']['Weeks']));
         return $this->render('view', [
-            'data' => $result,
-            'dataProvider' => $dataProvider,
+            //'data' => $result,
+            'dataProviderAll' => $dataProviderAll,
+            'weeks' => $weekNames,
+            'dataProviderWeeks' => $dataProviderWeeks,
             'projcode' => $projcode,
             'proj' => $proj,
         ]);

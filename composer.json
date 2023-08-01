@@ -21,7 +21,9 @@
         "yiisoft/yii2-swiftmailer": "~2.0.0 || ~2.1.0",
         "endroid/qr-code": "^4.7",
         "cypresslab/gitelephant": "*",
-        "yiithings/yii2-dotenv": "*"
+        "yiithings/yii2-dotenv": "*",
+        "bower-asset/bootstrap": "^3.4",
+        "npm-asset/bootstrap": "^5.3"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",
