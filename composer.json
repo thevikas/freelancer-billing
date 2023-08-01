@@ -20,10 +20,14 @@
         "deployer/deployer": "*",
         "yiisoft/yii2-swiftmailer": "~2.0.0 || ~2.1.0",
         "endroid/qr-code": "^4.7",
+        "league/climate": "*",
         "cypresslab/gitelephant": "*",
         "yiithings/yii2-dotenv": "*",
         "bower-asset/bootstrap": "^3.4",
-        "npm-asset/bootstrap": "^5.3"
+        "npm-asset/bootstrap": "^5.3",
+        "initphp/cli-table": "^1.0",
+        "symfony/console": "^5.4",
+        "npm-asset/puppeteer": "^18.1"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

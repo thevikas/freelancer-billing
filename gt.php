@@ -3,6 +3,7 @@
 
 namespace gtimelogphp;
 
+
 ini_set('xdebug.log_level', 0);
 error_reporting(E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED);
 
@@ -167,20 +168,22 @@ if ($hello_cmd['report'] || $hello_cmd['bill'] || $hello_cmd['earning'] || $hell
     else if ($hello_cmd['bill'] || $hello_cmd['earning'] || $hello_cmd['cache'])
     {
         $bill = new Bill($report_data);
-        $rep = $bill->report($FirstDayOfMonth);
+        $BillRep = $bill->report($FirstDayOfMonth);
         if ($hello_cmd['earning'])
         {
-            echo sprintf("%d", round($rep['TotalEarning'])) . "\n";
+            echo sprintf("%d", round($BillRep['TotalEarning'])) . "\n";
         }
         else if ($hello_cmd['project'])
         {
             $proj = $hello_cmd['project'];
-            $bill->saveJson($rep[$proj], $proj);
-            print_r($rep[$proj]);
+            $bill->saveJson($BillRep[$proj], $proj);
+            $clean = $report_data[$proj];
+            $rep->printTimesheet($report_data,$proj);
         }
         else
         {
             print_r($rep);
+            echo "Requires project code\n";
         }
     }
     return;

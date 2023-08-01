@@ -2,6 +2,12 @@
 
 namespace gtimelogphp;
 
+use InitPHP\CLITable\Table;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\Table as SymfonyTable;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+
 class MonthReport
 {
     /**
@@ -112,7 +118,7 @@ class MonthReport
             $this->report();
 
         print_r($this->reportData);
-        
+
         $bill = new Bill($this->reportData);
         $total = 0;
         $billable = 0;
@@ -128,27 +134,25 @@ class MonthReport
 
                 $billing = true;
 
-                if(isset($projectinfo['billing']) && !$projectinfo['billing'])
+                if (isset($projectinfo['billing']) && !$projectinfo['billing'])
                     $billing = false;
 
                 $stats = [];
 
                 //calculate estimate for whole month based on current total
                 $avgHoursPerDay = $project['Total'] / date('d');
-                $stats['EstimatedTotalHours'] = round($avgHoursPerDay * 30,2);
+                $stats['EstimatedTotalHours'] = round($avgHoursPerDay * 30, 2);
 
-                if($billing)
+                if ($billing)
                     $billable += $project['Total'];
 
                 $hour_inr_rate = $projectinfo['per_hour'];
                 if ($projectinfo['ccy'] != 'INR')
                 {
-                    $hour_inr_rate = $projectinfo['per_hour'] * $bill->rates['ccy'][
-                        $projectinfo['ccy']
-                    ];
+                    $hour_inr_rate = $projectinfo['per_hour'] * $bill->rates['ccy'][$projectinfo['ccy']];
                     $stats['Income' . $projectinfo['ccy']] = $projectinfo['per_hour'] * $project['Total'];
                     $stats['EstimatedIncome' . $projectinfo['ccy']] = $projectinfo['per_hour'] * $stats['EstimatedTotalHours'];
-                }   
+                }
                 $stats['Total'] = $project['Total'];
                 $stats['Dated'] = date('Y-m-d H:i', $project['Dated']);
                 $stats['name'] = $project_name;
@@ -157,7 +161,7 @@ class MonthReport
                 //sory array by keys
                 ksort($stats);
 
-                if($billing)
+                if ($billing)
                 {
                     $totalestimatedincome += $stats['EstimatedIncome'];
                     $income += $stats['Income'];
@@ -165,7 +169,7 @@ class MonthReport
                 $billable_projects[$project_name]['times'] = $project;
 
                 //check monthlyTargetHours
-                if(!empty($projectinfo['monthlyTargetHours']))
+                if (!empty($projectinfo['monthlyTargetHours']))
                 {
                     $stats['monthlyTargetHours'] = $projectinfo['monthlyTargetHours'];
                     $stats['remainingTargetHours'] = $projectinfo['monthlyTargetHours'] - $stats['EstimatedTotalHours'];
@@ -239,8 +243,8 @@ class MonthReport
         fwrite($F1, "Billable," . $summary['Billable'] . "\n");
         fclose($F1);
         $cmd = "$termgraph $file1dat --title \"Month Report\"";
-        system($cmd);  
-        
+        system($cmd);
+
         $file2dat = __DIR__ . '/file2.dat';
         $F2 = fopen($file2dat, 'w');
         foreach ($summary['BillableProjects'] as $project_name => $project)
@@ -250,6 +254,43 @@ class MonthReport
         fclose($F2);
         $cmd = "$termgraph $file2dat --title \"Billable Projects\"";
         system($cmd);
+    }
 
+    public function printTimesheet($report_data, $proj)
+    {
+        $clean = $report_data[$proj];
+        //$climate = new \League\CLImate\CLImate;
+        unset($clean['Weeks']);
+        unset($clean['Total']);
+        unset($clean['Dated']);
+        //print_r($clean);
+
+        //$table = new Table();
+        $headers = ['Task', 'Time'];
+        //$tableData = [$headers];
+        foreach ($clean as $task => $time)
+        {
+            $tableData[] = [$task, $time];
+
+            /*$table->row([
+                'task'        => $task,
+                'time'      => $time
+            ]);*/
+
+        }
+        //print_r($tableData);
+        //$climate->table($tableData);
+        //echo $table;
+        
+        $output = new \Symfony\Component\Console\Output\ConsoleOutput();
+
+        $table = new SymfonyTable($output);
+        $table->setHeaderTitle('Timesheet');
+        $table->setStyle('box-double');
+        $table
+            ->setHeaders($headers)
+            ->setRows($tableData)
+        ;
+        $table->render();
     }
 }

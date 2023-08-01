@@ -57,6 +57,10 @@ class Project
         $year = date('Y',$ts = strtotime($info['given_ts']));
         $weekDateTime = $this->getDateTimeFromWeekNumber($week, $year);
 
+        if(empty($this->task_week_times[$weekDateTime][$task]))
+        {
+        	$this->task_week_times[$weekDateTime][$task] = 0;
+        }
         $this->task_week_times[$weekDateTime][$task] += $spent_time_secs;
         $this->task_times[$task] += $spent_time_secs;
         $this->last_datetime = $tasktime;
