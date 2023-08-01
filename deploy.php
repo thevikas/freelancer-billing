@@ -18,24 +18,30 @@ set('keep_releases', 5);
 
 // Shared files/dirs between deploys
 add('shared_files', [
-    
+    '.env',
+    'config/db.php',
+    'config/client-projects.json'
 ]);
 
 //default runtime dirs are shared across diff versions
 add('shared_dirs', [
+    'web/assets',
+    'data'
 ]);
 
 // Writable dirs by web server
-add('writable_dirs', ['backend/web/assets', 'frontend/web/assets']);
+add('writable_dirs', [
+    #NO NEED 'web/assets', 
+    'runtime']);
 
 // Hosts
 
-host('xx')
-    ->set('hostname', 'tb')
-    ->set('user', 'xx')
-    ->set('stage', 'dev')
+host('linode2')
+    ->set('hostname', 'linode2')
+    ->set('stage', 'prod')
+    ->set('branch', 'developer')
     ->set('composer_options', ' --verbose --no-interaction')
-    ->set('deploy_path', '~/deploy/dev/{{application}}');
+    ->set('deploy_path', '~/deploy/prod/{{application}}');
 
 task('ls', function ()
 {
@@ -63,8 +69,7 @@ task('fulldeploy', [
 task('copyfiles', function ()
 {
     $sharedPath = "{{deploy_path}}/shared";
-    run("cp $sharedPath/frontend/web/index.php {{release_path}}/frontend/web");
-    run("cp $sharedPath/yii {{release_path}}");
+    run("cp $sharedPath/web/index.php {{release_path}}/web");
 });
 
 after('deploy:vendors', 'copyfiles');

@@ -18,7 +18,7 @@ class Bill
     public function __construct($report_data)
     {
         $this->data = $report_data;
-        $json = \file_get_contents($_ENV['RATES_JSON_FILE']); //\getenv('HOME')  . "/.gtimelog/client-projects.json","r");
+        $json = \file_get_contents($_ENV['RATES_JSON_FILE']);
         $this->rates = json_decode($json, true);
         $this->syncAliases();
     }
@@ -67,8 +67,31 @@ class Bill
 
     public function saveJson($rep, $project_name)
     {
-        $json_file = $_ENV['BILLS_JSON_DIR'] . "/" . $this->getNextInvoiceNumber() . "-" . $project_name . ".json";
-        if (file_exists($json_file))
+        $inum = self::getNextInvoiceNumber();
+
+        //check for prev 10 inum json files 
+        $ictr = $inum-10;
+        $resuming = false;
+        for($i=0; $i<10; $i++)
+        {
+            $json_file = $_ENV['BILLS_JSON_DIR'] . "/" . $ictr . "-" . $project_name . ".json";
+            //load json and verify dated
+            if (file_exists($json_file))
+            {
+                $json = json_decode(file_get_contents($json_file), true);
+                if($json['dated'] == date('Y-m-d'))
+                {
+                    $inum = $ictr;
+                    echo "Using $json_file...\n";
+                    $resuming = true;
+                    break;
+                }
+            }
+            $ictr++;
+        }
+
+        $json_file = $_ENV['BILLS_JSON_DIR'] . "/" . $inum . "-" . $project_name . ".json";
+        if (!$resuming && file_exists($json_file))
         {
             die("$json_file already exists");
         }
@@ -88,6 +111,13 @@ class Bill
             'dated'  => date('Y-m-d'),
         ];
         file_put_contents($json_file, json_encode($json, JSON_PRETTY_PRINT));
+        return $inum;
+    }
+
+    public function printPDF($invoiceNum,$projcode)
+    {
+        $cmd = "node screenshot.js $invoiceNum $projcode";
+        system($cmd);
     }
 
     /**

@@ -29,13 +29,20 @@ class BillsController extends Controller
         ];
     }
 
+    public function getClients()
+    {
+        $dotenv = \Dotenv\Dotenv::createImmutable(Yii::getAlias('@app'));
+        $dotenv->load();
+        return json_decode(file_get_contents($_ENV['RATES_JSON_FILE']), true);
+    }
+
     /**
      * Lists all Bill models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $clients = json_decode(file_get_contents(Yii::getAlias('@app/config/client-projects.json')), true);
+        $clients = $this->clients;
         $dataProvider = new ArrayDataProvider([
             'allModels' => Bill::loadfiles(),
         ]);
@@ -55,7 +62,7 @@ class BillsController extends Controller
     public function actionView($id)
     {
         $bills = Bill::loadfiles();
-        $clients = json_decode(file_get_contents(Yii::getAlias('@app/config/client-projects.json')), true);
+        $clients = $this->clients;
         $invoice = $bills[$id];
         $project = $clients['projects'][$bills[$id]['client']];
         if (empty($project['layout']))

@@ -5,6 +5,7 @@ namespace app\controllers;
 use Yii;
 use app\models\Project;
 use yii\data\ActiveDataProvider;
+use yii\data\ArrayDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -35,12 +36,29 @@ class ProjectsController extends Controller
      */
     public function actionIndex()
     {
-        $dataProvider = new ActiveDataProvider([
-            'query' => Project::find(),
-        ]);
+        $dotenv = \Dotenv\Dotenv::createImmutable(Yii::getAlias('@app'));
+        $dotenv->load();
+        $proj = new Project();
 
+        //create a array of projects and stats
+        $stats = [];
+        foreach ($proj->cache['summary']['BillableProjects'] as $projname => $data)
+        {
+            $stats[$projname] = $data['stats'];
+        }
+
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => $stats,
+            'pagination' => [
+                'pageSize' => 10,
+            ],
+            'sort' => [
+                'attributes' => ['Name', 'Hours', 'Income', 'Dated'],
+            ],
+        ]);
         return $this->render('index', [
             'dataProvider' => $dataProvider,
+            'summary' => $proj->cache['summary'],
         ]);
     }
 
@@ -50,10 +68,99 @@ class ProjectsController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($id)
-    {
+    public function makeDataProvider($proj,$tasks)
+    {                
+        unset($tasks['name']);
+        unset($tasks['Income']);
+        unset($tasks['Total']);
+
+        $total = 0;
+
+        $result = array();
+
+        foreach ($tasks as $key => $value)
+        {
+
+            if ('Total' == $key || 'Dated' == $key || 'Weeks' == $key)
+                continue;
+
+            if(is_numeric($value))
+            {
+                $mins = round($value/60,2);
+                //$mins = $value/60;
+            }
+            else
+            {
+            $ss = explode(':', $value . ":0");
+            $mins = $ss[0] * 60 + $ss[1];
+            }
+                        
+            $total += $mins;
+
+            $result[] = array(
+                'task' => $key,
+                'times' => $value,
+                'spent' => round($mins / 60, 2),
+            );
+        }
+
+        /*$result[] = array(
+            'task' => 'Total',
+            'spent' => round($tasks['times']['Total'],2),
+        );*/
+
+        $result[] = array(
+            'task' => 'Total',
+            'spent' => round($total/60,2),
+        );
+
+        $proj->data['current']['hours'] = round($total/60,2);
+        $proj->data['current']['amount'] = $proj->data['current']['hours'] * $proj->data['per_hour'];
+
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => $result,
+            'pagination' => [
+                'pageSize' => 50,
+            ],
+            'sort' => [
+                'attributes' => ['task', 'spent'],
+            ],
+        ]);
+        return $dataProvider;
+    }
+
+    /**
+     * Displays a single Project model.
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionView($projcode)
+    {        
+        $dotenv = \Dotenv\Dotenv::createImmutable(Yii::getAlias('@app'));
+        $dotenv->load();
+        $proj = new Project([
+            'project' => $projcode
+        ]);
+
+        $tasks  = $proj->cache['summary']['BillableProjects'][$projcode];        
+        $dataProviderAll = $this->makeDataProvider($proj,$tasks['times']);
+        $dataProviderWeeks = [];
+        $n = 0;
+        foreach($tasks['times']['Weeks'] as $week => $weektimes)
+        {
+            $dataProviderWeeks[$n++] = $this->makeDataProvider($proj,$weektimes);
+        }
+
+        $dataProviderWeeks = array_reverse($dataProviderWeeks);
+        $weekNames = array_reverse(array_keys($tasks['times']['Weeks']));
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            //'data' => $result,
+            'dataProviderAll' => $dataProviderAll,
+            'weeks' => $weekNames,
+            'dataProviderWeeks' => $dataProviderWeeks,
+            'projcode' => $projcode,
+            'proj' => $proj,
         ]);
     }
 
@@ -66,7 +173,8 @@ class ProjectsController extends Controller
     {
         $model = new Project();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->save())
+        {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -86,7 +194,8 @@ class ProjectsController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) && $model->save())
+        {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
@@ -118,7 +227,8 @@ class ProjectsController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Project::findOne($id)) !== null) {
+        if (($model = Project::findOne($id)) !== null)
+        {
             return $model;
         }
 

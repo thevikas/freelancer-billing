@@ -32,14 +32,15 @@ AppAsset::register($this);
         'brandLabel' => Yii::$app->name,
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
-            'class' => 'navbar-inverse navbar-fixed-top',
+            'class' => 'navbar navbar-expand-lg bg-body-tertiary',
         ],
     ]);
     echo Nav::widget([
-        'options' => ['class' => 'navbar-nav navbar-right'],
+        'options' => ['class' => 'navbar-nav me-auto mb-2 mb-lg-0'],
         'items' => [
             ['label' => 'Home', 'url' => ['/site/index']],
             ['label' => 'Bills', 'url' => ['/bills']],
+            ['label' => 'Projects', 'url' => ['/projects']],
             ['label' => 'About', 'url' => ['/site/about']],
             ['label' => 'Contact', 'url' => ['/site/contact']],
             Yii::$app->user->isGuest ? (

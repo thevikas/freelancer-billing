@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <p align="center">
     <a href="https://github.com/yiisoft" target="_blank">
         <img src="https://avatars0.githubusercontent.com/u/993323" height="100px">
@@ -6,8 +7,24 @@
     <br>
 </p>
 
-## Background
+The primary objective is it is very private. You can host on your own infra that you can only access. You control where you keep the PDFs. There is no common web server. It uses the same file format as gtimelog. No changes.
 
+## Done
+
+1. Prints Invoice PDFs
+2. Prints Timesheets
+3. Provides Estimates
+4. Sends Emails
+
+## Todo
+
+1. Allows web based task time tracking
+2. Android app for time tracking
+3. Grant customers access to monitor weekly timesheets
+4. Append task times to Jira/Gitlab issues/etc
+
+
+## Background
 
 [Gtimelog](https://github.com/gtimelog/gtimelog) has been my oldest and most simple time tracking app.Originally this project started with just a command line tool for using gtimelog.
 
@@ -50,4 +67,3 @@ CONFIGURATION
 
 TESTING
 -------
-
