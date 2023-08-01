@@ -132,7 +132,7 @@ class MonthReport
 
                 //calculate estimate for whole month based on current total
                 $avgHoursPerDay = $project['Total'] / date('d');
-                $stats['EstimatedTotalHours'] = round($avgHoursPerDay * 30);
+                $stats['EstimatedTotalHours'] = round($avgHoursPerDay * 30,2);
 
                 if($billing)
                     $billable += $project['Total'];
