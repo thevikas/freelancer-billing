@@ -176,8 +176,10 @@ if ($hello_cmd['report'] || $hello_cmd['bill'] || $hello_cmd['earning'] || $hell
         else if ($hello_cmd['project'])
         {
             $proj = $hello_cmd['project'];
-            $bill->saveJson($BillRep[$proj], $proj);
+            $inum = $bill->saveJson($BillRep[$proj], $proj);
+            $bill->printPDF($inum,$proj);
             $clean = $report_data[$proj];
+
             $rep->printTimesheet($report_data,$proj);
         }
         else
