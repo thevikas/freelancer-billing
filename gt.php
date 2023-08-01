@@ -1,152 +1,204 @@
 #!/usr/bin/env php
 <?php
+
+namespace gtimelogphp;
+
+require __DIR__ . "/vendor/autoload.php";
+require_once 'functions.php';
+
+$dotenv = \Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+
+$pcname = $_ENV['TIMELOG_PCNAME'] ?? "MyPc";
+$gitrepo = $_ENV['TIMELOG_GITREPO'] ?? "";
+//getenv('HOME') . '/.local/share/gtimelog/timelog.txt';
+$logfile = $_ENV['TIMELOG_FILEPATH'] ?? "";
+
+if(empty($logfile))
+{
+    echo "Please set TIMELOG_FILEPATH in .env file\n";
+    exit(1);
+}
+if(empty($gitrepo))
+{
+    echo "Please set TIMELOG_GITREPO in .env file\n";
+    exit(1);
+}
+
+if(empty($pcname))
+{
+    echo "Please set TIMELOG_PCNAME in .env file\n";
+    exit(1);
+}
+
+
+$hello_cmd = new \Commando\Command();
+
+$hello_cmd->option()
+    ->describedAs('Log entry');
+
+// Define a boolean flag "-c" aka "--capitalize"
+$hello_cmd->option('r')
+    ->aka('report')
+    ->describedAs('Report')
+    ->boolean();
+
+$hello_cmd->option('u')
+    ->aka('undo')
+    ->describedAs('Undo the last log')
+    ->boolean();
+
+$hello_cmd->option('b')
+    ->aka('bill')
+    ->describedAs('Generate monthly bill report')
+    ->boolean();
+
+$hello_cmd->option('e')
+    ->aka('earning')
+    ->describedAs('Just report this months earnings')
+    ->boolean();
+
+$hello_cmd->option('p')
+    ->aka('project')
+    ->describedAs('Generate monthly bill json');
+
+$hello_cmd->option('i')
+    ->aka('inum')
+    ->describedAs('Get next invoice num')
+    ->boolean();
+
+// Define a boolean flag "-c" aka "--capitalize"
+$hello_cmd->option('m')
+    ->aka('month')
+    ->describedAs('Report for Month (last_month, this_month or YYYY-MM0)')
+    ->default("last_month");
+
 date_default_timezone_set('Asia/Kolkata');
 $all_lines = [];
 
-$logfile = getenv('HOME') . "/.gtimelog/timelog.txt";
-if (!file_exists($logfile)) {
-    fputs(STDERR,"$logfile: File not found\n");
+if (!file_exists($logfile))
+{
+    fputs(STDERR, "$logfile: File not found\n");
     return -1;
 }
-$away=false;
+$away = false;
 $argv2 = $argv;
-unset($argv2[0]);
-foreach($argv2 as $arg)
+
+if ($hello_cmd['inum'])
 {
-    if('-report' == $arg)
-    {
-        return makeReport();
-    }
+    $num = Bill::getNextInvoiceNumber();
+    echo "Next invoice num:" . $num;
+    return 0;
 }
-$fullarg = implode(" ",$argv2);
+
+if ($hello_cmd['report'] || $hello_cmd['bill'] || $hello_cmd['earning'])
+{
+    $rep = new MonthReport($logfile);
+    if ('last_month' == $hello_cmd['month'])
+    {
+        $FirstDayOfMonth = strtotime(date('Y-m-01', strtotime("-1 month")));
+    }
+    else if ('this_month' == $hello_cmd['month'])
+    {
+        $FirstDayOfMonth = strtotime(date('Y-m-01'));
+    }
+    else
+    {
+        $FirstDayOfMonth = strtotime(date('Y-m-01', strtotime($hello_cmd['month'])));
+    }
+
+    #echo "FirstDayOfMonth = " . date('Y-m-d',$FirstDayOfMonth) . "\n";
+    $report_data = $rep->report($FirstDayOfMonth);
+    if ($hello_cmd['report'])
+    {
+        print_r($report_data);
+    }
+    else if ($hello_cmd['bill'] || $hello_cmd['earning'])
+    {
+        $bill = new Bill($report_data);
+        $rep = $bill->report();
+        if ($hello_cmd['earning'])
+        {
+            echo sprintf("%d", round($rep['TotalEarning'])) . "\n";
+        }
+        else if ($hello_cmd['project'])
+        {
+            $proj = $hello_cmd['project'];
+            $bill->saveJson($rep[$proj], $proj);
+            print_r($rep[$proj]);
+        }
+        else
+        {
+            print_r($rep);
+        }
+
+    }
+    return;
+}
+
+if ($hello_cmd['undo'])
+{
+    undo($logfile);
+    return;
+}
+
+$fullarg = $hello_cmd[0];
 #Reading
-$L = fopen($logfile,"r");
-fseek($L,-200,SEEK_END);
+$L = fopen($logfile, 'r');
+fseek($L, -200, SEEK_END);
 $last_dt = $last_time = $lc = 0;
 iterate($L);
-function iterate($L,$only_first = false,$callback = null)
-{
-    global $last_time;
-    global $last_comment;
-    global $all_lines;
-    global $lc;
-    while(!feof($L))
-    {
-        $line = trim(fgets($L));
-        $lc++;
-        if(!empty($line))
-        {
-            //echo "$lc: $line\n";
-            $ss = explode(' ',$line,3);
-            if(count($ss)<3)
-                continue;
-            list($last_dt,$comment) = $ss;
 
-            $ss = explode(': ',$line,2);
-            if(count($ss)<2)
-                continue;
-            if(strlen($ss[0]) != 16)
-                continue;
-            $last_time = strtotime($ss[0]);
-            $last_comment = $ss[1];
-            $all_lines[$last_time] = [$last_time,$ss[0],$last_comment];
-            if($only_first)
-                break;
-            if(is_callable($callback) && call_user_func($callback,$all_lines[$last_time]))
-                break;
-        }
-    }
-    return $all_lines[$last_time];
-}
 fclose($L);
 
-if(!empty($argv[1]))
+if (!empty($argv[1]))
 {
-    if("last" == $argv[1])
+    if ('last' == $argv[1])
+    {
         $fullarg = $last_comment;
-    else if("away" == $argv[1])
+    }
+    else if ('away' == $argv[1])
     {
         $away = true;
         $fullarg = $last_comment;
     }
 }
 
-function difftime()
-{
-    global $last_time;
-    $diff = time() - $last_time;
-    $hh = gmdate("H",$diff);
-    $mm = gmdate("i",$diff) . "m";
-    if(intval($hh)>0)
-        $mm = "{$hh}h" . $mm;
-    return $mm;
-}
-
-if(empty($argv[1])) //if not arg given, we just show time spent doing the last item
+//if not arg given, we just show time spent doing the last item
+if (empty($argv[1]))
 {
     $mm = difftime();
     echo "$mm: $last_comment\n";
     return -1;
 }
 
-#Writing
-$L = fopen($logfile,"a");
-fseek($L,-200,SEEK_END);
+if(!pull_updated_logfile($logfile,$gitrepo,$PCNAME))
+{
+    fprintf(STDERR, "Failed to pull updated logfile\n");
+    return -1;
+}
 
+#Writing
+$L = fopen($logfile, 'a');
+#fseek($L, -200, SEEK_END);
+
+$last_dt = date('Y-m-d', $last_time);
 $today_date = date('Y-m-d');
-if(strstr($last_dt,$today_date) === false) //Not same day
-    fputs($L,"\n");
+//Not same day
+if (strstr($last_dt, $today_date) === false)
+{
+    fputs($L, "\n");
+}
 
 //mark a time period as away between last and this and resume the work
-if($away)
+if ($away)
 {
-    $newline = sprintf("%s: away **",date('Y-m-d H:i'));
-    fputs($L,$newline . "\n");
+    $newline = sprintf('%s: away **', date('Y-m-d H:i'));
+    fputs($L, $newline . "\n");
 }
 
-$newline = sprintf("%s: %s",date('Y-m-d H:i'),$fullarg);
-fputs($L,$newline . "\n");
+$newline = sprintf('%s: %s', date('Y-m-d H:i'), $fullarg);
+fputs($L, $newline . "\n");
 echo difftime() . ": $fullarg\n";
 fclose($L);
-
-function checkIfItsThisMonth($info)
-{
-    $firstDay = strtotime(date('Y-m-01'));
-    list($tt,$tt2,$cc) = $info;
-    return $firstDay < $tt;
-}
-
-function find_start_of_last_month($L)
-{
-    fseek($L,-200,SEEK_CUR);
-    //find first line
-    $info = iterate($L,true);
-    $firstDay = strtotime(date('Y-m-01'));
-    $twoMonthsBack = strtotime("-3 months");
-    if($firstDay < $info[0])
-        return find_start_of_last_month($L);
-    return $info;
-    //check month
-    //if
-}
-
-function find_start_of_this_month($L)
-{
-    $info = iterate($L,false,"checkIfItsThisMonth");
-    return $info;
-    //check month
-    //if
-}
-
-function makeReport()
-{
-    global $all_lines,$logfile;
-
-    $L = fopen($logfile,"r");
-    fseek($L,-200,SEEK_END);
-    $info = find_start_of_last_month($L);
-    $info = find_start_of_this_month($L);
-    fseek($L,-(strlen($info[1] + $info[2] + 5)),SEEK_CUR);
-    iterate($L);
-
-}
+push_logfile_to_git($logfile,$gitrepo,$PCNAME);
