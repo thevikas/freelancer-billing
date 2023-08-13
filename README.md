@@ -15,3 +15,7 @@ The primary objective is it is very private. You can host on your own infra that
 3. Grant customers access to monitor weekly timesheets
 4. Append task times to Jira/Gitlab issues/etc
 
+## Commands
+
+1. Generate Report `gt -r -m this_month`
+2. Save Report - `gt -c -r -m this_month`
