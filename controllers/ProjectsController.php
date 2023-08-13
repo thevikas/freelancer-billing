@@ -31,7 +31,7 @@ class ProjectsController extends Controller
     }
 
     /**
-     * Lists all Project models.
+     * Lists all Billable Project.
      * @return mixed
      */
     public function actionIndex()
@@ -57,6 +57,38 @@ class ProjectsController extends Controller
             ],
         ]);
         return $this->render('index', [
+            'dataProvider' => $dataProvider,
+            'summary' => $proj->cache['summary'],
+        ]);
+    }
+
+    /**
+     * Lists all projects
+     * @return mixed
+     */
+    public function actionCharts()
+    {
+        $dotenv = \Dotenv\Dotenv::createImmutable(Yii::getAlias('@app'));
+        $dotenv->load();
+        $proj = new Project();
+
+        //create a array of projects and stats
+        $stats = [];
+        foreach ($proj->cache['summary']['BillableProjects'] as $projname => $data)
+        {
+            $stats[$projname] = $data['stats'];
+        }
+
+        $dataProvider = new ArrayDataProvider([
+            'allModels' => $stats,
+            'pagination' => [
+                'pageSize' => 10,
+            ],
+            'sort' => [
+                'attributes' => ['Name', 'Hours', 'Income', 'Dated'],
+            ],
+        ]);
+        return $this->render('charts', [
             'dataProvider' => $dataProvider,
             'summary' => $proj->cache['summary'],
         ]);

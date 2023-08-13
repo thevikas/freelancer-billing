@@ -15,6 +15,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
         <?= Html::a('Create Project', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('All Projects', ['all'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Charts', ['charts'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([
