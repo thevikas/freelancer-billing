@@ -74,22 +74,27 @@ class ProjectsController extends Controller
 
         //create a array of projects and stats
         $stats = [];
-        foreach ($proj->cache['summary']['BillableProjects'] as $projname => $data)
+        foreach ($proj->cache['report_data'] as $projname => $data)
         {
-            $stats[$projname] = $data['stats'];
+            $stats[$projname] = $data['Total'];
         }
 
-        $dataProvider = new ArrayDataProvider([
-            'allModels' => $stats,
-            'pagination' => [
-                'pageSize' => 10,
-            ],
-            'sort' => [
-                'attributes' => ['Name', 'Hours', 'Income', 'Dated'],
-            ],
-        ]);
+        $billing_stats = [];
+        foreach ($proj->cache['summary']['BillableProjects'] as $projname => $data)
+        {
+            $billing_stats[$projname] = $data['stats']['Income'];
+        }
+
+        $est_billing_stats = [];
+        foreach ($proj->cache['summary']['BillableProjects'] as $projname => $data)
+        {
+            $est_billing_stats[$projname] = $data['stats']['EstimatedIncome'];
+        }
+
         return $this->render('charts', [
-            'dataProvider' => $dataProvider,
+            'stats' => $stats,
+            'billing_stats' => $billing_stats,
+            'est_billing_stats' => $est_billing_stats,
             'summary' => $proj->cache['summary'],
         ]);
     }

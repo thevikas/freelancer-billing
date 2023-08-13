@@ -15,12 +15,27 @@ $this->params['breadcrumbs'][] = $this->title;
 
 //register JS
 $this->registerJs(
-    "(async function() {new Chart(document.getElementById('acquisitions'),config);})();",
+    "(async function() {new Chart(document.getElementById('chart1'),config_chart1);})();",
     \yii\web\View::POS_READY
 );
 
+$this->registerJs(
+    "(async function() {new Chart(document.getElementById('chart2'),config_chart2);})();",
+    \yii\web\View::POS_READY
+);
 
+$this->registerJs(
+    "(async function() {new Chart(document.getElementById('chart3'),config_chart3);})();",
+    \yii\web\View::POS_READY
+);
 
+//round of all $stats values
+foreach ($stats as $key => $value)
+{
+    $stats[$key] = round($value);
+}
+
+$ctr=0;
 
 ?>
 <div class="project-index">
@@ -32,33 +47,50 @@ $this->registerJs(
         <?= Html::a('All Projects', ['all'], ['class' => 'btn btn-success']) ?>
     </p>
 
-    <div style="width: 800px;"><canvas id="acquisitions"></canvas></div>
-
-    <script type="text/javascript">
+    <?php
+    makeChart($stats,'chart1',"All Projects");
+    makeChart($billing_stats,'chart2','Billed Projects');
+    makeChart($est_billing_stats,'chart3','Estimated Bills');
+    function makeChart($dstats,$chartid,$title)
+    {
+        echo "<h2>$title</h2>";
+        ?>
+        <div style="width: 800px;"><canvas id="<?=$chartid?>"></canvas></div>
+        <script type="text/javascript">
         
+        const data_<?=$chartid?> = <?php
+            $data = [
+                'labels' => array_keys($dstats),
+                'datasets' => [
+                    [
+                        'label' => 'Hours',
+                        'data' => array_values($dstats),
+                        'backgroundColor' => [
+                            'rgb(255, 99, 132)',
+                            'rgb(54, 162, 235)',
+                            'rgb(255, 205, 86)',
+                            'rgb(75, 192, 192)',
+                            'rgb(153, 102, 255)',
+                            'rgb(255, 159, 64)',
+                            'rgb(255, 99, 132)',
+                            'rgb(54, 162, 235)',
+                            'rgb(255, 205, 86)'
+                        ],
+                        'hoverOffset' => 4
+                    ]
+                ]
+            ];
+            $jsondata = json_encode($data, JSON_PRETTY_PRINT);
+            echo $jsondata;
+        ?>
 
-        const data = {
-            labels: [
-                'Red',
-                'Blue',
-                'Yellow'
-            ],
-            datasets: [{
-                label: 'My First Dataset',
-                data: [300, 50, 100],
-                backgroundColor: [
-                    'rgb(255, 99, 132)',
-                    'rgb(54, 162, 235)',
-                    'rgb(255, 205, 86)'
-                ],
-                hoverOffset: 4
-            }]
-        };
-
-        const config = {
+        const config_<?=$chartid?> = {
             type: 'pie',
-            data: data,
+            data: data_<?=$chartid?>,
         };
         </script>
+        <?php
+    }
+    ?>
 
 </div>
