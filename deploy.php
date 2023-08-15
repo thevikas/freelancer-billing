@@ -6,6 +6,13 @@ namespace Deployer;
 //require 'recipe/yii2-app-advanced.php';
 require 'recipe/yii.php';
 
+set('bin/php', function () {
+    return '/usr/bin/php8.1';
+});
+
+
+set('php_executable', 'php8.1');
+
 // Project name
 set('application', 'FreelancerBilling');
 
@@ -39,7 +46,7 @@ add('writable_dirs', [
 host('linode2')
     ->set('hostname', 'linode2')
     ->set('stage', 'prod')
-    ->set('branch', 'developer')
+    ->set('branch', 'master')
     ->set('composer_options', ' --verbose --no-interaction')
     ->set('deploy_path', '~/deploy/prod/{{application}}');
 
