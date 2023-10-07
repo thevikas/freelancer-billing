@@ -9,8 +9,10 @@ use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
+use app\assets\Bootstrap5;
 
 AppAsset::register($this);
+Bootstrap5::register($this);
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -38,13 +40,13 @@ AppAsset::register($this);
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav me-auto mb-2 mb-lg-0'],
         'items' => [
-            ['label' => 'Home', 'url' => ['/site/index']],
-            ['label' => 'Bills', 'url' => ['/bills']],
-            ['label' => 'Projects', 'url' => ['/projects']],
-            ['label' => 'About', 'url' => ['/site/about']],
-            ['label' => 'Contact', 'url' => ['/site/contact']],
+            ['label' => 'Home', 'url' => ['/site/index'],'options' => ['class' => 'nav-item'],'linkOptions' => ['class' => 'nav-link']],
+            ['label' => 'Bills', 'url' => ['/bills'],'options' => ['class' => 'nav-item'],'linkOptions' => ['class' => 'nav-link']],
+            ['label' => 'Projects', 'url' => ['/projects'],'options' => ['class' => 'nav-item'],'linkOptions' => ['class' => 'nav-link']],
+            ['label' => 'About', 'url' => ['/site/about'],'options' => ['class' => 'nav-item'],'linkOptions' => ['class' => 'nav-link']],
+            ['label' => 'Contact', 'url' => ['/site/contact'],'options' => ['class' => 'nav-item'],'linkOptions' => ['class' => 'nav-link']],
             Yii::$app->user->isGuest ? (
-                ['label' => 'Login', 'url' => ['/site/login']]
+                ['label' => 'Login', 'url' => ['/site/login'],'options' => ['class' => 'nav-item'],'linkOptions' => ['class' => 'nav-link']]
             ) : (
                 '<li>'
                 . Html::beginForm(['/site/logout'], 'post')
