@@ -1,3 +1,4 @@
+require('dotenv').config();
 // Check the Node.js version
 const [major, minor] = process.versions.node.split('.').map(Number);
 
@@ -22,7 +23,7 @@ const fs = require('fs');
 
     const id = process.argv[2];
     const proj = process.argv[3];
-    const website_url = `http://billing.asus/bills/view?id=${id}`;
+    const website_url = process.env.FREELANCER_WEB_URL + `/bills/view?id=${id}`;
     console.log(`Generating screenshot for ${website_url}...`);
 
     const browser = await puppeteer.launch();
@@ -31,8 +32,8 @@ const fs = require('fs');
 
     // Open URL in the current page
     await page.goto(website_url, { waitUntil: 'networkidle0' });
-    const jpgfile = `Invoice-${id}-${proj}.jpg`;
-    const pdffile = `Invoice-${id}-${proj}.pdf`;
+    const jpgfile = process.env.BILLS_JPG_DIR + `/Invoice-${id}-${proj}.jpg`;
+    const pdffile = process.env.BILLS_PDF_DIR + `/Invoice-${id}-${proj}.pdf`;
     await page.screenshot({
         path: jpgfile,
     });

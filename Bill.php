@@ -118,6 +118,16 @@ class Bill
     {
         $cmd = "node screenshot.js $invoiceNum $projcode";
         system($cmd);
+        $this->syncS3();
+    }
+
+    public function syncS3()
+    {
+        //sync data directory with remote s3 bucket
+        $cmd = "aws s3 sync " . $_ENV['BILLS_JSON_DIR'] . ' ' . $_ENV['AWS_S3_INVOICE_URL'];
+        system($cmd);
+        $cmd = "aws s3 sync " . $_ENV['BILLS_PDF_DIR'] . ' ' . $_ENV['AWS_S3_PDF_URL'];
+        system($cmd);
     }
 
     /**

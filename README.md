@@ -25,15 +25,24 @@ The primary objective is it is very private. You can host on your own infra that
 
 ## Background
 
-[Gtimelog](https://github.com/gtimelog/gtimelog) has been my oldest and most simple time tracking app.Originally this project started with just a command line tool for using gtimelog.
+[Gtimelog](https://github.com/gtimelog/gtimelog) has been my oldest and most simple time tracking app. Originally this project started with just a command line tool for using gtimelog.
 
 Later had setup a git based timelog.txt sync system for the many dev stations I use. This helps keep my timelog.txt same in all machines. Like a desktop in one place and my mac on another.
 
 Later using other PCs where all setup was not done or if it was Windows. I still need to do time tracking. So this is now this is gradually also progressing towards web based time tracking. This is just for cases when command line linux-like env is not setup to run php/gtimelog/git/ssh.
 
-Already a setup of git for storing timelog.txt helps in web migration cause it always has latest copy of the timelog.
+Already a setup of git for storing `timelog.txt` helps in web migration cause it always has latest copy of the timelog.
 
 The timelog itself is a private repo. :)
+
+## Getting Started
+
+2. clone your timelog repository
+1. clone this repository
+3. do a composer install
+3. make a copy of `.env` from `.env.default`
+4. edit the `.env` file based on the current system settings
+5. add this cloned path into your local $PATH env variable
 
 EXAMPLES
 ------------
@@ -66,3 +75,4 @@ CONFIGURATION
 
 TESTING
 -------
+
