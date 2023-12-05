@@ -33,6 +33,8 @@ Later using other PCs where all setup was not done or if it was Windows. I still
 
 Already a setup of git for storing `timelog.txt` helps in web migration cause it always has latest copy of the timelog.
 
+The code does not use any database. Invoices are kept in as JSON files. They are sync with AWS S3 (Bill::syncS3). PDF is generated and also synced to S3. `client-projects.json` is kept in timelog repo and symlinked to `config/client-projects.json`
+
 The timelog itself is a private repo. :)
 
 ## Getting Started
@@ -55,6 +57,9 @@ To repeat the last entry
 
 To add a away ** between work and then repeat the last entry
 `gt away`
+
+To make new bill based on last calender month's work
+`gt -b -p projectName`
 
 It does not do anything else like make reports,etc (though I could). For that you can use the GUI gtimelog itself.
 

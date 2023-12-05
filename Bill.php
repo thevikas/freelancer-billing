@@ -67,6 +67,9 @@ class Bill
 
     public function saveJson($rep, $project_name)
     {
+        //sync invoice files so next invoice is in sequence
+        $this->syncS3();
+
         $inum = self::getNextInvoiceNumber();
 
         //check for prev 10 inum json files 

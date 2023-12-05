@@ -1,0 +1,42 @@
+{
+    "ccy": {
+        "INR": 1.0,
+        "Sats": 1.0,
+        "BTC": 3480000,
+        "USD": 81
+    },
+    "precision":{
+        "default": 2,
+        "BTC": 5
+    },
+    "projects": {
+        "default": {
+            "ccy": "USD",
+            "per_hour": 45.0
+        },
+        "smarty": {
+            "ccy": "USD",
+            "billing": {
+                "name": "Smarty",
+                "address": "​Level 23, That Plaza",
+                "email": "​marketing@smarty.com",
+                "phone": "​+971 55 555 5555"
+            },
+            "billingactive": true,
+            "per_hour": 45.0
+        },
+        "smartLife": {
+            "aliases": ["smartLife"],
+            "ccy": "BTC",
+            "layout": "smartLife-blue",
+            "monthlyTargetHours": 62.5,
+            "billing": {
+                "name": "smartLife LLP.",
+                "address": "Lucknow – 226023",
+                "email": "smartLife@smartLife.com",
+                "phone": "+91 55555 55555"
+            },
+            "per_hour": 0.00064000
+        }
+    }
+}
