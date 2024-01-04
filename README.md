@@ -33,9 +33,9 @@ Later using other PCs where all setup was not done or if it was Windows. I still
 
 Already a setup of git for storing `timelog.txt` helps in web migration cause it always has latest copy of the timelog.
 
-The code does not use any database. Invoices are kept in as JSON files. They are sync with AWS S3 (Bill::syncS3). PDF is generated and also synced to S3. `client-projects.json` is kept in timelog repo and symlinked to `config/client-projects.json`
+The main data of timesheets is using timelog repo. This code does not use any database. Invoices are kept in as JSON files. They are sync with AWS S3 (Bill::syncS3). PDF is generated and also synced to S3. `client-projects.json` is kept in timelog repo and symlinked to `config/client-projects.json`
 
-The timelog itself is a private repo. :)
+The timelog itself is a private repo. :) It has various confidential info about customers, their rates, currency, exceptions. Occasionally even special invoice entries.
 
 ## Getting Started
 
