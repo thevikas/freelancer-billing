@@ -22,12 +22,17 @@ class Project
      */
     public $name;
 
+    public $billingInfo;
+
     /**
      * @param $name
      */
     public function __construct($name)
     {
         $this->name = $name;
+        $json = \file_get_contents($_ENV['RATES_JSON_FILE']);
+        $rates = json_decode($json, true);
+        $this->billingInfo = $rates['projects'][$name];
     }
 
     function getDateTimeFromWeekNumber($weekNumber, $year) {
@@ -78,6 +83,7 @@ class Project
         }
         list($hours,$mins) = explode(':',getHourMins($total));
         $hours += $mins/60;
+        $rep['billingactive'] = !empty($this->billingInfo);
         $rep['Weeks'] = $this->task_week_times;
         $rep['Total'] = $hours;
         $rep['Dated'] = $this->last_datetime;
