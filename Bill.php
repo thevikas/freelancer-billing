@@ -65,7 +65,7 @@ class Bill
         }
     }
 
-    public function saveJson($rep, $project_name)
+    public function saveJson($rep, $project_name,$invoice_date)
     {
         $inum = self::getNextInvoiceNumber();
 
@@ -79,7 +79,7 @@ class Bill
             if (file_exists($json_file))
             {
                 $json = json_decode(file_get_contents($json_file), true);
-                if($json['dated'] == date('Y-m-d'))
+                if(date('Y-m',strtotime($json['dated'])) == date('Y-m',strtotime($invoice_date)))
                 {
                     $inum = $ictr;
                     echo "Using $json_file...\n";

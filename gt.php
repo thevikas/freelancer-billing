@@ -41,6 +41,11 @@ $hello_cmd = new \Commando\Command();
 $hello_cmd->option()
     ->describedAs('Log entry');
 
+$hello_cmd->option('a')
+    ->aka('allprojects')
+    ->describedAs('Generate monthly bill json for all active projects')
+    ->boolean();
+
 $hello_cmd->option('b')
     ->aka('bill')
     ->describedAs('Generate monthly bill report')
@@ -50,6 +55,11 @@ $hello_cmd->option('c')
     ->aka('cache')
     ->describedAs('Cache and parse data')
     ->boolean();
+
+$hello_cmd->option('d')
+    ->aka('idate')
+    ->describedAs('Invoice date, defaults today')
+    ->default(date('Y-m-01'));
 
 $hello_cmd->option('e')
     ->aka('earning')
@@ -169,6 +179,9 @@ if ($hello_cmd['report'] || $hello_cmd['bill'] || $hello_cmd['earning'] || $hell
     {
         $bill = new Bill($report_data);
         $BillRep = $bill->report($FirstDayOfMonth);
+        
+        $invoice_date = $hello_cmd['invoice_date'];
+
         if ($hello_cmd['earning'])
         {
             echo sprintf("%d", round($BillRep['TotalEarning'])) . "\n";
@@ -176,17 +189,30 @@ if ($hello_cmd['report'] || $hello_cmd['bill'] || $hello_cmd['earning'] || $hell
         else if ($hello_cmd['project'])
         {
             $proj = $hello_cmd['project'];
-            $inum = $bill->saveJson($BillRep[$proj], $proj);
+            $inum = $bill->saveJson($BillRep[$proj], $proj, $hello_cmd['idate']);
             $bill->printPDF($inum,$proj);
             $clean = $report_data[$proj];
 
             $rep->printTimesheet($report_data,$proj);
         }
+        else if ($hello_cmd['allprojects'])
+        {
+            foreach ($BillRep as $proj => $bill_data)
+            {
+                $rateinfo = $bill->rates['projects'][$proj] ?? [];
+                if(empty($rateinfo) || empty($rateinfo['billingactive']) || !$rateinfo['billingactive'])
+                    continue;
+
+                $inum = $bill->saveJson($bill_data, $proj, $hello_cmd['idate']);
+                $bill->printPDF($inum,$proj);
+                $clean = $report_data[$proj];
+            }
+        }
         else
         {
             print_r($rep);
             echo "Requires project code\n";
-        }
+        }        
     }
     return;
 }
