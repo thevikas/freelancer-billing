@@ -32,7 +32,7 @@ class Project
         $this->name = $name;
         $json = \file_get_contents($_ENV['RATES_JSON_FILE']);
         $rates = json_decode($json, true);
-        $this->billingInfo = $rates['projects'][$name];
+        $this->billingInfo = $rates['projects'][$name] ?? [];
     }
 
     function getDateTimeFromWeekNumber($weekNumber, $year) {

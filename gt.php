@@ -206,6 +206,8 @@ if ($hello_cmd['report'] || $hello_cmd['bill'] || $hello_cmd['earning'] || $hell
                 $inum = $bill->saveJson($bill_data, $proj, $hello_cmd['idate']);
                 $bill->printPDF($inum,$proj);
                 $clean = $report_data[$proj];
+                $rep->printTimesheet($report_data,$proj);
+
             }
         }
         else

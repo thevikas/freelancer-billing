@@ -98,19 +98,13 @@ class Bill
 
         echo "Writing $json_file...\n";
 
-        /*
-        {
-        "client": "care4life-btc",
-        "hours": 82,
-        "dated": "2023-01-01",
-        }
-         */
         $json = [
             'hours'  => $rep['hours'],
             'client' => $project_name,
             'dated'  => date('Y-m-d'),
         ];
-        file_put_contents($json_file, json_encode($json, JSON_PRETTY_PRINT));
+        if(!$resuming)
+            file_put_contents($json_file, json_encode($json, JSON_PRETTY_PRINT));
         return $inum;
     }
 
