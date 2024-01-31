@@ -15,9 +15,12 @@ class MonthReport
      */
     public $fHandle;
     /**
-     * @var mixed
+     * @var Project
      */
     public $projects;
+
+    public $dates;
+
     /**
      * @param $logfile
      */
@@ -87,23 +90,58 @@ class MonthReport
             $this->last_time = $next['last_time'];
             $this->last_info = $next;
             $current_date = date('Y-m-d', $next['last_time']);
-            continue;
         }
-        //$info_this_month = find_start_of_this_month($L);
-        /*$pos = -(strlen($info[1]) + strlen($info[2]) + 5);
-    fseek($L, $pos, SEEK_CUR);
-    iterate($L);*/
     }
 
     public function report($FirstDayOfMonth)
     {
         $this->parse($FirstDayOfMonth);
         $rep = [];
+        /** @var Project $project */
         foreach ($this->projects as $project_name => $project)
         {
             $rep[$project_name] = $project->report();
         }
         return $this->reportData = $rep;
+    }
+
+    function getEarnings($dates)
+    {
+        $earnings = [];
+        $bill = new Bill($this->reportData);
+        $dates = explode(',', $dates);
+        $dates = array_map('trim', $dates);
+        foreach ($dates as $date1)
+        {
+            $date2 = date("Y-m-$date1");
+            //loop through
+            foreach ($this->reportData as $project_name => $project)
+            {
+
+                if(empty($project['Dates'][$date2]))
+                    continue;
+                if (isset($bill->rates['projects'][$project_name]))
+                {
+                    $projectinfo = $bill->rates['projects'][$project_name];
+
+                    $billing = true;
+
+                    if (isset($projectinfo['billing']) && !$projectinfo['billing'])
+                        $billing = false;
+                    
+                    if ($billing)
+                    {
+                        if(empty($earnings[$date1][$project_name]))
+                            $earnings[$date1][$project_name] = 0;
+                        $earning = $project['Dates'][$date2];
+                        $earnings[$date1][$project_name] += $earning;
+                        $earnings[$date1]['Total'] += $earning;
+                        $earnings['Total'] += $earning;
+                    }
+                }
+            }
+        }
+        return $earnings;
     }
 
     /**

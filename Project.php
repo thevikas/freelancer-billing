@@ -15,6 +15,8 @@ class Project
      */
     public $task_times;
 
+    public $dates;
+
     public $task_week_times;
 
     /**
@@ -54,7 +56,9 @@ class Project
             $this->task_times[$task] = 0;
         }
         $week = date('W',$ts = strtotime($info['given_ts']));
-        $year = date('Y',$ts = strtotime($info['given_ts']));
+        $year = date('Y',$ts);
+        $dated = date('Y-m-d', $ts);
+
         $weekDateTime = $this->getDateTimeFromWeekNumber($week, $year);
 
         if(empty($this->task_week_times[$weekDateTime][$task]))
@@ -64,6 +68,11 @@ class Project
         $this->task_week_times[$weekDateTime][$task] += $spent_time_secs;
         $this->task_times[$task] += $spent_time_secs;
         $this->last_datetime = $tasktime;
+        if(empty($this->dates[$dated]))
+        {
+        	$this->dates[$dated] = 0;
+        }
+        $this->dates[$dated] += $spent_time_secs;
     }
 
     public function report()
@@ -79,6 +88,15 @@ class Project
         list($hours,$mins) = explode(':',getHourMins($total));
         $hours += $mins/60;
         $rep['Weeks'] = $this->task_week_times;
+
+        $dates = $this->dates;
+        //remove array elements with zero
+        foreach($dates as $date => $time)
+        {
+            if($time == 0)
+                unset($dates[$date]);
+        }
+        $rep['Dates'] = $dates;
         $rep['Total'] = $hours;
         $rep['Dated'] = $this->last_datetime;
         return $rep;
