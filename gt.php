@@ -60,6 +60,9 @@ $hello_cmd->option('d')
     ->aka('idate')
     ->describedAs('Invoice date, defaults today')
     ->default(date('Y-m-01'));
+//    ->aka('dates')
+//    ->describedAs('Dates to report on');
+//>>>>>>> @{-1}
 
 $hello_cmd->option('e')
     ->aka('earning')
@@ -126,6 +129,13 @@ if ($hello_cmd['sync'])
     return 0;
 }
 
+if($hello_cmd['dates'] && !isset($hello_cmd['earning']))
+{
+    echo "Dates only works with earning report\n";
+    return -1;
+}
+
+
 if ($hello_cmd['report'] || $hello_cmd['bill'] || $hello_cmd['earning'] || $hello_cmd['cache'])
 {
     $rep = new MonthReport($logfile);
@@ -184,7 +194,14 @@ if ($hello_cmd['report'] || $hello_cmd['bill'] || $hello_cmd['earning'] || $hell
 
         if ($hello_cmd['earning'])
         {
-            echo sprintf("%d", round($BillRep['TotalEarning'])) . "\n";
+            if($hello_cmd['dates'])
+            {
+                //use $rep->projects[]->dates[] for getting date wise earning
+                $earnings = $rep->getEarnings($hello_cmd['dates']);
+                print_r($earnings);
+            }
+            else
+                echo sprintf("%d", round($BillRep['TotalEarning'])) . "\n";
         }
         else if ($hello_cmd['project'])
         {
