@@ -1,0 +1,330 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "Freelancer Billing API",
+        "description": "API to access info, bills and even submit timesheets through API",
+        "version": "1"
+    },
+    "servers": [
+        {
+            "url": "https://billing.thevikas.com/api"
+        }
+    ],
+    "security": [
+        {
+            "bearerAuth": []
+        }
+    ],
+    "paths": {
+        "/reg/register": {
+            "description": "To register users from API",
+            "post": {
+                "tags": [
+                    "reg"
+                ],
+                "summary": "To register users from API",
+                "operationId": "register",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "schema": {
+                            "type": "number"
+                        },
+                        "description": "N/a"
+                    }
+                ],
+                "requestBody": {
+                    "description": "N/a",
+                    "content": {
+                        "application/json; charset=utf-8": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RegisterReq"
+                            },
+                            "example": {}
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "N/a",
+                        "content": {
+                            "application/json; charset=utf-8": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RegisterRes"
+                                },
+                                "examples": {
+                                    "good": {
+                                        "summary": "when all was good",
+                                        "value": {
+                                            "status": 1,
+                                            "message": "User registered successfully.",
+                                            "response": {
+                                                "role_id": "1",
+                                                "email": "jack@jill.com",
+                                                "first_name": "John",
+                                                "last_name": "Doe",
+                                                "mobile": "87875487358",
+                                                "country_code": "97",
+                                                "type": "Other",
+                                                "api_token": "e6f095e985e6762f1538b47ff1abda58dbe8ce088b16d8a5744fc179e9a2fc16"
+                                            }
+                                        }
+                                    },
+                                    "bad": {
+                                        "summary": "when something went wrong",
+                                        "value": {
+                                            "status": 1,
+                                            "message": "The Password must be at least 6 characters."
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "description": "API Token header",
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": ""
+            }
+        },
+        "schemas": {
+            "HomeRes": {
+                "type": "object",
+                "required": [
+                    "first_page_url",
+                    "to",
+                    "from",
+                    "total",
+                    "current_page",
+                    "last_page",
+                    "status",
+                    "dataflow",
+                    "message",
+                    "response"
+                ],
+                "properties": {
+                    "status": {
+                        "type": "integer",
+                        "description": "Status code"
+                    },
+                    "message": {
+                        "type": "string",
+                        "description": "Response message"
+                    },
+                    "response": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Product"
+                        },
+                        "description": "Product data"
+                    },
+                    "first_page_url": {
+                        "type": "string",
+                        "format": "uri",
+                        "description": "URL of the first page of results"
+                    },
+                    "next_page_url": {
+                        "description": "URL of the next page of results (can be NULL)"
+                    },
+                    "to": {
+                        "type": "integer",
+                        "description": "Number of records shown 'to'"
+                    },
+                    "from": {
+                        "type": "integer",
+                        "description": "Number of records shown 'from'"
+                    },
+                    "total": {
+                        "type": "integer",
+                        "description": "Total number of records"
+                    },
+                    "current_page": {
+                        "type": "integer",
+                        "description": "Current page number"
+                    },
+                    "last_page": {
+                        "type": "integer",
+                        "description": "Last page number"
+                    },
+                    "dataflow": {
+                        "type": "integer",
+                        "description": "Data flow value"
+                    }
+                },
+                "example": {
+                    "first_page_url": "https://bogus.com/api/webservice/home?page=1",
+                    "next_page_url": null,
+                    "to": 10,
+                    "from": 1,
+                    "total": 18,
+                    "current_page": 1,
+                    "last_page": 2,
+                    "status": 1,
+                    "dataflow": 0,
+                    "message": "success",
+                    "response": [
+                        {
+                            "id": 1,
+                            "name": "bogus Diamond Thingi",
+                            "price": "636.00",
+                            "image": "https://bogus.com/img/1679050312.IMG_0080 march 13.jpg",
+                            "try_on_product_id": null,
+                            "wishlist": 0,
+                            "vendor_id": 2,
+                            "category_id": 107,
+                            "stone_type": 1,
+                            "product_preference": 2,
+                            "top_category": 0,
+                            "featured_status": 0,
+                            "product_link": "https://bogus.com/vendor/product_detail/MTY="
+                        },
+                        {
+                            "id": 2,
+                            "name": "Gold Chain Thingi",
+                            "price": "1067.85",
+                            "image": "https://bogus.com/img/1678784868.IMG_0065 mar 13.jpg",
+                            "try_on_product_id": null,
+                            "wishlist": 0,
+                            "vendor_id": 2,
+                            "category_id": 104,
+                            "stone_type": 1,
+                            "product_preference": 2,
+                            "top_category": 0,
+                            "featured_status": 0,
+                            "product_link": "https://bogus.com/vendor/product_detail/MTU="
+                        },
+                        {
+                            "id": 3,
+                            "name": "Infinity Chain THingi",
+                            "price": "804.00",
+                            "image": "https://bogus.com/img/1669017630.61QrV-EpGML._UY500_.jpg",
+                            "try_on_product_id": 0,
+                            "wishlist": 0,
+                            "vendor_id": 5,
+                            "category_id": 108,
+                            "stone_type": 1,
+                            "product_preference": 2,
+                            "top_category": 0,
+                            "featured_status": 0,
+                            "product_link": "https://bogus.com/vendor/product_detail/MTQ="
+                        },
+                        {
+                            "id": 4,
+                            "name": "Earrings of Gold Thingi",
+                            "price": "743.00",
+                            "image": "https://bogus.com/img/1669017476.images (5).jfif",
+                            "try_on_product_id": 0,
+                            "wishlist": 0,
+                            "vendor_id": 5,
+                            "category_id": 107,
+                            "stone_type": 1,
+                            "product_preference": 2,
+                            "top_category": 0,
+                            "featured_status": 0,
+                            "product_link": "https://bogus.com/vendor/product_detail/MTM="
+                        },
+                        {
+                            "id": 5,
+                            "name": "Rings Thingi",
+                            "price": "903.00",
+                            "image": "https://bogus.com/img/1669017343.images (3).jfif",
+                            "try_on_product_id": 0,
+                            "wishlist": 0,
+                            "vendor_id": 5,
+                            "category_id": 104,
+                            "stone_type": 2,
+                            "product_preference": 2,
+                            "top_category": 0,
+                            "featured_status": 1,
+                            "product_link": "https://bogus.com/vendor/product_detail/MTI="
+                        },
+                        {
+                            "id": 6,
+                            "name": "Gold Chain with small diamonds Thingi",
+                            "price": "45454.00",
+                            "image": "https://bogus.com/img/1669015898.download.jfif",
+                            "try_on_product_id": 0,
+                            "wishlist": 0,
+                            "vendor_id": 5,
+                            "category_id": 108,
+                            "stone_type": 2,
+                            "product_preference": 2,
+                            "top_category": 0,
+                            "featured_status": 1,
+                            "product_link": "https://bogus.com/vendor/product_detail/MTE="
+                        },
+                        {
+                            "id": 7,
+                            "name": "Ring with 1 diamond Thingi",
+                            "price": "168.00",
+                            "image": "https://bogus.com/img/1667977693.earring new.jpg",
+                            "try_on_product_id": 0,
+                            "wishlist": 0,
+                            "vendor_id": 2,
+                            "category_id": 107,
+                            "stone_type": 1,
+                            "product_preference": 2,
+                            "top_category": 0,
+                            "featured_status": 0,
+                            "product_link": "https://bogus.com/vendor/product_detail/MQ=="
+                        },
+                        {
+                            "id": 8,
+                            "name": "Diamond Heart Pendant Thingi",
+                            "price": "899.00",
+                            "image": "https://example.com/images/heart_pendant.jpg",
+                            "try_on_product_id": 0,
+                            "wishlist": 1,
+                            "vendor_id": 8,
+                            "category_id": 108,
+                            "stone_type": 1,
+                            "product_preference": 2,
+                            "top_category": 0,
+                            "featured_status": 0,
+                            "product_link": "https://example.com/products/18"
+                        },
+                        {
+                            "id": 9,
+                            "name": "Silver Cufflinks Thingi with diamond",
+                            "price": "99.00",
+                            "image": "https://example.com/images/silver_cufflinks.jpg",
+                            "try_on_product_id": 0,
+                            "wishlist": 0,
+                            "vendor_id": 7,
+                            "category_id": 111,
+                            "stone_type": 0,
+                            "product_preference": 1,
+                            "top_category": 0,
+                            "featured_status": 0,
+                            "product_link": "https://example.com/products/19"
+                        },
+                        {
+                            "id": 10,
+                            "name": "Diamon Gold Thingi Ringi",
+                            "price": "5000.00",
+                            "image": "https://bogus.com/img/gold-diamon-ring.jpg",
+                            "try_on_product_id": 0,
+                            "wishlist": 0,
+                            "vendor_id": 2,
+                            "category_id": 104,
+                            "stone_type": 1,
+                            "product_preference": 2,
+                            "top_category": 0,
+                            "featured_status": 0,
+                            "product_link": "https://bogus.com/vendor/product_detail/Mg=="
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}
