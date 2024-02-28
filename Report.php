@@ -137,6 +137,21 @@ class MonthReport
                         $earnings[$date1][$project_name] += $earning;
                         $earnings[$date1]['Total'] += $earning;
                         $earnings['Total'] += $earning;
+
+                        $earning_hrs = round($earning / 3600,2);
+
+                        $hour_inr_rate = $projectinfo['per_hour'];
+                        if ($projectinfo['ccy'] != 'INR')
+                        {
+                            $hour_inr_rate = $projectinfo['per_hour'] * $bill->rates['ccy'][$projectinfo['ccy']];
+                        }
+                        if(empty($earnings[$date1]['TotalAmount']))
+                            $earnings[$date1]['TotalAmount'] = 0;
+                        if(empty($earnings['TotalAmount']))
+                            $earnings['TotalAmount'] = 0;
+                        $amount = round($earning_hrs * $hour_inr_rate);
+                        $earnings[$date1]['TotalAmount'] += $amount;
+                        $earnings['TotalAmount'] += $amount;
                     }
                 }
             }
