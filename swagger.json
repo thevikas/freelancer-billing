@@ -16,14 +16,14 @@
         }
     ],
     "paths": {
-        "/reg/register": {
+        "/projects": {
             "description": "To register users from API",
             "post": {
                 "tags": [
-                    "reg"
+                    "projects"
                 ],
-                "summary": "To register users from API",
-                "operationId": "register",
+                "summary": "To get summary info of all projects",
+                "operationId": "projects",
                 "parameters": [
                     {
                         "in": "query",
@@ -34,51 +34,48 @@
                         "description": "N/a"
                     }
                 ],
-                "requestBody": {
-                    "description": "N/a",
-                    "content": {
-                        "application/json; charset=utf-8": {
-                            "schema": {
-                                "$ref": "#/components/schemas/RegisterReq"
-                            },
-                            "example": {}
-                        }
-                    },
-                    "required": true
-                },
                 "responses": {
                     "200": {
                         "description": "N/a",
                         "content": {
                             "application/json; charset=utf-8": {
                                 "schema": {
-                                    "$ref": "#/components/schemas/RegisterRes"
+                                    "$ref": "#/components/schemas/ProjectsRes"
                                 },
                                 "examples": {
                                     "good": {
                                         "summary": "when all was good",
                                         "value": {
-                                            "status": 1,
-                                            "message": "User registered successfully.",
-                                            "response": {
-                                                "role_id": "1",
-                                                "email": "jack@jill.com",
-                                                "first_name": "John",
-                                                "last_name": "Doe",
-                                                "mobile": "87875487358",
-                                                "country_code": "97",
-                                                "type": "Other",
-                                                "api_token": "e6f095e985e6762f1538b47ff1abda58dbe8ce088b16d8a5744fc179e9a2fc16"
+                                            "xx1": {
+                                                "Dated": "2024-02-28 11:58",
+                                                "EstimatedIncome": 8064,
+                                                "EstimatedTotalHours": 11.52,
+                                                "Income": 7525,
+                                                "Total": 10.75,
+                                                "name": "xx1"
+                                            },
+                                            "xx2": {
+                                                "Dated": "2024-02-28 13:21",
+                                                "EstimatedIncome": 231539,
+                                                "EstimatedIncomeUSD": 2858.5,
+                                                "EstimatedTotalHours": 114.34,
+                                                "Income": 216101,
+                                                "IncomeUSD": 2667.9166666666665,
+                                                "Total": 106.71666666666667,
+                                                "name": "xx2"
+                                            },                                            
+                                            "summary": {
+                                                "Total": 184,
+                                                "Billable": 152,
+                                                "EstimatedIncome": 330339,
+                                                "Income": 308312,
+                                                "Productivity": "83%",
+                                                "EarningDays": "100%",
+                                                "EffectiveHourlyRateINR": 2024,
+                                                "ThisMonthHourlyRateINR": 1927
                                             }
                                         }
-                                    },
-                                    "bad": {
-                                        "summary": "when something went wrong",
-                                        "value": {
-                                            "status": 1,
-                                            "message": "The Password must be at least 6 characters."
-                                        }
-                                    }
+                                    }                                    
                                 }
                             }
                         }
