@@ -32,4 +32,16 @@ class ProjectsController extends \yii\web\Controller
         return $stats;
     }
 
+    public function actionGet($id)
+    {
+        $dotenv = \Dotenv\Dotenv::createImmutable(Yii::getAlias('@app'));
+        $dotenv->load();
+        $proj = new Project();
+
+        //set json header
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        return $proj->cache['summary']['BillableProjects'][$id];
+    }
+
 }
