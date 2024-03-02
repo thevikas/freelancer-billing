@@ -35,7 +35,6 @@ if (empty($pcname))
     exit(1);
 }
 
-
 $hello_cmd = new \Commando\Command();
 
 $hello_cmd->option()
@@ -57,6 +56,7 @@ $hello_cmd->option('c')
     ->boolean();
 
 $hello_cmd->option('d')
+    ->aka('idate')
     ->describedAs('Invoice date, defaults today')
     ->default(date('Y-m-01'));
 //    ->aka('dates')

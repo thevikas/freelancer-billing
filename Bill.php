@@ -67,6 +67,8 @@ class Bill
 
     public function saveJson($rep, $project_name,$invoice_date)
     {
+        if(empty($invoice_date))
+            throw new \Exception("Invoice date is required in saveJson(... $project_name ...)");
         //sync invoice files so next invoice is in sequence
         $this->syncS3();
 
