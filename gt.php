@@ -241,6 +241,10 @@ if ($hello_cmd['undo'])
     return;
 }
 
+$proj = new Project("");
+$proj->logNow($hello_cmd[0],$logfile,$argv,$gitrepo,$pcname);
+return;
+
 $fullarg = $hello_cmd[0];
 #Reading
 $L = fopen($logfile, 'r');

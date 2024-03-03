@@ -5,6 +5,7 @@ namespace gtimelogphp;
 use InitPHP\CLITable\Table;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table as SymfonyTable;
+use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -242,7 +243,8 @@ class MonthReport
             $rep['EstimatedIncome'] = round($totalestimatedincome);
             $rep['Income'] = round($income);
             $rep['Productivity'] = (round($billable / $total, 2) * 100) . "%";
-            $rep['EarningDays'] = round(100 * ($rep['Billable'] / 8) / $this->getWOrkingDaysTillTOday($FirstDayOfMonth)) . "%";
+            $wdays = $this->getWOrkingDaysTillTOday($FirstDayOfMonth);
+            $rep['EarningDays'] = $wdays ? round(100 * ($rep['Billable'] / 8) / $wdays) . "%" : "";
 
             $rep['EffectiveHourlyRateINR'] = round($income / $billable);
             $rep['ThisMonthHourlyRateINR'] = round($income / (20 * 8));
@@ -323,6 +325,9 @@ class MonthReport
         //$tableData = [$headers];
         foreach ($clean as $task => $time)
         {
+            if('Dates' == $task || 'billingactive' == $task)
+                continue;
+
             $tableData[] = [$task, $time];
 
             /*$table->row([
@@ -334,6 +339,9 @@ class MonthReport
         //print_r($tableData);
         //$climate->table($tableData);
         //echo $table;
+
+        $tableData[] = new TableSeparator();
+        $tableData[] = ['Total', round($report_data[$proj]['Total'],2)];
         
         $output = new \Symfony\Component\Console\Output\ConsoleOutput();
 

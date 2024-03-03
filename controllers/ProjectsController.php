@@ -118,7 +118,7 @@ class ProjectsController extends Controller
         foreach ($tasks as $key => $value)
         {
 
-            if ('Total' == $key || 'Dated' == $key || 'Weeks' == $key || 'billingactive' == $key)
+            if ('Total' == $key || 'Dated' == $key || 'Weeks' == $key || 'billingactive' == $key || is_array($value))
                 continue;
 
             if(is_numeric($value))

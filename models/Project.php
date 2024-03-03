@@ -65,6 +65,8 @@ class Project extends Model
             die("Error running $cmd");
         $FirstDayOfMonth = strtotime(date('Y-m-01'));
         $cacheJsonFileName = $_ENV['TIMELOG_GITREPO'] . '/cache/' . date('Y-m-d', $FirstDayOfMonth) . ".json";
+        if(!file_exists($cacheJsonFileName))
+            throw new \Exception("$cacheJsonFileName not found");
         return json_decode(file_get_contents($cacheJsonFileName), true);
     }
     /**
