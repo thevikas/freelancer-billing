@@ -85,11 +85,12 @@ class Project
     public function report()
     {
         $rep = [];
+        $tasks = [];
         $times = $total = 0;
 
         foreach ($this->task_times as $task => $times)
         {
-            $rep[$task] = getHourMins($times);
+            $tasks[$task] = getHourMins($times);
             $total += $times;
         }
         list($hours, $mins) = explode(':', getHourMins($total));
@@ -104,6 +105,7 @@ class Project
             if ($time == 0)
                 unset($dates[$date]);
         }
+        $rep['Tasks'] = $tasks;
         $rep['Dates'] = $dates;
         $rep['Total'] = $hours;
         $rep['Dated'] = $this->last_datetime;

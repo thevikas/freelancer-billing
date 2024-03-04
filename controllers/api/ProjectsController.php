@@ -15,6 +15,8 @@ class ProjectsController extends \yii\web\Controller
         parent::init(); 
         $dotenv = \Dotenv\Dotenv::createImmutable(Yii::getAlias('@app'));
         $dotenv->load();        
+        //set json header
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
     }
 
     public function actionIndex()
@@ -31,16 +33,21 @@ class ProjectsController extends \yii\web\Controller
         $stats['summary'] = $proj->cache['summary'];
         unset($stats['summary']['BillableProjects']);
 
-        //set json header
-        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 
         return $stats;
     }
 
+    public function actionTasks($id,$month="")
+    {
+        $proj = new Project('');
+
+        $data = $proj->loadCache($month);
+        $data2 = $data['report_data'][$id];
+        return $data2['Tasks'];
+    }
+
     public function actionGet($id)
     {
-        $dotenv = \Dotenv\Dotenv::createImmutable(Yii::getAlias('@app'));
-        $dotenv->load();
         $proj = new Project();
 
         //set json header

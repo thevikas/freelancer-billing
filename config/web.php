@@ -64,6 +64,8 @@ $config = [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                '<module:\w+>/<controller:projects>/<id:\w+>/tasks' => '<module>/<controller>/tasks',
+                '<controller:\w+>/<id:\d+>' => '<controller>/view',
             ],
         ],
 

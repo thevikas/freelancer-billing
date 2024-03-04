@@ -45,6 +45,19 @@ class Project extends Model
         $this->cache = $jsondata;
     }
 
+    public function loadCache($month)
+    {
+        $FirstDayOfMonth = strtotime(date("$month-01"));
+        $dmy = date('Y-m-d', $FirstDayOfMonth);
+        $cacheJsonFileName = $_ENV['TIMELOG_GITREPO'] . '/cache/' . $dmy . ".json";
+        Yii::info("cacheJsonFileName=$cacheJsonFileName");
+        if (!file_exists($cacheJsonFileName))
+            return [];
+        //verify it is todays date
+        $data = json_decode(file_get_contents($cacheJsonFileName), true);    
+        return $data;
+    }
+
     /**
      * Update cache and return latest json parsed data
      *
