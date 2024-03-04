@@ -10,10 +10,15 @@ use Yii;
  */
 class ProjectsController extends \yii\web\Controller
 {
+    public function init()
+    {
+        parent::init(); 
+        $dotenv = \Dotenv\Dotenv::createImmutable(Yii::getAlias('@app'));
+        $dotenv->load();        
+    }
+
     public function actionIndex()
     {
-        $dotenv = \Dotenv\Dotenv::createImmutable(Yii::getAlias('@app'));
-        $dotenv->load();
         $proj = new Project();
 
         //create a array of projects and stats
@@ -42,6 +47,18 @@ class ProjectsController extends \yii\web\Controller
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 
         return $proj->cache['summary']['BillableProjects'][$id];
+    }
+
+    /**
+     * Refresh 
+     *
+     * @return void
+     */
+    public function actionRefresh()
+    {
+        $proj = new Project('');
+        $proj->updateCache();
+        return $this->actionIndex();
     }
 
 }

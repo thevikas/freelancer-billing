@@ -40,7 +40,7 @@ class Project extends Model
         {
             $jsondata = json_decode(file_get_contents($cacheJsonFileName), true);
             if (date('Y-m-d', strtotime($jsondata['dated'])) != date('Y-m-d'))
-                $jsondata = $this->updateCache();
+                return $this->updateCache();
         }
         $this->cache = $jsondata;
     }
@@ -67,7 +67,7 @@ class Project extends Model
         $cacheJsonFileName = $_ENV['TIMELOG_GITREPO'] . '/cache/' . date('Y-m-d', $FirstDayOfMonth) . ".json";
         if(!file_exists($cacheJsonFileName))
             throw new \Exception("$cacheJsonFileName not found");
-        return json_decode(file_get_contents($cacheJsonFileName), true);
+        return $this->cache = json_decode(file_get_contents($cacheJsonFileName), true);
     }
     /**
      * {@inheritdoc}
