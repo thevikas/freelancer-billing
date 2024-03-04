@@ -151,6 +151,8 @@ if ($hello_cmd['report'] || $hello_cmd['bill'] || $hello_cmd['earning'] || $hell
         $ss = $hello_cmd['month'];
         if (preg_match('/^str(?<str1>.*)$/', $ss, $mats))
             $FirstDayOfMonth = strtotime(date('Y-m-01', strtotime($mats['str1'])));
+        else
+            $FirstDayOfMonth = strtotime(date('Y-m-01', strtotime($ss)));
     }
 
     echo "FirstDayOfMonth = " . date('Y-m-d', $FirstDayOfMonth) . "\n";

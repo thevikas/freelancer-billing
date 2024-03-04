@@ -52,7 +52,10 @@ class Project extends Model
         $cacheJsonFileName = $_ENV['TIMELOG_GITREPO'] . '/cache/' . $dmy . ".json";
         Yii::info("cacheJsonFileName=$cacheJsonFileName");
         if (!file_exists($cacheJsonFileName))
-            return [];
+        {
+            $this->updateCache($month);
+            return $this->loadCache($month);
+        } 
         //verify it is todays date
         $data = json_decode(file_get_contents($cacheJsonFileName), true);    
         return $data;
@@ -63,9 +66,10 @@ class Project extends Model
      *
      * @return array parsed data
      */
-    function updateCache()
+    function updateCache($month = null)
     {
-        $cmd = Yii::getAlias('@app') . "/gt.php --cache -m this_month";
+        $mon1 = $month ?? 'this_month';
+        $cmd = Yii::getAlias('@app') . "/gt.php --cache -m $mon1";
         Yii::info("Running $cmd");
         #echo "Running $cmd\n";
         $output = [];
