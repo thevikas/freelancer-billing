@@ -23,6 +23,11 @@ class Bill
         $this->syncAliases();
     }
 
+    /**
+     * Get next invoice number based on existing files
+     *
+     * @return void
+     */
     public static function getNextInvoiceNumber()
     {
         $num = 0;

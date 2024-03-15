@@ -124,7 +124,12 @@ class Project
      */
     public function logNow($fullarg,$logfile,$argv,$gitrepo,$pcname)
     {
-        global $last_comment, $away;
+        global $last_time;
+        global $last_comment;
+        global $all_lines;
+        global $lc;        
+        global $away;
+        
         #Reading
         $L = fopen($logfile, 'r');
         fseek($L, -200, SEEK_END);

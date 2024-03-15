@@ -62,7 +62,15 @@ class MonthReport
         {
             $next = iterate($this->fHandle, true);
             if (!$next)
-                break;
+            {
+                if(!empty($info_prev_month))
+                {
+                    $next = $info_prev_month;
+                    $info_prev_month = false;
+                }                
+                else
+                    break;
+            }
             if ($current_date != date('Y-m-d', $next['last_time']))
                 $this->last_time = 0;
             if (empty($current_month))
@@ -94,8 +102,11 @@ class MonthReport
         }
     }
 
-    public function report($FirstDayOfMonth)
+    public function report($FirstDayOfMonth='')
     {
+        if(empty($FirstDayOfMonth))
+            $FirstDayOfMonth = strtotime(date('Y-m-01'));
+
         $this->parse($FirstDayOfMonth);
         $rep = [];
         /** @var Project $project */
