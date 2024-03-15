@@ -16,9 +16,185 @@
         }
     ],
     "paths": {
+        "/now/last": {
+            "description": "To get last time entry",
+            "get": {
+                "tags": [
+                    "last"
+                ],
+                "summary": "To just return data of currently running task and times",
+                "operationId": "last",
+                "responses": {
+                    "200": {
+                        "description": "N/a",
+                        "content": {
+                            "application/json; charset=utf-8": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "last"
+                                    ],
+                                    "properties": {
+                                        "last": {
+                                            "type": "string",
+                                            "description": "Last time entry"
+                                        }
+                                    },
+                                    "example": {
+                                        "last": "2024-02-28 11:58"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "last"
+                ],
+                "summary": "To post last time entry again",
+                "operationId": "last",
+                "responses": {
+                    "200": {
+                        "description": "N/a",
+                        "content": {
+                            "application/json; charset=utf-8": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "last"
+                                    ],
+                                    "properties": {
+                                        "last": {
+                                            "type": "string",
+                                            "description": "Last time entry"
+                                        }
+                                    },
+                                    "example": {
+                                        "last": "2024-02-28 11:58"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/now": {
+            "description": "To get current time",
+            "get": {
+                "tags": [
+                    "now"
+                ],
+                "summary": "To get current time",
+                "operationId": "now",
+                "responses": {
+                    "200": {
+                        "description": "N/a",
+                        "content": {
+                            "application/json; charset=utf-8": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "now"
+                                    ],
+                                    "properties": {
+                                        "now": {
+                                            "type": "string",
+                                            "description": "Current time"
+                                        }
+                                    },
+                                    "example": {
+                                        "now": "2024-02-28 11:58"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "now"
+                ],
+                "summary": "To post a raw gtimelog string",
+                "operationId": "now",
+                "responses": {
+                    "200": {
+                        "description": "N/a",
+                        "content": {
+                            "application/json; charset=utf-8": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "now"
+                                    ],
+                                    "properties": {
+                                        "now": {
+                                            "type": "string",
+                                            "description": "Current time"
+                                        }
+                                    },
+                                    "example": {
+                                        "now": "2024-02-28 11:58"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/projects/{NNN}": {
+            "description": "To register users from API",
+            "get": {
+                "tags": [
+                    "projects"
+                ],
+                "summary": "To get summary info of a project",
+                "operationId": "projects",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "NNN",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Project name"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "N/a",
+                        "content": {
+                            "application/json; charset=utf-8": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProjectRes"
+                                },
+                                "examples": {
+                                    "good": {
+                                        "summary": "when all was good",
+                                        "value": {
+                                            "Dated": "2024-02-28 11:58",
+                                            "EstimatedIncome": 8064,
+                                            "EstimatedTotalHours": 11.52,
+                                            "Income": 7525,
+                                            "Total": 10.75,
+                                            "name": "xx1"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/projects": {
             "description": "To register users from API",
-            "post": {
+            "get": {
                 "tags": [
                     "projects"
                 ],
@@ -94,6 +270,65 @@
             }
         },
         "schemas": {
+            "Task": {
+                "type": "object",
+                "required": [
+                    "name",
+                    "last_time",
+                    "total",
+                    "project"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "Task name"
+                    },
+                    "last_time": {
+                        "type": "string",
+                        "description": "Last time entry"
+                    },
+                    "total": {
+                        "type": "string",
+                        "description": "Total time in minutes for the whole current month"
+                    },
+                    "project": {
+                        "type": "string",
+                        "description": "Project name"
+                    }
+                }
+            },
+            "TaskTimeStamp": {
+                "type": "object",
+                "required": [
+                    "datetime",
+                    "task",
+                    "duration",
+                    "status"
+                ],
+                "properties": {
+                    "datetime": {
+                        "type": "string",
+                        "description": "Time stamp"
+                    },
+                    "task": {
+                        "type": "object",
+                        "$ref": "#/components/schemas/Task"
+                    },
+                    "duration": {
+                        "type": "string",
+                        "description": "Duration of this time entry"
+                    },
+                    "status": {
+                        "type": "string",
+                        "description": "Status of this time entry",
+                        "enum": [
+                            "running",
+                            "paused",
+                            "stopped"
+                        ]
+                    }
+                }
+            },
             "HomeRes": {
                 "type": "object",
                 "required": [
@@ -183,141 +418,6 @@
                             "top_category": 0,
                             "featured_status": 0,
                             "product_link": "https://bogus.com/vendor/product_detail/MTY="
-                        },
-                        {
-                            "id": 2,
-                            "name": "Gold Chain Thingi",
-                            "price": "1067.85",
-                            "image": "https://bogus.com/img/1678784868.IMG_0065 mar 13.jpg",
-                            "try_on_product_id": null,
-                            "wishlist": 0,
-                            "vendor_id": 2,
-                            "category_id": 104,
-                            "stone_type": 1,
-                            "product_preference": 2,
-                            "top_category": 0,
-                            "featured_status": 0,
-                            "product_link": "https://bogus.com/vendor/product_detail/MTU="
-                        },
-                        {
-                            "id": 3,
-                            "name": "Infinity Chain THingi",
-                            "price": "804.00",
-                            "image": "https://bogus.com/img/1669017630.61QrV-EpGML._UY500_.jpg",
-                            "try_on_product_id": 0,
-                            "wishlist": 0,
-                            "vendor_id": 5,
-                            "category_id": 108,
-                            "stone_type": 1,
-                            "product_preference": 2,
-                            "top_category": 0,
-                            "featured_status": 0,
-                            "product_link": "https://bogus.com/vendor/product_detail/MTQ="
-                        },
-                        {
-                            "id": 4,
-                            "name": "Earrings of Gold Thingi",
-                            "price": "743.00",
-                            "image": "https://bogus.com/img/1669017476.images (5).jfif",
-                            "try_on_product_id": 0,
-                            "wishlist": 0,
-                            "vendor_id": 5,
-                            "category_id": 107,
-                            "stone_type": 1,
-                            "product_preference": 2,
-                            "top_category": 0,
-                            "featured_status": 0,
-                            "product_link": "https://bogus.com/vendor/product_detail/MTM="
-                        },
-                        {
-                            "id": 5,
-                            "name": "Rings Thingi",
-                            "price": "903.00",
-                            "image": "https://bogus.com/img/1669017343.images (3).jfif",
-                            "try_on_product_id": 0,
-                            "wishlist": 0,
-                            "vendor_id": 5,
-                            "category_id": 104,
-                            "stone_type": 2,
-                            "product_preference": 2,
-                            "top_category": 0,
-                            "featured_status": 1,
-                            "product_link": "https://bogus.com/vendor/product_detail/MTI="
-                        },
-                        {
-                            "id": 6,
-                            "name": "Gold Chain with small diamonds Thingi",
-                            "price": "45454.00",
-                            "image": "https://bogus.com/img/1669015898.download.jfif",
-                            "try_on_product_id": 0,
-                            "wishlist": 0,
-                            "vendor_id": 5,
-                            "category_id": 108,
-                            "stone_type": 2,
-                            "product_preference": 2,
-                            "top_category": 0,
-                            "featured_status": 1,
-                            "product_link": "https://bogus.com/vendor/product_detail/MTE="
-                        },
-                        {
-                            "id": 7,
-                            "name": "Ring with 1 diamond Thingi",
-                            "price": "168.00",
-                            "image": "https://bogus.com/img/1667977693.earring new.jpg",
-                            "try_on_product_id": 0,
-                            "wishlist": 0,
-                            "vendor_id": 2,
-                            "category_id": 107,
-                            "stone_type": 1,
-                            "product_preference": 2,
-                            "top_category": 0,
-                            "featured_status": 0,
-                            "product_link": "https://bogus.com/vendor/product_detail/MQ=="
-                        },
-                        {
-                            "id": 8,
-                            "name": "Diamond Heart Pendant Thingi",
-                            "price": "899.00",
-                            "image": "https://example.com/images/heart_pendant.jpg",
-                            "try_on_product_id": 0,
-                            "wishlist": 1,
-                            "vendor_id": 8,
-                            "category_id": 108,
-                            "stone_type": 1,
-                            "product_preference": 2,
-                            "top_category": 0,
-                            "featured_status": 0,
-                            "product_link": "https://example.com/products/18"
-                        },
-                        {
-                            "id": 9,
-                            "name": "Silver Cufflinks Thingi with diamond",
-                            "price": "99.00",
-                            "image": "https://example.com/images/silver_cufflinks.jpg",
-                            "try_on_product_id": 0,
-                            "wishlist": 0,
-                            "vendor_id": 7,
-                            "category_id": 111,
-                            "stone_type": 0,
-                            "product_preference": 1,
-                            "top_category": 0,
-                            "featured_status": 0,
-                            "product_link": "https://example.com/products/19"
-                        },
-                        {
-                            "id": 10,
-                            "name": "Diamon Gold Thingi Ringi",
-                            "price": "5000.00",
-                            "image": "https://bogus.com/img/gold-diamon-ring.jpg",
-                            "try_on_product_id": 0,
-                            "wishlist": 0,
-                            "vendor_id": 2,
-                            "category_id": 104,
-                            "stone_type": 1,
-                            "product_preference": 2,
-                            "top_category": 0,
-                            "featured_status": 0,
-                            "product_link": "https://bogus.com/vendor/product_detail/Mg=="
                         }
                     ]
                 }

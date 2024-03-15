@@ -112,9 +112,19 @@ class Project
         return $rep;
     }
 
+    /**
+     * Undocumented function
+     *
+     * @param string $fullarg actual gtimelog statement
+     * @param string $logfile path of the log file
+     * @param array $argv command line arguments
+     * @param string $gitrepo path of the git repository where the log file
+     * @param string $pcname name of the pc that is posting this log
+     * @return void
+     */
     public function logNow($fullarg,$logfile,$argv,$gitrepo,$pcname)
     {
-        global $last_comment;
+        global $last_comment, $away;
         #Reading
         $L = fopen($logfile, 'r');
         fseek($L, -200, SEEK_END);
@@ -144,7 +154,7 @@ class Project
             return -1;
         }
 
-        if (!pull_updated_logfile($logfile, $gitrepo, $pcname))
+        if ($gitrepo && !pull_updated_logfile($logfile, $gitrepo, $pcname))
         {
             fprintf(STDERR, "Failed to pull updated logfile\n");
             return -1;
@@ -173,6 +183,7 @@ class Project
         fputs($L, $newline . "\n");
         echo difftime() . ": $fullarg\n";
         fclose($L);
-        push_logfile_to_git($logfile, $gitrepo, $pcname);
+        if($gitrepo)
+            push_logfile_to_git($logfile, $gitrepo, $pcname);
     }
 }
