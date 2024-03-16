@@ -25,12 +25,17 @@ class ProjectsController extends \yii\web\Controller
 
         //create a array of projects and stats
         $stats = [];
+        $summary = ['EstimatedTotalHours' => 0];
         foreach ($proj->cache['summary']['BillableProjects'] as $projname => $data)
         {
             $stats[$projname] = $data['stats'];
+            $summary['EstimatedTotalHours'] = $summary['EstimatedTotalHours'] + $data['stats']['EstimatedTotalHours'];
         }
 
-        $stats['summary'] = $proj->cache['summary'];
+        $stats['summary'] = array_merge($proj->cache['summary'],$summary);
+        $stats['summary']['name'] = "Summary";
+        $stats['summary']['Dated'] = date('Y-m-d H:i:s');
+        //$stats['summary']['EstimatedTotalHours'] = 
         unset($stats['summary']['BillableProjects']);
 
 

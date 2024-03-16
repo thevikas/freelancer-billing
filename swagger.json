@@ -270,6 +270,50 @@
             }
         },
         "schemas": {
+            "Project": {
+                "type": "object",
+                "required": [
+                    "name",
+                    "Dated",
+                    "EstimatedIncome",
+                    "EstimatedTotalHours",
+                    "Income",
+                    "Total"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "Project name"
+                    },
+                    "Dated": {
+                        "type": "string",
+                        "description": "Last time entry"
+                    },
+                    "EstimatedIncome": {
+                        "type": "integer",
+                        "description": "Estimated income"
+                    },
+                    "EstimatedTotalHours": {
+                        "type": "number",
+                        "description": "Estimated total hours"
+                    },
+                    "Income": {
+                        "type": "integer",
+                        "description": "Income"
+                    },
+                    "Total": {
+                        "type": "number",
+                        "description": "Total hours"
+                    }
+                }
+            },
+            "ProjectsRes": {
+                "type": "object",
+                "description": "Project data",
+                "additionalProperties": {
+                    "$ref": "#/components/schemas/Project"
+                }            
+            },
             "Task": {
                 "type": "object",
                 "required": [
