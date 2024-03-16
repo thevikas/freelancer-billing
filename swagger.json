@@ -300,22 +300,21 @@
             "TaskTimeStamp": {
                 "type": "object",
                 "required": [
-                    "datetime",
+                    "last_time",
                     "task",
                     "duration",
                     "status"
                 ],
                 "properties": {
-                    "datetime": {
-                        "type": "string",
+                    "last_time": {
+                        "type": "integer",
                         "description": "Time stamp"
                     },
                     "task": {
-                        "type": "object",
-                        "$ref": "#/components/schemas/Task"
+                        "type": "string"
                     },
                     "duration": {
-                        "type": "string",
+                        "type": "integer",
                         "description": "Duration of this time entry"
                     },
                     "status": {

@@ -102,7 +102,7 @@ class MonthReport
         }
     }
 
-    public function report($FirstDayOfMonth='')
+    public function report($FirstDayOfMonth='',$level=1)
     {
         if(empty($FirstDayOfMonth))
             $FirstDayOfMonth = strtotime(date('Y-m-01'));
@@ -112,7 +112,7 @@ class MonthReport
         /** @var Project $project */
         foreach ($this->projects as $project_name => $project)
         {
-            $rep[$project_name] = $project->report();
+            $rep[$project_name] = $project->report($level);
         }
         return $this->reportData = $rep;
     }
