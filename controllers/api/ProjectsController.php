@@ -4,12 +4,16 @@ namespace app\controllers\api;
 
 use app\models\Project;
 use Yii;
+require_once __DIR__ . '/../../Project.php';
+require_once __DIR__ . '/../../functions.php';
+require_once __DIR__ . '/../../Report.php';
 
 /**
  * Rerturns all data in JSON
  */
 class ProjectsController extends \yii\web\Controller
 {
+    public $logfile = "";
     public function init()
     {
         parent::init(); 
@@ -17,11 +21,17 @@ class ProjectsController extends \yii\web\Controller
         $dotenv->load();        
         //set json header
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        $this->logfile = Yii::getAlias($_ENV['TIMELOG_FILEPATH']);
+        //ignore csrf
+        Yii::$app->request->enableCsrfValidation = false;
     }
 
     public function actionIndex()
     {
         $proj = new Project();
+
+        $rep = new \gtimelogphp\MonthReport($this->logfile);
+        $rep2 = $rep->report('',2);
 
         //create a array of projects and stats
         $stats = [];
@@ -29,6 +39,7 @@ class ProjectsController extends \yii\web\Controller
         foreach ($proj->cache['summary']['BillableProjects'] as $projname => $data)
         {
             $stats[$projname] = $data['stats'];
+            $stats[$projname]['recent'] = $rep2[$projname]['recent'];
             $summary['EstimatedTotalHours'] = $summary['EstimatedTotalHours'] + $data['stats']['EstimatedTotalHours'];
         }
 
@@ -37,7 +48,6 @@ class ProjectsController extends \yii\web\Controller
         $stats['summary']['Dated'] = date('Y-m-d H:i:s');
         //$stats['summary']['EstimatedTotalHours'] = 
         unset($stats['summary']['BillableProjects']);
-
 
         return $stats;
     }

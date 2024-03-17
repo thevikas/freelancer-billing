@@ -14,7 +14,6 @@ require_once __DIR__ . '/../../Report.php';
  */
 class NowController extends \yii\web\Controller
 {
-
     public $logfile = "";
     public function init()
     {

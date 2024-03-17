@@ -27,6 +27,8 @@ class Project
 
     public $billingInfo;
 
+    public $recentTasks = [];
+
     /**
      * @param $name
      */
@@ -62,6 +64,14 @@ class Project
         {
             $this->task_times[$task] = 0;
         }
+        if(!empty($info['task']))
+        {
+            if(empty($this->recentTasks[$info['task']]))
+                $this->recentTasks[$info['task']] = 0;
+            if($this->recentTasks[$info['task']] < $info['last_time'])
+                $this->recentTasks[$info['task']] = $info['last_time'];        
+        }
+            //$this->recentTasks[$info['last_time']] = $info['task'];        
         $week = date('W', $ts = strtotime($info['given_ts']));
         $year = date('Y', $ts);
         $dated = date('Y-m-d', $ts);
@@ -115,9 +125,21 @@ class Project
         $rep['Dates'] = $dates;
         $rep['Total'] = $hours;
         $rep['Dated'] = $this->last_datetime;
+
+        //sort des recentTasks by values
+        arsort($this->recentTasks);
+        $rtask2 = [];
+        foreach($this->recentTasks as $task => $time1)
+        {
+            $time2 = date('Y-m-d H:i',$time1);
+            $rtask2[] = ['task' => $task,'last_time' => $time2];
+        }
+
         if($level == 2)
         {
             $rep['datestasks'] = $this->datestasks;
+            //remove indexes after 3 from recentTasks
+            $rep['recent'] = array_slice($rtask2, 0, 5);
         }
 
         return $rep;
