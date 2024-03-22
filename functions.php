@@ -61,20 +61,29 @@ function find_start_of_month($L, $FirstDayOfMonth = 0)
     fseek($L, -2000, SEEK_CUR);
     //find first line
     $info          = iterate($L, true);
-
+    if(!$info)
+        return false;
+        
     if (!$FirstDayOfMonth) {
         die("Need first day of month");
     }
 
     # keep going backward till before the prev month
-    if ($FirstDayOfMonth     < $info['last_time']) {
-        return find_start_of_month($L, $FirstDayOfMonth);
+    if (!empty($info) && $FirstDayOfMonth     < $info['last_time']) {
+        $rt =  find_start_of_month($L, $FirstDayOfMonth);
+        if(!$rt)
+            return $info;
+        return $rt;
     }
     $info2 = [];
 
     # keep going forward till just after the first day of prev month
     while (true) {
         $info2 = iterate($L, true);
+        if(!$info2)
+        {
+            break;
+        }
         if ($FirstDayOfMonth < $info2['last_time'])
             break;
     }
@@ -151,6 +160,7 @@ function iterate($L, $only_first = false, $callback = null)
                 continue;
             }
 
+            //if date string is not of correct length
             if (strlen($ss[0]) != 16) {
                 continue;
             }

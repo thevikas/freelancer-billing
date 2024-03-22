@@ -239,7 +239,7 @@
                                                 "IncomeUSD": 2667.9166666666665,
                                                 "Total": 106.71666666666667,
                                                 "name": "xx2"
-                                            },                                            
+                                            },
                                             "summary": {
                                                 "Total": 184,
                                                 "Billable": 152,
@@ -251,7 +251,7 @@
                                                 "ThisMonthHourlyRateINR": 1927
                                             }
                                         }
-                                    }                                    
+                                    }
                                 }
                             }
                         }
@@ -270,6 +270,119 @@
             }
         },
         "schemas": {
+            "RecentTask": {
+                "type": "object",
+                "required": [
+                    "task",
+                    "last_time"
+                ],
+                "properties": {
+                    "task": {
+                        "type": "string",
+                        "description": "Task name"
+                    },
+                    "last_time": {
+                        "type": "string",
+                        "description": "Last time entry"
+                    }
+                },
+                "example": {
+                    "task": "meeting",
+                    "last_time": "2024-03-15 10:52"
+                }
+            },
+            "Project": {
+                "type": "object",
+                "required": [
+                    "name",
+                    "Dated",
+                    "EstimatedIncome",
+                    "EstimatedTotalHours",
+                    "Income",
+                    "Total"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "description": "Project name"
+                    },
+                    "Dated": {
+                        "type": "string",
+                        "description": "Last time entry"
+                    },
+                    "EstimatedIncome": {
+                        "type": "integer",
+                        "description": "Estimated income"
+                    },
+                    "EstimatedTotalHours": {
+                        "type": "number",
+                        "description": "Estimated total hours"
+                    },
+                    "Income": {
+                        "type": "integer",
+                        "description": "Income"
+                    },
+                    "Total": {
+                        "type": "number",
+                        "description": "Total hours"
+                    },
+                    "recent": {
+                        "type": "array",
+                        "$ref": "#/components/schemas/RecentTask"
+                    }
+                }
+            },
+            "ProjectsRes": {
+                "type": "object",
+                "description": "Project data",
+                "additionalProperties": {
+                    "$ref": "#/components/schemas/Project"
+                },
+                "example": {
+                    "axxxxxx": {
+                        "Dated": "2024-03-15 10:20",
+                        "EstimatedIncome": 100683,
+                        "EstimatedIncomeUSD": 1243,
+                        "EstimatedTotalHours": 49.72,
+                        "Income": 53696,
+                        "IncomeUSD": 662.9166666666666,
+                        "Total": 26.516666666666666,
+                        "name": "axxxxxx"
+                    },
+                    "pxxxxxx": {
+                        "Dated": "2024-03-15 10:48",
+                        "EstimatedIncome": 1708,
+                        "EstimatedTotalHours": 2.44,
+                        "Income": 910,
+                        "Total": 1.3,
+                        "name": "pxxxxxx"
+                    },
+                    "summary": {
+                        "Billable": 62,
+                        "Dated": "2024-03-16 16:26:40",
+                        "EarningDays": "78%",
+                        "EffectiveHourlyRateINR": 2219,
+                        "EstimatedIncome": 256696,
+                        "EstimatedTotalHours": 115.66,
+                        "Income": 136902,
+                        "Productivity": "70%",
+                        "ThisMonthHourlyRateINR": 856,
+                        "Total": 88,
+                        "name": "Summary"
+                    },
+                    "wxxxxxx": {
+                        "Dated": "1970-01-01 05:30",
+                        "EstimatedIncome": 154305,
+                        "EstimatedIncomeUSD": 1905,
+                        "EstimatedTotalHours": 63.5,
+                        "Income": 82296,
+                        "IncomeUSD": 1016,
+                        "Total": 33.86666666666667,
+                        "name": "wxxxxxx",
+                        "recent": {}
+                    }
+                }
+            },
             "Task": {
                 "type": "object",
                 "required": [
@@ -295,27 +408,32 @@
                         "type": "string",
                         "description": "Project name"
                     }
+                },
+                "example": {
+                    "name": "bogus",
+                    "last_time": "2024-02-28 11:58",
+                    "total": "0",
+                    "project": "bogus"
                 }
             },
             "TaskTimeStamp": {
                 "type": "object",
                 "required": [
-                    "datetime",
+                    "last_time",
                     "task",
                     "duration",
                     "status"
                 ],
                 "properties": {
-                    "datetime": {
-                        "type": "string",
+                    "last_time": {
+                        "type": "integer",
                         "description": "Time stamp"
                     },
                     "task": {
-                        "type": "object",
-                        "$ref": "#/components/schemas/Task"
+                        "type": "string"
                     },
                     "duration": {
-                        "type": "string",
+                        "type": "integer",
                         "description": "Duration of this time entry"
                     },
                     "status": {

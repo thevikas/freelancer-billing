@@ -38,5 +38,7 @@ return [
             */
         ],
     ],
-    'params' => $params,
+    'params' => array_merge($params, [
+        'envFile' => '.env.test',
+    ]),
 ];

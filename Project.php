@@ -27,6 +27,8 @@ class Project
 
     public $billingInfo;
 
+    public $recentTasks = [];
+
     /**
      * @param $name
      */
@@ -62,6 +64,14 @@ class Project
         {
             $this->task_times[$task] = 0;
         }
+        if(!empty($info['task']))
+        {
+            if(empty($this->recentTasks[$info['task']]))
+                $this->recentTasks[$info['task']] = 0;
+            if($this->recentTasks[$info['task']] < $info['last_time'])
+                $this->recentTasks[$info['task']] = $info['last_time'];        
+        }
+            //$this->recentTasks[$info['last_time']] = $info['task'];        
         $week = date('W', $ts = strtotime($info['given_ts']));
         $year = date('Y', $ts);
         $dated = date('Y-m-d', $ts);
@@ -80,9 +90,16 @@ class Project
             $this->dates[$dated] = 0;
         }
         $this->dates[$dated] += $spent_time_secs;
+
+        if (empty($this->datestasks[$dated][$task]))
+        {
+            $this->datestasks[$dated][$task] = 0;
+        }
+        $this->datestasks[$dated][$task] += $spent_time_secs;
+
     }
 
-    public function report()
+    public function report($level = 1)
     {
         $rep = [];
         $tasks = [];
@@ -97,7 +114,6 @@ class Project
         $hours += $mins / 60;
         $rep['billingactive'] = !empty($this->billingInfo);
         $rep['Weeks'] = $this->task_week_times;
-
         $dates = $this->dates;
         //remove array elements with zero
         foreach ($dates as $date => $time)
@@ -109,6 +125,23 @@ class Project
         $rep['Dates'] = $dates;
         $rep['Total'] = $hours;
         $rep['Dated'] = $this->last_datetime;
+
+        //sort des recentTasks by values
+        arsort($this->recentTasks);
+        $rtask2 = [];
+        foreach($this->recentTasks as $task => $time1)
+        {
+            $time2 = date('Y-m-d H:i',$time1);
+            $rtask2[] = ['task' => $task,'last_time' => $time2];
+        }
+
+        if($level == 2)
+        {
+            $rep['datestasks'] = $this->datestasks;
+            //remove indexes after 3 from recentTasks
+            $rep['recent'] = array_slice($rtask2, 0, 5);
+        }
+
         return $rep;
     }
 
@@ -122,9 +155,14 @@ class Project
      * @param string $pcname name of the pc that is posting this log
      * @return void
      */
-    public function logNow($fullarg,$logfile,$argv,$gitrepo,$pcname)
+    public function logNow($fullarg,$logfile,$argv,$gitrepo,$pcname,$json = false)
     {
-        global $last_comment, $away;
+        global $last_time;
+        global $last_comment;
+        global $all_lines;
+        global $lc;        
+        global $away;
+
         #Reading
         $L = fopen($logfile, 'r');
         fseek($L, -200, SEEK_END);
@@ -149,6 +187,19 @@ class Project
         //if not arg given, we just show time spent doing the last item
         if (empty($argv[1]))
         {
+            if($json)
+            {
+                $mm = difftime();
+                $ss1 = explode(':', $last_comment, 2);  
+                $task = trim($ss1[1]);
+                return [
+                    'project' => $ss1[0],
+                    'task' => $task,
+                    'time' => $mm,
+                    'last_time' => $last_time,
+                    'comment' => $last_comment
+                ];
+            }
             $mm = difftime();
             echo "$mm: $last_comment\n";
             return -1;
@@ -181,7 +232,8 @@ class Project
 
         $newline = sprintf('%s: %s', date('Y-m-d H:i'), $fullarg);
         fputs($L, $newline . "\n");
-        echo difftime() . ": $fullarg\n";
+        if(!$json)
+            echo difftime() . ": $fullarg\n";
         fclose($L);
         if($gitrepo)
             push_logfile_to_git($logfile, $gitrepo, $pcname);
