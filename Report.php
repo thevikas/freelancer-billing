@@ -5,6 +5,7 @@ namespace gtimelogphp;
 use InitPHP\CLITable\Table;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table as SymfonyTable;
+use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -61,7 +62,15 @@ class MonthReport
         {
             $next = iterate($this->fHandle, true);
             if (!$next)
-                break;
+            {
+                if(!empty($info_prev_month))
+                {
+                    $next = $info_prev_month;
+                    $info_prev_month = false;
+                }                
+                else
+                    break;
+            }
             if ($current_date != date('Y-m-d', $next['last_time']))
                 $this->last_time = 0;
             if (empty($current_month))
@@ -93,14 +102,17 @@ class MonthReport
         }
     }
 
-    public function report($FirstDayOfMonth)
+    public function report($FirstDayOfMonth='',$level=1)
     {
+        if(empty($FirstDayOfMonth))
+            $FirstDayOfMonth = strtotime(date('Y-m-01'));
+
         $this->parse($FirstDayOfMonth);
         $rep = [];
         /** @var Project $project */
         foreach ($this->projects as $project_name => $project)
         {
-            $rep[$project_name] = $project->report();
+            $rep[$project_name] = $project->report($level);
         }
         return $this->reportData = $rep;
     }
@@ -242,7 +254,8 @@ class MonthReport
             $rep['EstimatedIncome'] = round($totalestimatedincome);
             $rep['Income'] = round($income);
             $rep['Productivity'] = (round($billable / $total, 2) * 100) . "%";
-            $rep['EarningDays'] = round(100 * ($rep['Billable'] / 8) / $this->getWOrkingDaysTillTOday($FirstDayOfMonth)) . "%";
+            $wdays = $this->getWOrkingDaysTillTOday($FirstDayOfMonth);
+            $rep['EarningDays'] = $wdays ? round(100 * ($rep['Billable'] / 8) / $wdays) . "%" : "";
 
             $rep['EffectiveHourlyRateINR'] = round($income / $billable);
             $rep['ThisMonthHourlyRateINR'] = round($income / (20 * 8));
@@ -323,6 +336,9 @@ class MonthReport
         //$tableData = [$headers];
         foreach ($clean as $task => $time)
         {
+            if('Dates' == $task || 'billingactive' == $task)
+                continue;
+
             $tableData[] = [$task, $time];
 
             /*$table->row([
@@ -334,6 +350,9 @@ class MonthReport
         //print_r($tableData);
         //$climate->table($tableData);
         //echo $table;
+
+        $tableData[] = new TableSeparator();
+        $tableData[] = ['Total', round($report_data[$proj]['Total'],2)];
         
         $output = new \Symfony\Component\Console\Output\ConsoleOutput();
 

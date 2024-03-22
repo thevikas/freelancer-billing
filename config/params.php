@@ -4,5 +4,6 @@ return [
     'adminEmail' => 'admin@example.com',
     'senderEmail' => 'noreply@example.com',
     'senderName' => 'Example.com mailer',
-    'client-projects-json' => '/Users/vikas/.gtimelog/client-projects.json'
+    'envFile' => '.env',
+    'client-projects-json' => '/xx/timelog/client-projects.json'
 ];

@@ -23,6 +23,11 @@ class Bill
         $this->syncAliases();
     }
 
+    /**
+     * Get next invoice number based on existing files
+     *
+     * @return void
+     */
     public static function getNextInvoiceNumber()
     {
         $num = 0;
@@ -65,8 +70,10 @@ class Bill
         }
     }
 
-    public function saveJson($rep, $project_name)
+    public function saveJson($rep, $project_name,$invoice_date)
     {
+        if(empty($invoice_date))
+            throw new \Exception("Invoice date is required in saveJson(... $project_name ...)");
         //sync invoice files so next invoice is in sequence
         $this->syncS3();
 
@@ -82,7 +89,7 @@ class Bill
             if (file_exists($json_file))
             {
                 $json = json_decode(file_get_contents($json_file), true);
-                if($json['dated'] == date('Y-m-d'))
+                if(date('Y-m',strtotime($json['dated'])) == date('Y-m',strtotime($invoice_date)))
                 {
                     $inum = $ictr;
                     echo "Using $json_file...\n";
@@ -101,19 +108,13 @@ class Bill
 
         echo "Writing $json_file...\n";
 
-        /*
-        {
-        "client": "care4life-btc",
-        "hours": 82,
-        "dated": "2023-01-01",
-        }
-         */
         $json = [
             'hours'  => $rep['hours'],
             'client' => $project_name,
             'dated'  => date('Y-m-d'),
         ];
-        file_put_contents($json_file, json_encode($json, JSON_PRETTY_PRINT));
+        if(!$resuming)
+            file_put_contents($json_file, json_encode($json, JSON_PRETTY_PRINT));
         return $inum;
     }
 

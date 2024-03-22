@@ -126,6 +126,7 @@ class BillsController extends Controller
             'id_invoice'    => $id,
             'invoice'       => $invoice,
             'project'       => $project,
+            'bankdetails'   => $clients['bankdetails'],
         ]);
     }
 

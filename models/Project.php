@@ -40,9 +40,25 @@ class Project extends Model
         {
             $jsondata = json_decode(file_get_contents($cacheJsonFileName), true);
             if (date('Y-m-d', strtotime($jsondata['dated'])) != date('Y-m-d'))
-                $jsondata = $this->updateCache();
+                return $this->updateCache();
         }
         $this->cache = $jsondata;
+    }
+
+    public function loadCache($month)
+    {
+        $FirstDayOfMonth = strtotime(date("$month-01"));
+        $dmy = date('Y-m-d', $FirstDayOfMonth);
+        $cacheJsonFileName = $_ENV['TIMELOG_GITREPO'] . '/cache/' . $dmy . ".json";
+        Yii::info("cacheJsonFileName=$cacheJsonFileName");
+        if (!file_exists($cacheJsonFileName))
+        {
+            $this->updateCache($month);
+            return $this->loadCache($month);
+        } 
+        //verify it is todays date
+        $data = json_decode(file_get_contents($cacheJsonFileName), true);    
+        return $data;
     }
 
     /**
@@ -50,9 +66,10 @@ class Project extends Model
      *
      * @return array parsed data
      */
-    function updateCache()
+    function updateCache($month = null)
     {
-        $cmd = Yii::getAlias('@app') . "/gt.php --cache -m this_month";
+        $mon1 = $month ?? 'this_month';
+        $cmd = Yii::getAlias('@app') . "/gt.php --cache -m $mon1";
         Yii::info("Running $cmd");
         #echo "Running $cmd\n";
         $output = [];
@@ -65,7 +82,9 @@ class Project extends Model
             die("Error running $cmd");
         $FirstDayOfMonth = strtotime(date('Y-m-01'));
         $cacheJsonFileName = $_ENV['TIMELOG_GITREPO'] . '/cache/' . date('Y-m-d', $FirstDayOfMonth) . ".json";
-        return json_decode(file_get_contents($cacheJsonFileName), true);
+        if(!file_exists($cacheJsonFileName))
+            throw new \Exception("$cacheJsonFileName not found");
+        return $this->cache = json_decode(file_get_contents($cacheJsonFileName), true);
     }
     /**
      * {@inheritdoc}

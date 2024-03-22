@@ -35,11 +35,15 @@ if (empty($pcname))
     exit(1);
 }
 
-
 $hello_cmd = new \Commando\Command();
 
 $hello_cmd->option()
     ->describedAs('Log entry');
+
+$hello_cmd->option('a')
+    ->aka('allprojects')
+    ->describedAs('Generate monthly bill json for all active projects')
+    ->boolean();
 
 $hello_cmd->option('b')
     ->aka('bill')
@@ -52,8 +56,12 @@ $hello_cmd->option('c')
     ->boolean();
 
 $hello_cmd->option('d')
-    ->aka('dates')
-    ->describedAs('Dates to report on');
+    ->aka('idate')
+    ->describedAs('Invoice date, defaults today')
+    ->default(date('Y-m-01'));
+//    ->aka('dates')
+//    ->describedAs('Dates to report on');
+//>>>>>>> @{-1}
 
 $hello_cmd->option('e')
     ->aka('earning')
@@ -143,6 +151,8 @@ if ($hello_cmd['report'] || $hello_cmd['bill'] || $hello_cmd['earning'] || $hell
         $ss = $hello_cmd['month'];
         if (preg_match('/^str(?<str1>.*)$/', $ss, $mats))
             $FirstDayOfMonth = strtotime(date('Y-m-01', strtotime($mats['str1'])));
+        else
+            $FirstDayOfMonth = strtotime(date('Y-m-01', strtotime($ss)));
     }
 
     echo "FirstDayOfMonth = " . date('Y-m-d', $FirstDayOfMonth) . "\n";
@@ -180,6 +190,9 @@ if ($hello_cmd['report'] || $hello_cmd['bill'] || $hello_cmd['earning'] || $hell
     {
         $bill = new Bill($report_data);
         $BillRep = $bill->report($FirstDayOfMonth);
+        
+        $invoice_date = $hello_cmd['invoice_date'];
+
         if ($hello_cmd['earning'])
         {
             if($hello_cmd['dates'])
@@ -194,17 +207,32 @@ if ($hello_cmd['report'] || $hello_cmd['bill'] || $hello_cmd['earning'] || $hell
         else if ($hello_cmd['project'])
         {
             $proj = $hello_cmd['project'];
-            $inum = $bill->saveJson($BillRep[$proj], $proj);
+            $inum = $bill->saveJson($BillRep[$proj], $proj, $hello_cmd['idate']);
             $bill->printPDF($inum,$proj);
             $clean = $report_data[$proj];
 
             $rep->printTimesheet($report_data,$proj);
         }
+        else if ($hello_cmd['allprojects'])
+        {
+            foreach ($BillRep as $proj => $bill_data)
+            {
+                $rateinfo = $bill->rates['projects'][$proj] ?? [];
+                if(empty($rateinfo) || empty($rateinfo['billingactive']) || !$rateinfo['billingactive'])
+                    continue;
+
+                $inum = $bill->saveJson($bill_data, $proj, $hello_cmd['idate']);
+                $bill->printPDF($inum,$proj);
+                $clean = $report_data[$proj];
+                $rep->printTimesheet($report_data,$proj);
+
+            }
+        }
         else
         {
             print_r($rep);
             echo "Requires project code\n";
-        }
+        }        
     }
     return;
 }
@@ -214,6 +242,10 @@ if ($hello_cmd['undo'])
     undo($logfile);
     return;
 }
+
+$proj = new Project("");
+$proj->logNow($hello_cmd[0],$logfile,$argv,$gitrepo,$pcname);
+return;
 
 $fullarg = $hello_cmd[0];
 #Reading

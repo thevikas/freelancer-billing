@@ -74,9 +74,7 @@ function prefix_ccy($project, $amount)
         </p>
 
         <p style="margin-bottom:10px;"><img class="icon-mail" src="/images/mail.png"></i><?=$billing['email']?></p>
-        <?php if(!empty($billing['phone'])) { ?>
-            <p><img class="icon-mobile" src="/images/mobile.png"></i><?=$billing['phone']?></p>
-        <?php  } ?>
+        <p><img class="icon-mobile" src="/images/mobile.png"></i><?=$billing['phone']?></p>
 
     </div>
 
@@ -186,32 +184,34 @@ foreach ($invoice['items'] as $item)
     ?>
                             <img class="icon-cc" src="/images/cc.png">
                             <p><strong>Payment</strong></p>
-                            <p>Bitcoin Lightning invoice on request</p>
+                            <p>Lightning invoice on request</p>
                         <?php }?>
+
+                        <p><br/><br/>
+                            <strong>Bank Details</strong><br/>
+                            Account Name: Vikas Yadav<br/>
+                        Account Number: 054-085949-006<br/>
+                        Bank Name: HSBC<br/>
+                        Branch: JMD Regent Square, Gurgaon<br/>
+                        SWIFT Code: HSBCINBB<br/>
+                        IFSC Code: HSBC0110005
+
+                        </p>
+
                         <?php if (!empty($invoice['unused_pay2addr']))
-                        {
-                            //massive privacy breach bro tro leak out addresses
-                            //echo Html::img("/site/qr1?size=150&addr=" . $invoice['unused_pay2addr']);
-                        }?>
+{
+    //massive privacy breach bro tro leak out addresses
+    //echo Html::img("/site/qr1?size=150&addr=" . $invoice['unused_pay2addr']);
+}?>
                     </td>
                 </tr>
                 <tr>
-                    <td>
-                    <?php if(!empty($project['showbankdetails']) && $project['showbankdetails']) { 
-                    
-                        ?>
-                        <div style="margin-bottom: -50px">
-                        <p><strong>Bank Details</strong></p>
-                        <p>Account Name: <?=$bankdetails['AccountName']?></p>
-                        <p>Account Number: <?=$bankdetails['AccountNumber']?></p>
-                        <p>Bank Name: <?=$bankdetails['Bank']?></p>
-                        <p>Branch: <?=$bankdetails['Branch']?></p>
-                        <p>SWIFT Code: <?=$bankdetails['SwitftCode']?></p>
-                        <p>IFSC Code: <?=$bankdetails['IFSC']?></p>
-                        </div>
-                        <?php
-                    
-                    } ?>
+                    <td><?php /*<p>
+<strong>Active Interactive</strong><br>
+256 highland garden,<br>
+london SW1235,<br>
+United Kingdom
+</p>*/?>
                     </td>
                 </tr>
             </tbody>
@@ -274,7 +274,6 @@ echo !$conversion ? prefix_ccy($project, $invoice['total']) : prefix_ccy('INR', 
             <tbody>
                 <tr>
                     <td>
-                        <p><!-- <strong>payments@websitename.com</strong> --></p>
                     </td>
                 </tr>
                 <tr>

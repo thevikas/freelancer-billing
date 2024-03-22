@@ -12,7 +12,7 @@ require __DIR__ . '/../vendor/yiisoft/yii2/Yii.php';
 
 function __($txt)
 {
-    return _($txt);
+    return $txt;// _($txt);
 }
 
 $config = require __DIR__ . '/../config/web.php';

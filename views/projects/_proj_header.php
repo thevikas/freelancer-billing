@@ -44,7 +44,7 @@ if(0)
     <div class="addressbox">
         <div class="address"><?= $data['billing']['address'] ?></div>
         <div class="email"><?= $data['billing']['email'] ?></div>
-        <div class="email"><?= $data['billing']['phone'] ?></div>
+        <div class="email"><?= $data['billing']['phone'] ?? "" ?></div>
     </div>
 
     <div class="boxes">

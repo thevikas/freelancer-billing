@@ -40,7 +40,10 @@
         "codeception/module-filesystem": "^1.0.0",
         "codeception/module-yii2": "*",
         "phpunit/phpunit": "*",
-        "codeception/module-asserts": "^1.0.0"
+        "codeception/module-asserts": "^2.0",
+        "codeception/module-rest": "^2.0",
+        "justinrainbow/json-schema": "^5.2",
+        "swaggest/json-schema": "^0.12.42"
     },
     "config": {
         "process-timeout": 1800,
