@@ -17,6 +17,7 @@ class ProjectsController extends \yii\web\Controller
     public function init()
     {
         parent::init(); 
+        date_default_timezone_set('Asia/Kolkata');
         $dotenv = \Dotenv\Dotenv::createImmutable(Yii::getAlias('@app'));
         $dotenv->load();        
         //set json header
@@ -26,7 +27,7 @@ class ProjectsController extends \yii\web\Controller
         Yii::$app->request->enableCsrfValidation = false;
     }
 
-    public function actionIndex()
+    public function actionIndex($showall=0)
     {
         $proj = new Project();
 
@@ -34,7 +35,7 @@ class ProjectsController extends \yii\web\Controller
         $rep2 = $rep->report('',2);
 
         //create a array of projects and stats
-        $stats = [];
+        $stats = 1 == $showall ? $rep2 : [];
         $summary = ['EstimatedTotalHours' => 0];
         foreach ($proj->cache['summary']['BillableProjects'] as $projname => $data)
         {

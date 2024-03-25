@@ -18,6 +18,7 @@ class NowController extends \yii\web\Controller
     public function init()
     {
         parent::init();
+        date_default_timezone_set('Asia/Kolkata');
         $dotenv = \Dotenv\Dotenv::createImmutable(Yii::getAlias('@app'),Yii::$app->params['envFile']);
         $dotenv->load();       
         $this->logfile = Yii::getAlias($_ENV['TIMELOG_FILEPATH']);
