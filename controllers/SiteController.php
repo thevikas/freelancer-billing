@@ -160,4 +160,14 @@ class SiteController extends Controller
     {
         return $this->render('about');
     }
+
+    public function actionPi()
+    {
+        //only when server IP and client IP is localhost
+        if (isset($_SERVER['HTTP_CLIENT_IP']) && $_SERVER['HTTP_CLIENT_IP'] == '127.0.0.1' || isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR'] == '127.0.0.1') {
+            return $this->redirect(['site/index']);
+        }
+
+        phpinfo();
+    }
 }

@@ -29,6 +29,8 @@ class Project
 
     public $recentTasks = [];
 
+    public $datestasks = [];
+
     /**
      * @param $name
      */

@@ -334,9 +334,9 @@ class MonthReport
         //$table = new Table();
         $headers = ['Task', 'Time'];
         //$tableData = [$headers];
-        foreach ($clean as $task => $time)
+        foreach ($clean['Tasks'] as $task => $time)
         {
-            if('Dates' == $task || 'billingactive' == $task)
+            if('Dates' == $task || 'billingactive' == $task )
                 continue;
 
             $tableData[] = [$task, $time];
