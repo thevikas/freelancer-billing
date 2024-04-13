@@ -86,6 +86,7 @@ class Project extends Model
             throw new \Exception("$cacheJsonFileName not found");
         return $this->cache = json_decode(file_get_contents($cacheJsonFileName), true);
     }
+    
     /**
      * {@inheritdoc}
      */
