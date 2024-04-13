@@ -98,7 +98,7 @@ class ProjectsController extends \yii\web\Controller
                 continue;
             if(empty($project) || $project == $proj)
                 $rt[$proj] = [
-                    'subtitle' => $data['subitle'] ?? $proj,
+                    'subtitle' => $data['subtitle'] ?? $proj,
                     'imgSrc' => $data['imgSrc'] ?? ''
                 ];
         }
