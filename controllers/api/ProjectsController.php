@@ -96,10 +96,11 @@ class ProjectsController extends \yii\web\Controller
         {
             if(empty($data['billingactive']))
                 continue;
-            $rt[$proj] = [
-                'subtitle' => $data['subitle'] ?? $proj,
-                'imgSrc' => $data['imgSrc'] ?? ''
-            ];
+            if(empty($project) || $project == $proj)
+                $rt[$proj] = [
+                    'subtitle' => $data['subitle'] ?? $proj,
+                    'imgSrc' => $data['imgSrc'] ?? ''
+                ];
         }
 
         return $rt;
