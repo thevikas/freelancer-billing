@@ -22,6 +22,8 @@ class MonthReport
 
     public $dates;
 
+    public $parsed_logs = [];
+
     /**
      * @param $logfile
      */
@@ -94,6 +96,7 @@ class MonthReport
                 }
                 $next['spent_time_secs'] = $spent_time_secs;
                 //print_r($next);
+                $this->parsed_logs[] = $next;
                 $this->projects[$next['project']]->parse($next, $spent_time_secs, $this->last_time);
             }
             $this->last_time = $next['last_time'];
@@ -334,9 +337,9 @@ class MonthReport
         //$table = new Table();
         $headers = ['Task', 'Time'];
         //$tableData = [$headers];
-        foreach ($clean as $task => $time)
+        foreach ($clean['Tasks'] as $task => $time)
         {
-            if('Dates' == $task || 'billingactive' == $task)
+            if('Dates' == $task || 'billingactive' == $task )
                 continue;
 
             $tableData[] = [$task, $time];

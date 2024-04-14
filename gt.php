@@ -159,10 +159,15 @@ if ($hello_cmd['report'] || $hello_cmd['bill'] || $hello_cmd['earning'] || $hell
     $report_data = $rep->report($FirstDayOfMonth);
     if ($hello_cmd['report'] || $hello_cmd['cache'])
     {
+        $cache_dir = $_ENV['TIMELOG_GITREPO'] . '/cache/';
+        //also save parsed_logs
+        $cacheJsonFileName = $cache_dir . date('Y-m-d', $FirstDayOfMonth) . "_parsed.json";
+        $data = $rep->parsed_logs;
+        file_put_contents($cacheJsonFileName, json_encode($data, JSON_PRETTY_PRINT));
+        
         $summary = $rep->summary($FirstDayOfMonth);
         if ($hello_cmd['cache'])
         {
-            $cache_dir = $_ENV['TIMELOG_GITREPO'] . '/cache/';
             if (!file_exists($cache_dir))
             {
                 mkdir($cache_dir, 0777, true);
@@ -176,6 +181,7 @@ if ($hello_cmd['report'] || $hello_cmd['bill'] || $hello_cmd['earning'] || $hell
                 'report_data' => $report_data
             ];
             file_put_contents($cacheJsonFileName, json_encode($data, JSON_PRETTY_PRINT));
+
             addGitFile($cacheJsonFileName, $gitrepo);
         }
         //print_r($report_data);
