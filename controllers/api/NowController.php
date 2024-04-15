@@ -59,7 +59,7 @@ class NowController extends \yii\web\Controller
     }
 
     public function actionToday()
-    {   
+    {
         $firstDay = date('Y-m-01');
         $today = date('Y-m-d');
         //TIMELOG_GITREPO
@@ -68,7 +68,7 @@ class NowController extends \yii\web\Controller
         $todaylogs = [];
         $parsed_logs = json_decode(file_get_contents($_ENV['TIMELOG_GITREPO'] . "/cache/{$firstDay}_parsed.json"), true);
 
-        usort($parsed_logs,[$this,'sortByLastTime']);
+        usort($parsed_logs, [$this, 'sortByLastTime']);
 
         // Initialize an array to store unique entries
         $filteredData = [];
@@ -90,7 +90,7 @@ class NowController extends \yii\web\Controller
         }
 
         // Sort the filtered array by last_time again
-        usort($filteredData, [$this,'sortByLastTime']);
+        usort($filteredData, [$this, 'sortByLastTime']);
 
         $filteredData = array_reverse($filteredData);
 
@@ -119,10 +119,15 @@ class NowController extends \yii\web\Controller
      * @param [type] $log
      * @return void
      */
-    public function actionIndex($log = "")
+    public function actionIndex($log = null)
     {
         $proj = new \gtimelogphp\Project("");
 
+        //read POSTed JSON data
+        $data = json_decode(Yii::$app->request->getRawBody(), true);
+        if(!empty($data['log']))
+            $log = $log ?? $data['log'];
+        
         $proj->logNow($log, $this->logfile, [
             "", $log
         ], false, $_ENV['TIMELOG_PCNAME'], true);
@@ -143,7 +148,7 @@ class NowController extends \yii\web\Controller
 
         $projName = $lastInfo['project'];
 
-        if(empty($rep2[$projName]['datestasks'][date('Y-m-d')][$lastInfo['task']]))
+        if (empty($rep2[$projName]['datestasks'][date('Y-m-d')]))
         {
             $lastInfo['duration'] = 0;
             $lastInfo['status'] = 'stopped';
@@ -159,7 +164,7 @@ class NowController extends \yii\web\Controller
 
     // Define a function to compare elements based on last_time
     function sortByLastTime($a, $b)
-        {
-            return $a['last_time'] <=> $b['last_time'];
-        }
+    {
+        return $a['last_time'] <=> $b['last_time'];
+    }
 }
