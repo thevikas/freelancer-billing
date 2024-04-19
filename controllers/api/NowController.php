@@ -3,6 +3,7 @@
 namespace app\controllers\api;
 
 use app\models\Project as ProjectModal;
+use app\models\PomodoroTask;
 use stdClass;
 use Yii;
 use yii\filters\Cors;
@@ -92,25 +93,27 @@ class NowController extends \yii\web\Controller
         // Sort the filtered array by last_time again
         usort($filteredData, [$this, 'sortByLastTime']);
 
+        //check if tomorodo is running, append that task
+        $cache = Yii::$app->cache;
+        $pomodoro = $cache->get('pomodoro');
+        if($pomodoro && $pomodoro->spent_time_secs > $pomodoro->duration)
+        {
+            $pomodoro = null;
+        }        
+        if ($pomodoro)
+        {
+            //$ar = $pomodoro;
+            //$ar['spent_time_secs'] = $pomodoro->spent_time_secs;            
+            $filteredData[] = [
+                'project' => $pomodoro->project,
+                'task' => $pomodoro->task,
+                'last_time' => $pomodoro->last_time,
+                'spent_time_secs' => $pomodoro->spent_time_secs,
+                'status' => $pomodoro->status
+            ];            
+        }
         $filteredData = array_reverse($filteredData);
-
         return $filteredData;
-
-        foreach ($parsed_logs as $log)
-        {
-            $dt = date('Y-m-d', $log['last_time']);
-            if ($dt == $today)
-            {
-                $todaylogs[] = $log;
-            }
-        }
-
-        foreach ($parsed_logs as $log)
-        {
-            $todaylogs[] = $log;
-        }
-
-        return $todaylogs;
     }
 
     /**
@@ -136,9 +139,13 @@ class NowController extends \yii\web\Controller
         return $this->actionLast();
     }
 
+    public function actionAway()
+    {
+        return $this->actionIndex("away");
+    }
+
     public function actionLast()
     {
-        //return json header
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 
         $proj = new \gtimelogphp\Project("");
@@ -160,6 +167,31 @@ class NowController extends \yii\web\Controller
         $lastInfo['status'] = 'running';
         $lastInfo['status'] = 'running';
         return $lastInfo;
+    }
+
+    public function actionPomodoro()
+    {
+        $this->actionAway();
+        //store pomodoro flag in cache with datetime
+        $cache = Yii::$app->cache;
+        $pomodoro = $cache->get('pomodoro');
+        if($pomodoro && $pomodoro->spent_time_secs > $pomodoro->duration)
+        {
+            $pomodoro = null;
+        }        
+        if (!$pomodoro)
+        {        
+            $pomodoro = new PomodoroTask();
+            $pomodoro->status = 'running';
+            $pomodoro->project = 'Pomodoro';
+            $pomodoro->task = 'Pomodoro';
+            $pomodoro->duration = 25 * 60;  
+            $pomodoro->last_time = time();
+        }
+                
+        $cache = Yii::$app->cache;
+        $cache->set('pomodoro', $pomodoro, 25 * 60);        
+        return $pomodoro;
     }
 
     // Define a function to compare elements based on last_time

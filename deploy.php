@@ -33,6 +33,7 @@ add('shared_files', [
 //default runtime dirs are shared across diff versions
 add('shared_dirs', [
     'web/assets',
+    'web/m',
     'data'
 ]);
 
