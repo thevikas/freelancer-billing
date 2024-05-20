@@ -216,7 +216,7 @@ if ($hello_cmd['report'] || $hello_cmd['bill'] || $hello_cmd['earning'] || $hell
             $inum = $bill->saveJson($BillRep[$proj], $proj, $hello_cmd['idate']);
             $bill->printPDF($inum,$proj);
             $clean = $report_data[$proj];
-
+            $report_data = $bill->data;
             $rep->printTimesheet($report_data,$proj);
         }
         else if ($hello_cmd['allprojects'])

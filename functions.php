@@ -166,7 +166,7 @@ function iterate($L, $only_first = false, $callback = null)
             }
 
             $last_time             = strtotime($ss[0]);
-            $last_comment          = trim($ss2[2]);
+            $last_comment          = trim($ss2[2] ?? "");
             $all_lines[$last_time] = [
                 'last_time' => $last_time,
                 'given_ts' => $ss[0],

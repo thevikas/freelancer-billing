@@ -77,7 +77,7 @@ class NowController extends \yii\web\Controller
         // Loop through the sorted array and filter out duplicates based on project and task
         foreach ($parsed_logs as $entry)
         {
-            $key = $entry['project'] . '-' . $entry['task'];
+            $key = $entry['project'] . '-' . ($entry['task'] ?? "");
             if (!isset($filteredData[$key]))
             {
                 $filteredData[$key] = $entry;

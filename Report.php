@@ -354,8 +354,11 @@ class MonthReport
         //$climate->table($tableData);
         //echo $table;
 
+        $total1 = $report_data[$proj]['Total'] + $report_data[$proj]['ExtraTotal'];
+        $total1 = round($total1,2);
+
         $tableData[] = new TableSeparator();
-        $tableData[] = ['Total', round($report_data[$proj]['Total'],2)];
+        $tableData[] = ['Total', $total1];
         
         $output = new \Symfony\Component\Console\Output\ConsoleOutput();
 

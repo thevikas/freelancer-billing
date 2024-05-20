@@ -70,6 +70,23 @@ class Bill
         }
     }
 
+    public function appendExtraTimesheet($extra_timesheet,$project_name)
+    {
+        $this->data[$project_name]['ExtraTotal'] = 0;
+        foreach($extra_timesheet as $taskinfo)
+        {
+            list($task,$hours) = $taskinfo;
+            if(!empty($this->data[$project_name]['Tasks']))
+            {
+                //$hoursmin should be hours:mins with zero padding
+                //$hoursmin = intval($hours) . ":" . intval(($hours - intval($hours)) * 60);
+                $hoursmin = sprintf("%d:%02d",intval($hours),intval(($hours - intval($hours)) * 60));
+                $this->data[$project_name]['Tasks'][$task] = $hoursmin;
+                $this->data[$project_name]['ExtraTotal'] += $hours;
+            }
+        }
+    }
+
     public function saveJson($rep, $project_name,$invoice_date)
     {
         if(empty($invoice_date))
@@ -94,6 +111,10 @@ class Bill
                     $inum = $ictr;
                     echo "Using $json_file...\n";
                     $resuming = true;
+
+                    if(!empty($json['extra-timesheet']))
+                        $this->appendExtraTimesheet($json['extra-timesheet'],$project_name);
+
                     break;
                 }
             }
