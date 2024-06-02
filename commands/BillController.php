@@ -52,15 +52,16 @@ class BillController extends Controller
         }
 
         $file = fopen($this->csvfile, 'r');
-        $header = strtolower(fgetcsv($file));
-        if($header[0] != 'Task' || $header[1] != 'Time'){
+        $header = fgetcsv($file);
+        if(strtolower($header[0]) != 'task' || strtolower($header[1]) != 'time'){
             echo "Invalid CSV file\n";
             return ExitCode::UNSPECIFIED_ERROR;
         }
 
         $rows = [];
         while($row = fgetcsv($file)){
-            $rows[] = array_combine($header, $row);
+            $row[1] += 0;
+            $rows[] = $row;//array_combine($header, $row);
         }
 
         $invoice_json_dir = \Yii::getAlias('@app/data');
@@ -74,13 +75,13 @@ class BillController extends Controller
 
         $obj = json_decode(file_get_contents($invoice_json_file), true);
 
-        if(!empty($obj['"extra-timesheet"']))
+        if(!empty($obj["extra-timesheet"]))
         {
             echo "Extra timesheet already added\n";
             return ExitCode::UNSPECIFIED_ERROR;
         }
 
-        $obj['"extra-timesheet"'] = $rows;
+        $obj["extra-timesheet"] = $rows;
 
         file_put_contents($invoice_json_file, json_encode($obj, JSON_PRETTY_PRINT));
     }

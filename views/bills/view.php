@@ -32,6 +32,12 @@ if (0)
 
     </div>
 <?php }
+
+
+$btcpayurl = $bankdetails['btcpay'];
+//https://btcpay.thevikas.com/api/v1/invoices?storeId=BKhMQ9kFYA6vx5PJhnjwQfaWcnjbGeYVvvWi5hvKBKsc&orderId=134&checkoutDesc=Invoice+134&price=1696.5&currency=USD
+$btcpayurl .= "&orderId=" . $id_invoice . "&checkoutDesc=Invoice+" . $id_invoice . "&price=" . ($invoice['total']*0.9) . "&currency=" . $project['ccy'];
+
 $conversion = false;
 if (!empty($project['conversion_in_invoice']) && $project['conversion_in_invoice'])
 {
@@ -182,11 +188,11 @@ foreach ($invoice['items'] as $item)
                 <tr>
                     <td>
                         <?php if (1)
-{
-    ?>
+                        {
+                            ?>
                             <img class="icon-cc" src="/images/cc.png">
                             <p><strong>Payment</strong></p>
-                            <p>Bitcoin Lightning invoice on request</p>
+                            <p><a href="<?=$btcpayurl?>"><img src="/images/btcpay.svg" width="209" height="57"/></a></p>
                         <?php }?>
                         <?php if (!empty($invoice['unused_pay2addr']))
                         {
@@ -197,20 +203,25 @@ foreach ($invoice['items'] as $item)
                 </tr>
                 <tr>
                     <td>
-                    <?php if(!empty($project['showbankdetails']) && $project['showbankdetails']) { 
-                    
+                    <?php if(!empty($project['showbankdetails'])) { 
+                        $bankname = $project['showbankdetails'];
                         ?>
                         <div style="margin-bottom: -50px">
                         <p><strong>Bank Details</strong></p>
-                        <p>Account Name: <?=$bankdetails['AccountName']?></p>
-                        <p>Account Number: <?=$bankdetails['AccountNumber']?></p>
-                        <p>Bank Name: <?=$bankdetails['Bank']?></p>
-                        <p>Branch: <?=$bankdetails['Branch']?></p>
-                        <p>SWIFT Code: <?=$bankdetails['SwitftCode']?></p>
-                        <p>IFSC Code: <?=$bankdetails['IFSC']?></p>
-                        </div>
+                        <p>Account Name: <?=$bankdetails[$bankname]['AccountName']?></p>
+                        <p>Account Number: <?=$bankdetails[$bankname]['AccountNumber']?></p>
+                        <p>Bank Name: <?=$bankdetails[$bankname]['Bank']?></p>
+                        <p>Branch: <?=$bankdetails[$bankname]['Branch']?></p>
                         <?php
-                    
+                        if(!empty($bankdetails[$bankname]['SwitftCode']))
+                            echo "<p>SWIFT Code: ".$bankdetails[$bankname]['SwitftCode']."</p>";
+                        if(!empty($bankdetails[$bankname]['IBAN']))
+                            echo "<p>IBAN: ".$bankdetails[$bankname]['IBAN']."</p>";
+                        if(!empty($bankdetails[$bankname]['IFSC']))
+                            echo "<p>IFSC Code: ".$bankdetails[$bankname]['IFSC']."</p>";
+                        ?>
+                        </div>
+                        <?php                    
                     } ?>
                     </td>
                 </tr>
