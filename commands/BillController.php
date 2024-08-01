@@ -47,14 +47,14 @@ class BillController extends Controller
     public function actionAddTimesheet()
     {
         if(empty($this->csvfile) || empty($this->project) || empty($this->id)){
-            echo "Please provide csvfile, project and id\n";
+            echo "Please provide csvfile, project (code) and id (invoice id)\n";
             return ExitCode::UNSPECIFIED_ERROR;
         }
 
         $file = fopen($this->csvfile, 'r');
         $header = fgetcsv($file);
         if(strtolower($header[0]) != 'task' || strtolower($header[1]) != 'time'){
-            echo "Invalid CSV file\n";
+            echo "Invalid CSV file, need [task,time] fields\n";
             return ExitCode::UNSPECIFIED_ERROR;
         }
 
@@ -69,7 +69,7 @@ class BillController extends Controller
         $invoice_json_file = sprintf('%s/%02d-%s.json', $invoice_json_dir, $this->id, $this->project);
 
         if(!file_exists($invoice_json_file)){
-            echo "Invoice file not found\n";
+            echo "Invoice file [$invoice_json_file] not found\n";
             return ExitCode::UNSPECIFIED_ERROR;
         }
 

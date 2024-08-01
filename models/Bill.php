@@ -24,7 +24,7 @@ class Bill extends Model
             if($file[0] == '.')
                 continue;
             $mats = [];
-            if(!preg_match('/^(?<id_invoice>\d+)\-(?<clientcode>\w+)\.json/',$file,$mats))
+            if(!preg_match('/^(?<id_invoice>\d+)\-(?<clientcode>[\-\w]+)\.json/',$file,$mats))
                 throw new \Exception("Invoice file $file name could not parts");
             $jsonfile = $startdir . '/' . $file;
             $bill = json_decode(file_get_contents($jsonfile),true);

@@ -15,6 +15,8 @@ use yii\filters\VerbFilter;
  */
 class ProjectsController extends Controller
 {
+    public $enableCsrfValidation = false;
+    
     /**
      * {@inheritdoc}
      */
@@ -22,12 +24,26 @@ class ProjectsController extends Controller
     {
         return [
             'verbs' => [
-                'class' => VerbFilter::className(),
+                'class' => VerbFilter::class,
                 'actions' => [
                     'delete' => ['POST'],
                 ],
             ],
         ];
+    }
+
+    public function beforeAction($action)
+    {
+        if (in_array($action->id, ['action1', 'action2'])) {
+            $this->enableCsrfValidation = false;
+        }
+        return parent::beforeAction($action);
+    }
+
+    public function init()
+    {
+        $dotenv = \Dotenv\Dotenv::createImmutable(Yii::getAlias('@app'));
+        $dotenv->load();        
     }
 
     /**
@@ -36,8 +52,6 @@ class ProjectsController extends Controller
      */
     public function actionIndex()
     {
-        $dotenv = \Dotenv\Dotenv::createImmutable(Yii::getAlias('@app'));
-        $dotenv->load();
         $proj = new Project();
 
         //create a array of projects and stats

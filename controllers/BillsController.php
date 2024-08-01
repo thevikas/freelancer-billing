@@ -21,7 +21,7 @@ class BillsController extends Controller
     {
         return [
             'verbs' => [
-                'class'   => VerbFilter::className(),
+                'class'   => VerbFilter::class,
                 'actions' => [
                     'delete' => ['POST'],
                 ],
@@ -67,7 +67,8 @@ class BillsController extends Controller
         $project = $clients['projects'][$bills[$id]['client']];
         if (empty($project['layout']))
         {
-            $this->layout = 'blue-invoice';
+            //$this->layout = 'blue-invoice';
+            $this->layout = 'bs5-invoice';
         }
         else
         {
@@ -121,9 +122,27 @@ class BillsController extends Controller
         }
         $invoice['total_inr'] = round($invoice['total'] * $clients['ccy'][$project['ccy']]);
 
+        $btcpayurl = $clients['bankdetails']['btcpay'];
+
+        $params = [
+            'orderId'      => $id,
+            'checkoutDesc' => "Invoice " . $id,
+            'price'        => $invoice['total']*0.8, //discount on btc payment
+            'currency'     => $project['ccy'],
+        ];
+        
+        if($project['ccy'] == 'BTC')
+        {
+            $params['price'] = $invoice['total'];
+        }
+        
+        $btcpayurl .= "&" . http_build_query($params);
+        
+
         return $this->render('view', [
             'ccy_precision' => $ccy_precision,
             'id_invoice'    => $id,
+            'btcpayurl'     =>  $btcpayurl, 
             'invoice'       => $invoice,
             'project'       => $project,
             'bankdetails'   => $clients['bankdetails'],
