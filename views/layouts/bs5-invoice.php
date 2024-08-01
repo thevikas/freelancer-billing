@@ -3,12 +3,12 @@
 /* @var $this \yii\web\View */
 /* @var $content string */
 
-use app\assets\Bootstrap5;
+use app\assets\Boostrap5InvoiceAsset;
 use yii\helpers\Html;
 
 
 //load bootstrrap asset
-Bootstrap5::register($this);
+Boostrap5InvoiceAsset::register($this);
 
 ?>
 <?php $this->beginPage() ?>

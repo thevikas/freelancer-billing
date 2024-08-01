@@ -139,7 +139,7 @@ class BillsController extends Controller
         $btcpayurl .= "&" . http_build_query($params);
         
 
-        return $this->render('view', [
+        return $this->render('view2', [
             'ccy_precision' => $ccy_precision,
             'id_invoice'    => $id,
             'btcpayurl'     =>  $btcpayurl, 
