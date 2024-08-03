@@ -8,7 +8,6 @@
 namespace app\assets;
 
 use yii\web\AssetBundle;
-
 /**
  * Main application asset bundle.
  *
@@ -26,7 +25,7 @@ class AppAsset extends AssetBundle
     ];
     public $depends = [
         'yii\web\YiiAsset',
-        //'yii\bootstrap\BootstrapAsset',
+        'app\assets\FontAwesomeAsset',
         'app\assets\Bootstrap5'
     ];
 }

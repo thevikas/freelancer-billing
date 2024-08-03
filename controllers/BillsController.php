@@ -127,7 +127,7 @@ class BillsController extends Controller
         $params = [
             'orderId'      => $id,
             'checkoutDesc' => "Invoice " . $id,
-            'price'        => $invoice['total']*0.8, //discount on btc payment
+            'price'        => $invoice['total']*0.85, //discount on btc payment
             'currency'     => $project['ccy'],
         ];
         

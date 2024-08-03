@@ -56,4 +56,14 @@ class Bill extends Model
         ];
     }
 
+    public function saveExtra($id,$extra_ts,$extra_hours)
+    {
+        $bills = self::loadfiles();
+        $bill = $bills[$id];
+        $bill['extra-timesheet'] = $extra_ts;
+        $bill['hours'] += $extra_hours;
+        $jsonfile = $bill['jsonfile'];
+        unset($bill['jsonfile']);
+        file_put_contents($jsonfile,json_encode($bill,JSON_PRETTY_PRINT));
+    }
 }
