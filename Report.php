@@ -185,7 +185,7 @@ class MonthReport
         if (empty($this->reportData))
             $this->report();
 
-        print_r($this->reportData);
+        //print_r($this->reportData);
 
         $bill = new Bill($this->reportData);
         $total = 0;

@@ -103,7 +103,12 @@ $hello_cmd->option('g')
     ->describedAs('Make a bar graph of all billable projects')
     ->boolean();
 
-date_default_timezone_set($_ENV['TIMEZONE'] ?? 'Asia/Kolkata');
+$hello_cmd->option('s')
+    ->aka('silent')
+    ->describedAs('Does not out anything')
+    ->boolean();
+
+    date_default_timezone_set($_ENV['TIMEZONE'] ?? 'Asia/Kolkata');
 
 $all_lines = [];
 
@@ -175,6 +180,7 @@ if ($hello_cmd['report'] || $hello_cmd['bill'] || $hello_cmd['earning'] || $hell
 
             //create file name using month and year from $FirstDayOfMonth
             $cacheJsonFileName = $cache_dir . date('Y-m-d', $FirstDayOfMonth) . ".json";
+            $cacheJsonFileNameLink = $cache_dir . "current.json";
             $data = [
                 'dated' => date('Y-m-d H:i:s'),
                 'summary' => $summary,
@@ -182,11 +188,19 @@ if ($hello_cmd['report'] || $hello_cmd['bill'] || $hello_cmd['earning'] || $hell
             ];
             file_put_contents($cacheJsonFileName, json_encode($data, JSON_PRETTY_PRINT));
 
+            //link $cacheJsonFileNameLink to $cacheJsonFileName
+            if (file_exists($cacheJsonFileNameLink))
+            {
+                unlink($cacheJsonFileNameLink);
+            }
+            symlink($cacheJsonFileName, $cacheJsonFileNameLink);
+
             addGitFile($cacheJsonFileName, $gitrepo);
         }
         //print_r($report_data);
         $summary = $rep->summary($FirstDayOfMonth);
-        print_r($summary);
+        if (!$hello_cmd['silent'])
+            print_r($summary);
         if ($hello_cmd['graph'])
         {
             $rep->makeGraph($summary);

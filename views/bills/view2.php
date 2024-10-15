@@ -335,3 +335,10 @@ function prefix_ccy($project, $amount)
     </div>
 </div>
 <?php } ?>
+
+<style type="text/css">
+    body
+    {
+        margin: 20px;
+    }
+</style>
