@@ -17,6 +17,9 @@ class Bill extends Model
 
     static function loadfiles()
     {
+        $dotenv = \Dotenv\Dotenv::createImmutable(Yii::getAlias('@app'));
+        $dotenv->load();
+
         $bills = [];
         $DIR = opendir($startdir = Yii::getAlias('@app/data'));
         while($file = readdir($DIR))

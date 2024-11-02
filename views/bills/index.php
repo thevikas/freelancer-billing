@@ -46,10 +46,23 @@ $this->params['breadcrumbs'][] = $this->title;
                 if($action === 'upload-ts') {
                     return Url::toRoute(['uploads/ts', 'id_invoice' => $model['id_invoice']]);
                 }
+                else if($action === 'download-pdf') {
+                    return Url::toRoute(['bills/download', 'id_invoice' => $model['id_invoice']]);
+                }
+                
+
                 return Url::toRoute([$action, 'id' => $model['id_invoice']]);
             },
-            'template' => '{upload-ts} {view} {update} {delete}', // Add the {process} button here
+            'template' => '{upload-ts} {download-pdf} {view} {update} {delete}', // Add the {process} button here
             'buttons' => [
+                'download-pdf' => function ($url, $model, $key) {
+                    return Html::a(                            
+                            Html::tag('i', '', ['class' => 'fa fa-download']),
+                        $url, [
+                        'title' => Yii::t('app', 'Download Invoice PDF'),
+                        //'data-method' => 'get'
+                    ]);
+                },
                 'upload-ts' => function ($url, $model, $key) {
                     return Html::a(                            
                             Html::tag('i', '', ['class' => 'fa fa-upload']),

@@ -7,11 +7,11 @@ namespace Deployer;
 require 'recipe/yii.php';
 
 set('bin/php', function () {
-    return '/usr/bin/php8.1';
+    return '/usr/bin/php8.3';
 });
 
 
-set('php_executable', 'php8.1');
+set('php_executable', 'php8.3');
 
 // Project name
 set('application', 'FreelancerBilling');
@@ -48,7 +48,7 @@ host('linode2')
     ->set('hostname', 'linode2')
     ->set('stage', 'prod')
     ->set('branch', 'master')
-    ->set('composer_options', ' --verbose --no-interaction')
+    ->set('composer_options', ' --verbose --no-interaction --ignore-platform-reqs -W')
     ->set('deploy_path', '~/deploy/prod/{{application}}');
 
 task('ls', function ()
