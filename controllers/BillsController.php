@@ -40,15 +40,20 @@ class BillsController extends Controller
      * Lists all Bill models.
      * @return mixed
      */
-    public function actionIndex()
+    public function actionIndex($client = null)
     {
         $clients = $this->clients;
         $dataProvider = new ArrayDataProvider([
-            'allModels' => Bill::loadfiles(),
+            'allModels' => Bill::loadfiles($client),
+            'sort'      => [
+                'attributes' => ['id_invoice', 'client', 'dated'],
+            ],
         ]);
 
         return $this->render('index', [
             'dataProvider'  => $dataProvider,
+            'clients'  => $clients,
+            'filter_client'   => $client,
             'ccy_precision' => $clients['precision']['default'],
         ]);
     }
@@ -221,6 +226,38 @@ class BillsController extends Controller
     }
 
     /**
+     * Echo sha 256 of PDF file and echo
+     *
+     * @param [type] $id_invoice
+     * @return void
+     */
+    public function actionSha($id_invoice)
+    {
+        $bills = Bill::loadfiles();
+
+        $BILLS_PDF_DIR = $_ENV['BILLS_PDF_DIR'];
+
+        $clients = $this->clients;
+
+        $invoice = $bills[$id_invoice];
+
+        $pdf_filename = "Invoice-" . $id_invoice . "-" . $invoice['client'] . ".pdf";
+
+        $pdf_path = $BILLS_PDF_DIR . "/" . $pdf_filename;
+
+        if(file_exists($pdf_path))
+        {
+            echo hash_file('sha256', $pdf_path);
+        }
+        else
+        {
+            throw new NotFoundHttpException('The requested PDF does not exist.');
+        }
+
+        return;
+    }
+
+    /**
      * Download PDF
      */
     public function actionDownload($id_invoice)
@@ -241,7 +278,7 @@ class BillsController extends Controller
 
         if(file_exists($pdf_path))
         {
-            return Yii::$app->response->sendFile($pdf_path, $pdf_filename);
+            return Yii::$app->response->sendFile($pdf_path, $pdf_filename,['inline' => true]);
         }
         else
         {

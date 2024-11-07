@@ -15,7 +15,7 @@ class Bill extends Model
     public $hours;
     public $json;
 
-    static function loadfiles()
+    static function loadfiles($filter_project = null)
     {
         $dotenv = \Dotenv\Dotenv::createImmutable(Yii::getAlias('@app'));
         $dotenv->load();
@@ -33,6 +33,10 @@ class Bill extends Model
             $bill = json_decode(file_get_contents($jsonfile),true);
             $bill['jsonfile'] = $jsonfile;
             $bill['id_invoice'] = $mats['id_invoice'];
+
+            if($filter_project && $bill['client'] != $filter_project)
+                continue;
+
             $bills[$mats['id_invoice']] = $bill;
         }
         closedir($DIR);

@@ -132,7 +132,7 @@ class Bill
         $json = [
             'hours'  => $rep['hours'],
             'client' => $project_name,
-            'dated'  => date('Y-m-d'),
+            'dated'  => $invoice_date,
         ];
         if(!$resuming)
             file_put_contents($json_file, json_encode($json, JSON_PRETTY_PRINT));

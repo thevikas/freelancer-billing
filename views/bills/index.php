@@ -7,9 +7,18 @@ use yii\helpers\Url;
 use yii\widgets\Pjax;
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
+/* @var $clients */
+
+
+//$project_keys = array_keys($clients['projects']);
+//only projects which are active
+$project_keys = array_keys(array_filter($clients['projects'], function($project) {
+    return $project['billingactive'] ?? false;
+}));
 
 $this->title = 'Bills';
 $this->params['breadcrumbs'][] = $this->title;
+
 ?>
 <div class="bill3-index">
 
@@ -17,9 +26,21 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <p>
         <?=Html::a('Create Bill3', ['create'], ['class' => 'btn btn-success'])?>
+        - 
+        <?php
+        $def = ['class' => 'btn btn-primary','style' => 'margin-right: 5px;'];
+            //filter tags
+            foreach ($project_keys as $key)
+            {
+                $def2 = $def;
+                if($key == $filter_client)
+                    $def2 = ['class' => 'btn btn-success active','style' => 'margin-right: 5px;'];
+                echo Html::a($key, ['bills/index', 'client' => $key], $def2);
+            }
+        ?>
     </p>
 
-    <?php Pjax::begin();?>
+    <?php #Pjax::begin();?>
 
     <?=GridView::widget([
     'dataProvider' => $dataProvider,
@@ -30,12 +51,38 @@ $this->params['breadcrumbs'][] = $this->title;
         'client',
         'dated',
         [
+            'label' => 'Hours',
             'format'  => 'raw',
             'content' => function ($data) use ($ccy_precision)
             {
                 if (isset($data['hours']) && $data['hours'] > 0)
                 {
                     return round($data['hours'], $ccy_precision);
+                }
+
+            },
+        ],
+        [
+            'label' => 'Total',
+            'format'  => 'raw',
+            'content' => function ($data) use ($ccy_precision,$clients)
+            {
+                $ccy = $clients['projects'][$data['client']]['ccy'];
+                if (!empty($clients['precision'][$ccy]))
+                {
+                    $ccy_precision = $clients['precision'][$ccy];
+                }
+                $per_hour = $clients['projects'][$data['client']]['per_hour'];
+                if (empty($data['total']))
+                {
+                    $data['total'] = $data['hours'] * $per_hour;
+                }
+
+                if (isset($data['total']) && $data['total'] > 0)
+                {
+                    //return round($data['total'], $ccy_precision);
+                    //echo with ccy
+                    return Yii::$app->formatter->asCurrency($data['total'], $ccy);
                 }
 
             },
@@ -49,18 +96,29 @@ $this->params['breadcrumbs'][] = $this->title;
                 else if($action === 'download-pdf') {
                     return Url::toRoute(['bills/download', 'id_invoice' => $model['id_invoice']]);
                 }
+                else if($action === 'sha256-pdf') {
+                    return Url::toRoute(['bills/sha', 'id_invoice' => $model['id_invoice']]);
+                }
                 
 
                 return Url::toRoute([$action, 'id' => $model['id_invoice']]);
             },
-            'template' => '{upload-ts} {download-pdf} {view} {update} {delete}', // Add the {process} button here
+            'template' => '{upload-ts} {sha256-pdf} {download-pdf} {view} {update} {delete}', // Add the {process} button here
             'buttons' => [
                 'download-pdf' => function ($url, $model, $key) {
                     return Html::a(                            
                             Html::tag('i', '', ['class' => 'fa fa-download']),
                         $url, [
                         'title' => Yii::t('app', 'Download Invoice PDF'),
-                        //'data-method' => 'get'
+                        'target' => '_blank',
+                    ]);
+                },
+                'sha256-pdf' => function ($url, $model, $key) {
+                    return Html::a(                            
+                            Html::tag('i', '', ['class' => 'fas fa-fingerprint']),
+                        $url, [
+                        'title' => Yii::t('app', 'See Invoice PDF SHA256'),
+                        'target' => '_blank',
                     ]);
                 },
                 'upload-ts' => function ($url, $model, $key) {
@@ -76,6 +134,6 @@ $this->params['breadcrumbs'][] = $this->title;
     ],
 ]);?>
 
-    <?php Pjax::end();?>
+    <?php #Pjax::end();?>
 
 </div>
