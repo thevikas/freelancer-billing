@@ -29,10 +29,15 @@ class BillsController extends Controller
         ];
     }
 
-    public function getClients()
+    public function init()
     {
+        parent::init();
         $dotenv = \Dotenv\Dotenv::createImmutable(Yii::getAlias('@app'));
         $dotenv->load();
+    }
+
+    public function getClients()
+    {
         return json_decode(file_get_contents($_ENV['RATES_JSON_FILE']), true);
     }
 
@@ -55,6 +60,66 @@ class BillsController extends Controller
             'clients'  => $clients,
             'filter_client'   => $client,
             'ccy_precision' => $clients['precision']['default'],
+        ]);
+    }
+
+    /**
+     * Lists all Bill models.
+     * @return mixed
+     */
+    public function actionEmail($id_invoice)
+    {
+        $bills = Bill::loadfiles();
+        $clients = $this->clients;
+        $invoice = $bills[$id_invoice];
+        $project = $clients['projects'][$bills[$id_invoice]['client']];
+
+        //if form post
+        if (Yii::$app->request->post())
+        {
+            $model = new \app\models\InvoiceEmailForm();
+            $model->load(Yii::$app->request->post());
+            if ($model->validate())
+            {
+                $model->send();
+                //add notification
+                Yii::$app->session->setFlash('success', 'Email sent');
+                //update json with emailsent true
+                //TODO $bills[$id_invoice]['emailsent'] = true;
+                //TODO $json_file = $_ENV['BILLS_JSON_DIR'] . '/' . $id_invoice . '-' . $invoice['client'] . '.json';
+                //TODO file_put_contents($json_file, json_encode($bills[$id_invoice], JSON_PRETTY_PRINT));
+                return $this->redirect(['index']);
+            }
+        }
+
+        $project['email']['to'] = $project['email']['to'] ?? $project['billing']['email'];
+        $project['email']['name'] = $project['email']['name'] ?? $project['billing']['name'];
+        $project['email']['subject'] = $project['email']['subject'] ?? "{{client_name}} Invoice #{{inum}} for the month of {{month}}";
+                
+        $model = new \app\models\InvoiceEmailForm();
+        $model->id_invoice = $id_invoice;
+        $pdf_path = $_ENV['BILLS_PDF_DIR'];
+        $model->invoice_pdf_path =  $pdf_path . '/Invoice-' . $id_invoice . '-' . $invoice['client'] . '.pdf';
+        $model->to_email = $project['email']['to'];
+        $model->to_name = $project['email']['name'];
+        $model->from_email = $_ENV['SENDER_EMAIL'];
+        $model->from_name = $_ENV['SENDER_NAME'];
+        $model->timesheet_csv_path = $_ENV['BILLS_JSON_DIR'] . '/' . $id_invoice . '-' . $invoice['client'] . '-ts.csv';
+
+        //month before invoice date
+        $model->invoice_month = date('F Y', strtotime($invoice['dated'] . ' -1 month'));
+
+        $model->email_subject = str_replace('{{month}}', $model->invoice_month, $project['email']['subject']);
+        $model->email_subject = str_replace('{{client_name}}', $project['billing']['name'], $model->email_subject);
+        //inum
+        $model->email_subject = str_replace('{{inum}}', $id_invoice, $model->email_subject);
+        
+        return $this->render('email', [
+            'model' => $model,
+            'id_invoice' => $id_invoice,
+            'clients'    => $clients,
+            'project'    => $project,
+            'invoice'    => $invoice,
         ]);
     }
 

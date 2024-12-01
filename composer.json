@@ -27,7 +27,11 @@
         "npm-asset/bootstrap": "^5.3",
         "initphp/cli-table": "^1.0",
         "symfony/console": "^5.4",
-        "npm-asset/puppeteer": "^18.1"
+        "npm-asset/puppeteer": "^18.1",
+        "symfony/mailer": "^6.4",
+        "symfony/brevo-mailer": "^7.1",
+        "yiisoft/yii2-symfonymailer": "^4.0",
+        "symfony/http-client": "^7.2"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.1.0",

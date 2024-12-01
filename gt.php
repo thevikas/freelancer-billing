@@ -232,6 +232,9 @@ if ($hello_cmd['report'] || $hello_cmd['bill'] || $hello_cmd['earning'] || $hell
             $clean = $report_data[$proj];
             $report_data = $bill->data;
             $rep->printTimesheet($report_data,$proj);
+            //save timesheet as csv in $_ENV['BILLS_JSON_DIR'] with inum
+            $csv_path = $_ENV['BILLS_JSON_DIR'] . '/' . $inum . '-' . $proj . '-ts.csv';
+            $rep->saveTimesheetCSV($report_data,$proj,$csv_path);
         }
         else if ($hello_cmd['allprojects'])
         {

@@ -1,6 +1,8 @@
 <?php
 namespace gtimelogphp;
 
+use yii\console\ExitCode;
+
 /**
  * Organizes data so bill for some project can be made
  */
@@ -106,6 +108,8 @@ class Bill
             if (file_exists($json_file))
             {
                 $json = json_decode(file_get_contents($json_file), true);
+                if(!$json)
+                    throw new \Exception("JSON Parsing failed for file $json_file");
                 if(date('Y-m',strtotime($json['dated'])) == date('Y-m',strtotime($invoice_date)))
                 {
                     $inum = $ictr;
@@ -126,7 +130,11 @@ class Bill
         {
             die("$json_file already exists");
         }
-
+        if(!empty($json['signed']))
+        {
+            echo "$json_file already signed, refusing\n";
+            exit(ExitCode::UNAVAILABLE);
+        }
         echo "Writing $json_file...\n";
 
         $json = [

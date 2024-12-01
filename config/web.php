@@ -19,8 +19,6 @@ $config = [
         //'assetManager' => [
         //    'linkAssets' => true, // Set this to true to publish symbolic links instead of actual asset files (Optional)
         //],
-
-
         'assetManager' => [
             'bundles' => [
                 'yii\bootstrap\BootstrapPluginAsset' => [
@@ -48,11 +46,7 @@ $config = [
             'errorAction' => 'site/error',
         ],
         'mailer' => [
-            'class' => 'yii\swiftmailer\Mailer',
-            // send all mails to a file by default. You have to set
-            // 'useFileTransport' to false and configure a transport
-            // for the mailer to send real emails.
-            'useFileTransport' => true,
+            'class' => \yii\symfonymailer\Mailer::class,              
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,

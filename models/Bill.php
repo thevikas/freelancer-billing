@@ -27,8 +27,11 @@ class Bill extends Model
             if($file[0] == '.')
                 continue;
             $mats = [];
-            if(!preg_match('/^(?<id_invoice>\d+)\-(?<clientcode>[\-\w]+)\.json/',$file,$mats))
-                throw new \Exception("Invoice file $file name could not parts");
+            if(!preg_match('/^(?<id_invoice>\d+)\-(?<clientcode>[\-\w]+)\.json$/',$file,$mats))
+            {
+                continue;
+                throw new \Exception("Invoice file $file name could not be parse");
+            }
             $jsonfile = $startdir . '/' . $file;
             $bill = json_decode(file_get_contents($jsonfile),true);
             $bill['jsonfile'] = $jsonfile;
@@ -67,6 +70,10 @@ class Bill extends Model
     {
         $bills = self::loadfiles();
         $bill = $bills[$id];
+        if(!empty($bill["signed"]))
+        {
+            throw new \Exception("Invoice already signed");
+        }
         $bill['extra-timesheet'] = $extra_ts;
         $bill['hours'] += $extra_hours;
         $jsonfile = $bill['jsonfile'];

@@ -356,6 +356,8 @@ class MonthReport
         //$climate->table($tableData);
         //echo $table;
 
+        $report_data[$proj]['ExtraTotal'] = $report_data[$proj]['ExtraTotal'] ?? 0;
+
         $total1 = $report_data[$proj]['Total'] + $report_data[$proj]['ExtraTotal'];
         $total1 = round($total1,2);
 
@@ -372,5 +374,35 @@ class MonthReport
             ->setRows($tableData)
         ;
         $table->render();
+    }
+
+    public function saveTimesheetCSV($report_data, $proj,$csv_path)
+    {
+        $clean = $report_data[$proj];
+        unset($clean['Weeks']);
+        $total = $clean['Total'];
+        unset($clean['Dated']);
+        $csv = fopen($csv_path, 'w');
+        fputcsv($csv, ['Module', 'Task', 'Time']);
+        foreach ($clean['Tasks'] as $task => $time)
+        {
+            if('Dates' == $task || 'billingactive' == $task )
+                continue;
+
+            $module = 'global';
+            $ss = explode(':', $task, 2);            
+            if(count($ss) > 1)
+            {
+                $module = $ss[0];
+                $task = $ss[1];
+            }            
+            $task = trim($task);
+            $module = trim($module);
+            fputcsv($csv, [$module, $task, $time]);
+        }
+        $total1 = $clean['Total'] + ($clean['ExtraTotal'] ?? 0);
+        $total1 = round($total1,2);
+        fputcsv($csv, ['Total', '',$total1]);
+        fclose($csv);
     }
 }

@@ -5,8 +5,7 @@ use yii\widgets\DetailView;
 
 $billing = $project['billing'];
 
-if (0)
-{
+if (0) {
 
     /* @var $this yii\web\View */
     /* @var $model app\models\Bill3 */
@@ -21,7 +20,7 @@ if (0)
         <h1><?=Html::encode($this->title)?></h1>
 
         <?=DetailView::widget([
-        'model'      => $model,
+        'model' => $model,
         'attributes' => [
             'id_invoice',
             'client',
@@ -31,11 +30,11 @@ if (0)
     ])?>
 
     </div>
-<?php }
+<?php
+}
 
 $conversion = false;
-if (!empty($project['conversion_in_invoice']) && $project['conversion_in_invoice'])
-{
+if (!empty($project['conversion_in_invoice']) && $project['conversion_in_invoice']) {
     $conversion = true;
 }
 
@@ -45,17 +44,14 @@ function prefix_ccy($project, $amount)
 {
     $ccyp = $project['ccyp'];
     $symbols = [
-        'INR'  => '&#x20B9;',
-        'USD'  => '$',
-        'BTC'  => 'BTC',
+        'INR' => '&#x20B9;',
+        'USD' => '$',
+        'BTC' => 'BTC',
         'Sats' => '(BTC) Satoshis',
     ];
-    if (is_array($project))
-    {
+    if (is_array($project)) {
         $rate = $symbols[$project['ccy']];
-    }
-    else if (is_string($project))
-    {
+    } else if (is_string($project)) {
         $rate = $symbols[$project];
     }
 
@@ -75,9 +71,9 @@ function prefix_ccy($project, $amount)
         </p>
 
         <p style="margin-bottom:10px;"><img class="icon-mail" src="/images/mail.png"></i><?=$billing['email']?></p>
-        <?php if(!empty($billing['phone'])) { ?>
+        <?php if (!empty($billing['phone'])) {?>
             <p><img class="icon-mobile" src="/images/mobile.png"></i><?=$billing['phone']?></p>
-        <?php  } ?>
+        <?php }?>
 
     </div>
 
@@ -137,8 +133,7 @@ function prefix_ccy($project, $amount)
             </thead>
             <tbody>
                 <?php
-foreach ($invoice['items'] as $item)
-{
+foreach ($invoice['items'] as $item) {
     ?>
                     <tr>
                         <td>
@@ -182,26 +177,25 @@ foreach ($invoice['items'] as $item)
                 </tr>
                 <tr>
                     <td>
-                        <?php if (1)
-                        {
-                            ?>
+                        <?php if (1) {
+    ?>
                             <img class="icon-cc" src="/images/cc.png">
                             <p><strong>Payment</strong></p>
                             <br/>
                             <p><a href="<?=$btcpayurl?>"><img src="/images/btcpay.svg" width="209" height="57"/></a></p>
-                        <?php }?>
-                        <?php if (!empty($invoice['unused_pay2addr']))
-                        {
-                            //massive privacy breach bro tro leak out addresses
-                            //echo Html::img("/site/qr1?size=150&addr=" . $invoice['unused_pay2addr']);
-                        }?>
+                        <?php
+}?>
+                        <?php if (!empty($invoice['unused_pay2addr'])) {
+    //massive privacy breach bro tro leak out addresses
+    //echo Html::img("/site/qr1?size=150&addr=" . $invoice['unused_pay2addr']);
+}?>
                     </td>
                 </tr>
                 <tr>
                     <td>
-                    <?php if(!empty($project['showbankdetails'])) { 
-                        $bankname = $project['showbankdetails'];
-                        ?>
+                    <?php if (!empty($project['showbankdetails'])) {
+    $bankname = $project['showbankdetails'];
+    ?>
                         <div style="margin-bottom: -50px">
                         <p><strong>Bank Details</strong></p>
                         <p>Account Name: <?=$bankdetails[$bankname]['AccountName']?></p>
@@ -209,16 +203,22 @@ foreach ($invoice['items'] as $item)
                         <p>Bank Name: <?=$bankdetails[$bankname]['Bank']?></p>
                         <p>Branch: <?=$bankdetails[$bankname]['Branch']?></p>
                         <?php
-                        if(!empty($bankdetails[$bankname]['SwitftCode']))
-                            echo "<p>SWIFT Code: ".$bankdetails[$bankname]['SwitftCode']."</p>";
-                        if(!empty($bankdetails[$bankname]['IBAN']))
-                            echo "<p>IBAN: ".$bankdetails[$bankname]['IBAN']."</p>";
-                        if(!empty($bankdetails[$bankname]['IFSC']))
-                            echo "<p>IFSC Code: ".$bankdetails[$bankname]['IFSC']."</p>";
-                        ?>
+if (!empty($bankdetails[$bankname]['SwitftCode'])) {
+        echo "<p>SWIFT Code: " . $bankdetails[$bankname]['SwitftCode'] . "</p>";
+    }
+
+    if (!empty($bankdetails[$bankname]['IBAN'])) {
+        echo "<p>IBAN: " . $bankdetails[$bankname]['IBAN'] . "</p>";
+    }
+
+    if (!empty($bankdetails[$bankname]['IFSC'])) {
+        echo "<p>IFSC Code: " . $bankdetails[$bankname]['IFSC'] . "</p>";
+    }
+
+    ?>
                         </div>
-                        <?php                    
-                    } ?>
+                        <?php
+}?>
                     </td>
                 </tr>
             </tbody>
@@ -239,8 +239,7 @@ foreach ($invoice['items'] as $item)
 <td><span>DISCOUNT 5%:</span></td>
 <td><span>-$138.12</span></td>
 </tr>*/?>
-                <?php if ($conversion)
-{
+                <?php if ($conversion) {
 
     ?>
                     <tr>
@@ -267,8 +266,7 @@ echo !$conversion ? prefix_ccy($project, $invoice['total']) : prefix_ccy('INR', 
     </div>
 </div>
 
-<?php if (1)
-{
+<?php if (1) {
     ?>
     <!--This section enables for smaller screens and phones-->
     <div class="large-5 medium-5 small-12 columns bottom-left show-for-small-only">
@@ -309,7 +307,8 @@ echo !$conversion ? prefix_ccy($project, $invoice['total']) : prefix_ccy('INR', 
             </tbody>
         </table>
     </div>
-<?php }?>
+<?php
+}?>
 
 <div class="row terms">
     <div class="large-12 columns">
@@ -318,3 +317,29 @@ echo !$conversion ? prefix_ccy($project, $invoice['total']) : prefix_ccy('INR', 
         <?php endif;?>
     </div>
 </div>
+
+<style type="text/css">
+    @page {
+        size: auto; /* Default size */
+    }
+
+    @page portrait {
+        size: portrait;
+    }
+
+    @page landscape {
+        size: landscape;
+    }
+
+    @media print {
+        /* Add specific styles for portrait */
+        @page portrait {
+            margin: 0cm;
+        }
+
+        /* Add specific styles for landscape */
+        @page landscape {
+            margin: 0cm;
+        }
+    }
+</style>

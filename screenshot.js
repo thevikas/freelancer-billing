@@ -34,6 +34,27 @@ const fs = require('fs');
     await page.goto(website_url, { waitUntil: 'networkidle0' });
     const jpgfile = process.env.BILLS_JPG_DIR + `/Invoice-${id}-${proj}.jpg`;
     const pdffile = process.env.BILLS_PDF_DIR + `/Invoice-${id}-${proj}.pdf`;
+
+    //if pdffile exists, confirm to overwrite
+    if (fs.existsSync(pdffile)) {
+        const readline = require('readline').createInterface({
+            input: process.stdin,
+            output: process.stdout,
+        });
+
+        console.log(`File ${pdffile} exists. Overwrite? (y/n)`);
+
+        readline.question(`?`, (answer) => {
+            if (answer.toLowerCase() !== 'y') {
+                console.log('Not overwriting ${pdffile}. Exiting...');
+                readline.close();
+                browser.close();
+                return;
+            }
+            readline.close();
+        });
+    }
+
     await page.screenshot({
         path: jpgfile,
     });

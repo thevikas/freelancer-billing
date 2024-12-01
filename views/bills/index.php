@@ -99,11 +99,13 @@ $this->params['breadcrumbs'][] = $this->title;
                 else if($action === 'sha256-pdf') {
                     return Url::toRoute(['bills/sha', 'id_invoice' => $model['id_invoice']]);
                 }
-                
+                else if($action === 'email') {
+                    return Url::toRoute(['bills/email', 'id_invoice' => $model['id_invoice']]);
+                }               
 
                 return Url::toRoute([$action, 'id' => $model['id_invoice']]);
             },
-            'template' => '{upload-ts} {sha256-pdf} {download-pdf} {view} {update} {delete}', // Add the {process} button here
+            'template' => '{upload-ts} {sha256-pdf} {download-pdf} {view} {email} {update} {delete}', // Add the {process} button here
             'buttons' => [
                 'download-pdf' => function ($url, $model, $key) {
                     return Html::a(                            
@@ -112,6 +114,17 @@ $this->params['breadcrumbs'][] = $this->title;
                         'title' => Yii::t('app', 'Download Invoice PDF'),
                         'target' => '_blank',
                     ]);
+                },
+                'email' => function ($url, $model, $key) {
+                    if(empty($model['emailsent']))
+                        return Html::a(                            
+                                Html::tag('i', '', ['class' => 'fa fa-envelope']),
+                            $url, [
+                            'title' => Yii::t('app', 'Email Invoice PDF'),
+                            'target' => '_blank',
+                        ]);
+                    else
+                        return Html::img('/images/mailcheck.svg', ['title' => 'Email Sent', 'style' => 'width: 20px;']);
                 },
                 'sha256-pdf' => function ($url, $model, $key) {
                     return Html::a(                            

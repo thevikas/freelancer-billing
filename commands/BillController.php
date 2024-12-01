@@ -82,6 +82,11 @@ class BillController extends Controller
         }
 
         $obj["extra-timesheet"] = $rows;
+        
+        if($obj['signed'])
+        {
+            die("$invoice_json_file already signed");
+        }
 
         file_put_contents($invoice_json_file, json_encode($obj, JSON_PRETTY_PRINT));
     }
@@ -90,15 +95,26 @@ class BillController extends Controller
     {
         $invoice_json_dir = \Yii::getAlias('@app/data');
         $mats = [];
-        if(!empty($pdf_filepath))
+        if(!empty($pdf_filepath) && preg_match('/Invoice\-(?<id_invoice>\d+)\-(?<clientcode>[\-\w]+)\.pdf/', $pdf_filepath, $mats))
         {
-            if(!preg_match('/Invoice\-(?<id_invoice>\d+)\-(?<clientcode>[\-\w]+)\.pdf/', $pdf_filepath, $mats))
-            {
-                echo "Invalid PDF file name\n";
-                return ExitCode::UNSPECIFIED_ERROR;
-            }
             $this->id = $mats['id_invoice'];
             $this->project = $mats['clientcode'];
+        }
+        else if(is_numeric($pdf_filepath))
+        {
+            $this->id = $pdf_filepath;
+            //find invoice file
+            $invoice_json_file = sprintf('%s/%02d-*.json', $invoice_json_dir, $this->id);
+            $files = glob($invoice_json_file);
+            if(count($files) == 1)
+            {
+                $mats = [];
+                if(preg_match('/(\d+)-([\-\w]+)\.json/', $files[0], $mats))
+                {
+                    $this->id = $mats[1];
+                    $this->project = $mats[2];
+                }
+            }
         }
         else
         {
@@ -117,13 +133,13 @@ class BillController extends Controller
 
         $obj = json_decode(file_get_contents($invoice_json_file), true);
 
-        if(!empty($obj["sha256"]))
+        if(!empty($obj["signed"]))
         {
             echo "Invoice already signed\n";
             return ExitCode::OK;
         }
 
-        $obj["sha256"] = hash_file('sha256', $invoice_json_file);
+        //We will just sign a json file instead of keeping just hash
 
         $invoice_pdf_dir = \Yii::getAlias('@runtime/pdf');
         $invoice_pdf_file = sprintf('%s/Invoice-%02d-%s.pdf', $invoice_pdf_dir, $this->id, $this->project);
@@ -142,7 +158,12 @@ class BillController extends Controller
         //store sign in json
         $obj["gpg-sign"] = file_get_contents($invoice_pdf_file . '.asc');
 
+        $obj['signed'] = true;
+
         file_put_contents($invoice_json_file, json_encode($obj, JSON_PRETTY_PRINT));
+        $cmd = "gpg -s --armor  --detach-sign $invoice_json_file";
+        exec($cmd);
+
     }
 
     public function actionVerify($pdf_filepath)
