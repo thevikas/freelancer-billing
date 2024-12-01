@@ -6,14 +6,15 @@
     <br>
 </p>
 
-The primary objective is it is very private. You can host on your own infra that you can only access. You control where you keep the PDFs. There is no common web server. It uses the same file format as gtimelog. No changes.
+The primary objective is it is very private. You can host on your own infra that you can only access. You control where you keep the PDFs. There is no common web server. It uses the same file format as gtimelog. No changes. You can keep using `gtimelog` and `gt.php` together.
 
 ## Done
 
 1. Prints Invoice PDFs
 2. Prints Timesheets
 3. Provides Estimates
-4. Sends Emails
+4. Sends Emails (using brevo/symphony mailer)
+5. GPG Signs and locks the JSON and PDF file
 
 ## Todo
 
@@ -21,6 +22,7 @@ The primary objective is it is very private. You can host on your own infra that
 2. Android app for time tracking
 3. Grant customers access to monitor weekly timesheets
 4. Append task times to Jira/Gitlab issues/etc
+5. Midnight set in gtimelog, e.g. 2 a.m. should not get counted as next day
 
 ## Commands
 
@@ -30,6 +32,8 @@ The primary objective is it is very private. You can host on your own infra that
 4. Make all active bills together `php gt.php --bill -a`
 5. Remake new PDF `clear;XDEBUG_MODE=debug php gt.php --bill -p pwx -d 2023-10-01` 
 6. Append extra timesheet `./yii bill/add-timesheet --csvfile file1.csv --project aurum --id 136`
+7. Sign PDF and JSON invoice file `./yii bill/sign 158`
+7. Verify Signed invoice `./yii bill/verify 158`
 
 ## Background
 
