@@ -122,6 +122,7 @@ class Bill
                     break;
                 }
             }
+            $json = null;
             $ictr++;
         }
 
@@ -130,6 +131,9 @@ class Bill
         {
             die("$json_file already exists");
         }
+        else if(file_exists($json_file))
+            $json = json_decode(file_get_contents($json_file));
+
         if(!empty($json['signed']))
         {
             echo "$json_file already signed, refusing\n";

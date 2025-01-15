@@ -124,7 +124,12 @@ $this->params['breadcrumbs'][] = $this->title;
                             'target' => '_blank',
                         ]);
                     else
-                        return Html::img('/images/mailcheck.svg', ['title' => 'Email Sent', 'style' => 'width: 20px;']);
+                        return Html::a(
+                            Html::img('/images/mailcheck.svg', ['title' => 'Email Sent', 'style' => 'width: 20px;']),
+                            $url, [
+                                'title' => Yii::t('app', 'Email Invoice PDF'),
+                                'target' => '_blank',
+                        ]);
                 },
                 'sha256-pdf' => function ($url, $model, $key) {
                     return Html::a(                            
