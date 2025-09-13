@@ -2,3 +2,4 @@ data
 config/*.json
 .env
 web/up.*
+gtr2.projects.php

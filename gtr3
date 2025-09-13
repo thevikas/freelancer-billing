@@ -1,0 +1,5 @@
+#!/bin/bash
+XDEBUG_MODE=off
+# cd to cur dir
+cd $(dirname $0)
+(php ./gt.php last;php ./gt.php -r -c -m this_month) > /dev/null;php ./gtr2.php
