@@ -60,6 +60,26 @@ function prefix_ccy($project, $amount)
 ?>
 
 
+<div class="paid-stamp-container" style="position: relative;">
+    <?php if (true || !empty($invoice['paid'])): ?>
+    <div class="paid-stamp" style="position: absolute; top: 50px; right: 100px; transform: rotate(-30deg); z-index: 1000; opacity: 0.5;">
+        <svg width="200" height="200" viewBox="0 0 200 200">
+            <g>
+                <!-- Outer circle -->
+                <circle cx="100" cy="100" r="90" fill="none" stroke="#c00" stroke-width="5"/>
+                <!-- Inner circle -->
+                <circle cx="100" cy="100" r="85" fill="none" stroke="#c00" stroke-width="2"/>
+                <!-- PAID text -->
+                <text x="100" y="85" font-family="Arial" font-size="40" fill="#c00" text-anchor="middle" font-weight="bold">PAID</text>
+                <!-- Date text -->
+                <text x="100" y="115" font-family="Arial" font-size="16" fill="#c00" text-anchor="middle">
+                    <?= date('d M Y', strtotime($invoice['paid'])) ?>
+                </text>
+            </g>
+        </svg>
+    </div>
+    <?php endif; ?>
+
 <div class="header-bottom row">
 
     <div class="large-6 medium-6 columns header-bottom-left">

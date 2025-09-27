@@ -98,7 +98,7 @@ class Bill
 
         $inum = self::getNextInvoiceNumber();
 
-        //check for prev 10 inum json files 
+        //check for prev 10 inum json files
         $ictr = $inum-10;
         $resuming = false;
         for($i=0; $i<10; $i++)
@@ -132,7 +132,7 @@ class Bill
             die("$json_file already exists");
         }
         else if(file_exists($json_file))
-            $json = json_decode(file_get_contents($json_file));
+            $json = json_decode(file_get_contents($json_file),true);
 
         if(!empty($json['signed']))
         {

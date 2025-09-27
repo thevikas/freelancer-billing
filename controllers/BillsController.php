@@ -48,8 +48,9 @@ class BillsController extends Controller
     public function actionIndex($client = null)
     {
         $clients = $this->clients;
+        [$allbills,$allpayments] = Bill::loadfiles($client);
         $dataProvider = new ArrayDataProvider([
-            'allModels' => Bill::loadfiles($client),
+            'allModels' => $allbills,
             'sort'      => [
                 'attributes' => ['id_invoice', 'client', 'dated'],
             ],
@@ -95,7 +96,7 @@ class BillsController extends Controller
         $project['email']['to'] = $project['email']['to'] ?? $project['billing']['email'];
         $project['email']['name'] = $project['email']['name'] ?? $project['billing']['name'];
         $project['email']['subject'] = $project['email']['subject'] ?? "{{client_name}} Invoice #{{inum}} for the month of {{month}}";
-                
+
         $model = new \app\models\InvoiceEmailForm();
         $model->id_invoice = $id_invoice;
         $pdf_path = $_ENV['BILLS_PDF_DIR'];
@@ -113,7 +114,7 @@ class BillsController extends Controller
         $model->email_subject = str_replace('{{client_name}}', $project['billing']['name'], $model->email_subject);
         //inum
         $model->email_subject = str_replace('{{inum}}', $id_invoice, $model->email_subject);
-        
+
         return $this->render('email', [
             'model' => $model,
             'id_invoice' => $id_invoice,
@@ -131,7 +132,7 @@ class BillsController extends Controller
      */
     public function actionView($id)
     {
-        $bills = Bill::loadfiles();
+        [$bills,$payments] = Bill::loadfiles();
         $clients = $this->clients;
         $invoice = $bills[$id];
         $project = $clients['projects'][$bills[$id]['client']];
@@ -160,11 +161,12 @@ class BillsController extends Controller
         $invoice['total'] = round($invoice['total'], $ccy_precision);
 
         $invoice['items'][0] = [
-            'name'     => 'Software development',
+            'name'     => $invoice['item_des'] ?? 'Software development',
             'price'    => $project['per_hour'],
             'quantity' => $invoice['hours'] ?: "",
             'amount'   => $invoice['total'],
         ];
+
         if (!empty($invoice['extra_items']))
         {
             foreach ($invoice['extra_items'] as &$item)
@@ -194,25 +196,30 @@ class BillsController extends Controller
 
         $btcpayurl = $clients['bankdetails']['btcpay'];
 
+        if(!empty($payments[$id]))
+        {
+            $invoice = array_merge($invoice, $payments[$id]);
+        }
+
         $params = [
             'orderId'      => $id,
             'checkoutDesc' => "Invoice " . $id,
             'price'        => $invoice['total']*0.85, //discount on btc payment
             'currency'     => $project['ccy'],
         ];
-        
+
         if($project['ccy'] == 'BTC')
         {
             $params['price'] = $invoice['total'];
         }
-        
+
         $btcpayurl .= "&" . http_build_query($params);
-        
+
 
         return $this->render('view2', [
             'ccy_precision' => $ccy_precision,
             'id_invoice'    => $id,
-            'btcpayurl'     =>  $btcpayurl, 
+            'btcpayurl'     =>  $btcpayurl,
             'invoice'       => $invoice,
             'project'       => $project,
             'bankdetails'   => $clients['bankdetails'],
@@ -326,7 +333,7 @@ class BillsController extends Controller
      * Download PDF
      */
     public function actionDownload($id_invoice)
-    {        
+    {
 
 
         $bills = Bill::loadfiles();

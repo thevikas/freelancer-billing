@@ -61,8 +61,33 @@ function prefix_ccy($project, $amount)
 
     return $rate . " " . round($amount, $ccyp);
 }
+
 ?>
 
+<div class="paid-stamp-container" style="position: relative;">
+    <?php if (!empty($invoice['paid'])): ?>
+    <div class="paid-stamp" style="position: absolute; top: 100px; right: 300px; transform: rotate(-30deg); z-index: 1000; opacity: 0.5;">
+        <svg width="200" height="200" viewBox="0 0 200 200">
+            <g>
+                <!-- Outer circle -->
+                <circle cx="100" cy="100" r="90" fill="none" stroke="#c00" stroke-width="5"/>
+                <!-- Inner circle -->
+                <circle cx="100" cy="100" r="85" fill="none" stroke="#c00" stroke-width="2"/>
+                <!-- PAID text -->
+                <text x="100" y="75" font-family="Arial" font-size="40" fill="#c00" text-anchor="middle" font-weight="bold">PAID</text>
+                <!-- Date text -->
+                <text x="100" y="105" font-family="Arial" font-size="24" fill="#c00" text-anchor="middle" font-weight="bold">
+                    <?= date('d M Y', strtotime($invoice['paid'])) ?>
+                </text>
+                <!-- Amount text -->
+                <text x="100" y="135" font-family="Arial" font-size="24" fill="#c00" text-anchor="middle" font-weight="bold">
+                    <?= !$conversion ? prefix_ccy($project, $invoice['paid_amount']) : prefix_ccy('INR', $invoice['total_inr']) ?>
+                </text>
+            </g>
+        </svg>
+    </div>
+    <?php endif; ?>
+</div>
 
 <div class="header-bottom row">
 
@@ -192,11 +217,11 @@ function prefix_ccy($project, $amount)
                                     <p><strong>Payment</strong></p>
                                 </div>
                                 <div class="col-8">
-                                <p>
-                                    <a href="<?= htmlspecialchars($btcpayurl) ?>">
-                                        <img src="/images/btcpay.svg" width="209" height="57" alt="Bitcoin Payment">
-                                    </a>
-                                </p>
+                                    <p>
+                                        <a href="<?= htmlspecialchars($btcpayurl) ?>">
+                                            <img src="/images/btcpay.svg" width="209" height="57" alt="Bitcoin Payment">
+                                        </a>
+                                    </p>
                                 </div>
                             </div>
                         <?php } ?>
@@ -271,10 +296,10 @@ function prefix_ccy($project, $amount)
             </tfoot>
         </table>
         <div class="signature">
-            <!-- 
+            <!--
         <img class="icon-signature" src="/images/sign.png" alt="Signature">
         <p>Terry Brown</p>
-        <p><strong>Accounts Manager</strong></p> 
+        <p><strong>Accounts Manager</strong></p>
         -->
         </div>
     </div>
@@ -290,26 +315,27 @@ function prefix_ccy($project, $amount)
                     <th><strong>Payment Method:</strong> Cheque, Wire, and Bitcoin.</th>
                 </tr>
             </thead>
-            <?php if(0) { ?>
-            <tbody>
-                <tr>
-                    <td>
-                        <?php /* <p><strong>payments@websitename.com</strong></p> */ ?>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <?php /*
+            <?php if (0)
+            { ?>
+                <tbody>
+                    <tr>
+                        <td>
+                            <?php /* <p><strong>payments@websitename.com</strong></p> */ ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <?php /*
                         <img class="icon-cc" src="/images/cc.png" alt="Credit Card Icon">
                         <p><strong>Card Payment</strong></p>
                         <p>We Accept:</p>
                         <p>Visa, Master card, American Express</p>
                         */ ?>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <?php /*
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <?php /*
                         <p>
                             <strong>Active Interactive</strong><br>
                             256 highland garden,<br>
@@ -317,28 +343,28 @@ function prefix_ccy($project, $amount)
                             United Kingdom
                         </p>
                         */ ?>
-                    </td>
-                </tr>
-            </tbody>
+                        </td>
+                    </tr>
+                </tbody>
             <?php } ?>
         </table>
     </div>
 <?php } ?>
 
 
-<?php if(0) { ?>
-<div class="row terms">
-    <div class="col-12">
-        <?php if (!empty($project['terms'])) : ?>
-            <p><strong>Terms:</strong> <?= htmlspecialchars($project['terms']) ?></p>
-        <?php endif; ?>
+<?php if (0)
+{ ?>
+    <div class="row terms">
+        <div class="col-12">
+            <?php if (!empty($project['terms'])) : ?>
+                <p><strong>Terms:</strong> <?= htmlspecialchars($project['terms']) ?></p>
+            <?php endif; ?>
+        </div>
     </div>
-</div>
 <?php } ?>
 
 <style type="text/css">
-    body
-    {
+    body {
         margin: 20px;
     }
-</style>
+</div>
