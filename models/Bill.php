@@ -35,16 +35,16 @@ class Bill extends Model
             }
             $jsonfile = $startdir . '/' . $file;
             $bill = json_decode(file_get_contents($jsonfile), true);
-            $bill['jsonfile'] = $jsonfile;
             $bill['id_invoice'] = $mats['id_invoice'];
 
             if ($mats['clientcode'] == 'payment')
             {
+                $bill['paymentjsonfile'] = $jsonfile;
                 $payments[$mats['id_invoice']] = $bill;
             }
             else
             {
-
+                $bill['jsonfile'] = $jsonfile;
                 if ($filter_project && $bill['client'] != $filter_project)
                     continue;
 
