@@ -44,6 +44,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?=GridView::widget([
         'dataProvider' => $dataProvider,
+        'showFooter' => true,
         // highlight rows for paid invoices
         'rowOptions' => function ($model, $key, $index, $grid) {
             if (!empty($model['paid']) || !empty($model['paiddate']) || !empty($model['payment_received']) || !empty($model['receipt_issued'])) {
@@ -52,11 +53,23 @@ $this->params['breadcrumbs'][] = $this->title;
             return [];
         },
         'columns'      => [
-        ['class' => 'yii\grid\SerialColumn'],
+        [
+            'class' => 'yii\grid\SerialColumn',
+            'footer' => '<strong>Total:</strong>',
+        ],
 
-        'id_invoice',
-        'client',
-        'dated',
+        [
+            'attribute' => 'id_invoice',
+            'footer' => '',
+        ],
+        [
+            'attribute' => 'client',
+            'footer' => '',
+        ],
+        [
+            'attribute' => 'dated',
+            'footer' => '',
+        ],
         [
             'label' => 'Hours',
             'format'  => 'raw',
@@ -68,6 +81,13 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
 
             },
+            'footer' => (function () use ($dataProvider, $ccy_precision) {
+                $total_hours = 0;
+                foreach ($dataProvider->models as $model) {
+                    $total_hours += $model['hours'] ?? 0;
+                }
+                return '<strong>' . round($total_hours, $ccy_precision) . '</strong>';
+            })(),
         ],
         [
             'label' => 'Total',
@@ -93,9 +113,29 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
 
             },
+            'footer' => (function () use ($dataProvider, $clients, $ccy_precision) {
+                $totals_by_ccy = [];
+                foreach ($dataProvider->models as $model) {
+                    $ccy = $clients['projects'][$model['client']]['ccy'];
+                    $per_hour = $clients['projects'][$model['client']]['per_hour'];
+                    $total = $model['total'] ?? ($model['hours'] * $per_hour);
+
+                    if (!isset($totals_by_ccy[$ccy])) {
+                        $totals_by_ccy[$ccy] = 0;
+                    }
+                    $totals_by_ccy[$ccy] += $total;
+                }
+
+                $result = [];
+                foreach ($totals_by_ccy as $ccy => $amount) {
+                    $result[] = Yii::$app->formatter->asCurrency($amount, $ccy);
+                }
+                return '<strong>' . implode('<br>', $result) . '</strong>';
+            })(),
         ],
         [
             'class' => ActionColumn::class,
+            'footer' => '',
             'urlCreator' => function ($action, $model, $key, $index, $column) {
                 if($action === 'upload-ts') {
                     return Url::toRoute(['uploads/ts', 'id_invoice' => $model['id_invoice']]);
