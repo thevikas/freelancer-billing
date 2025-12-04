@@ -38,6 +38,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 echo Html::a($key, ['bills/index', 'client' => $key], $def2);
             }
         ?>
+        -
+        <?=Html::a('<i class="fa fa-file-text"></i> Export to Markdown', ['bills/export-markdown', 'client' => $filter_client], ['class' => 'btn btn-info'])?>
     </p>
 
     <?php #Pjax::begin();?>

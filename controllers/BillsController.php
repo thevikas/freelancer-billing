@@ -48,10 +48,12 @@ class BillsController extends Controller
     public function actionIndex($client = null)
     {
         $clients = $this->clients;
-        [$allbills,$allpayments] = Bill::loadfiles($client);
+        [$allbills, $allpayments] = Bill::loadfiles($client);
 
-        foreach($allpayments as $id_invoice => $paymentInfo) {
-            if (isset($allbills[$id_invoice])) {
+        foreach ($allpayments as $id_invoice => $paymentInfo)
+        {
+            if (isset($allbills[$id_invoice]))
+            {
                 $allbills[$id_invoice] = array_merge($allbills[$id_invoice], $paymentInfo);
             }
         }
@@ -139,7 +141,7 @@ class BillsController extends Controller
      */
     public function actionView($id)
     {
-        [$bills,$payments] = Bill::loadfiles();
+        [$bills, $payments] = Bill::loadfiles();
         $clients = $this->clients;
         $invoice = $bills[$id];
         $project = $clients['projects'][$bills[$id]['client']];
@@ -203,7 +205,7 @@ class BillsController extends Controller
 
         $btcpayurl = $clients['bankdetails']['btcpay'];
 
-        if(!empty($payments[$id]))
+        if (!empty($payments[$id]))
         {
             $invoice = array_merge($invoice, $payments[$id]);
         }
@@ -211,11 +213,11 @@ class BillsController extends Controller
         $params = [
             'orderId'      => $id,
             'checkoutDesc' => "Invoice " . $id,
-            'price'        => $invoice['total']*0.85, //discount on btc payment
+            'price'        => $invoice['total'] * 0.85, //discount on btc payment
             'currency'     => $project['ccy'],
         ];
 
-        if($project['ccy'] == 'BTC')
+        if ($project['ccy'] == 'BTC')
         {
             $params['price'] = $invoice['total'];
         }
@@ -324,7 +326,7 @@ class BillsController extends Controller
 
         $pdf_path = $BILLS_PDF_DIR . "/" . $pdf_filename;
 
-        if(file_exists($pdf_path))
+        if (file_exists($pdf_path))
         {
             echo hash_file('sha256', $pdf_path);
         }
@@ -355,9 +357,9 @@ class BillsController extends Controller
 
         $pdf_path = $BILLS_PDF_DIR . "/" . $pdf_filename;
 
-        if(file_exists($pdf_path))
+        if (file_exists($pdf_path))
         {
-            return Yii::$app->response->sendFile($pdf_path, $pdf_filename,['inline' => true]);
+            return Yii::$app->response->sendFile($pdf_path, $pdf_filename, ['inline' => true]);
         }
         else
         {
@@ -374,7 +376,8 @@ class BillsController extends Controller
     {
         [$bills, $payments] = Bill::loadfiles();
 
-        if (!isset($bills[$id_invoice])) {
+        if (!isset($bills[$id_invoice]))
+        {
             throw new NotFoundHttpException('Invoice not found.');
         }
 
@@ -383,7 +386,8 @@ class BillsController extends Controller
         $project = $clients['projects'][$invoice['client']];
 
         // Check if already paid
-        if (!empty($invoice['paid']) || !empty($invoice['paiddate'])) {
+        if (!empty($invoice['paid']) || !empty($invoice['paiddate']))
+        {
             Yii::$app->session->setFlash('warning', 'Invoice is already marked as paid.');
             return $this->redirect(['index']);
         }
@@ -402,7 +406,8 @@ class BillsController extends Controller
         // Generate receipt PDF using Node.js screenshot script
         $receipt_script = Yii::getAlias('@app/screenshot-receipt.js');
 
-        if (file_exists($receipt_script)) {
+        if (file_exists($receipt_script))
+        {
             // Execute Node.js script to generate receipt PDF
             $command = sprintf(
                 'node %s %s %s 2>&1',
@@ -413,12 +418,17 @@ class BillsController extends Controller
 
             exec($command, $output, $return_var);
 
-            if ($return_var !== 0) {
+            if ($return_var !== 0)
+            {
                 Yii::$app->session->setFlash('warning', 'Invoice marked as paid, but receipt PDF generation failed: ' . implode("\n", $output));
-            } else {
+            }
+            else
+            {
                 Yii::$app->session->setFlash('success', 'Invoice marked as paid and receipt PDF generated successfully.');
             }
-        } else {
+        }
+        else
+        {
             // Create a simple receipt record file as fallback
             $receipt_data = [
                 'id_invoice' => $id_invoice,
