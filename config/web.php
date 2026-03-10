@@ -46,7 +46,7 @@ $config = [
             'errorAction' => 'site/error',
         ],
         'mailer' => [
-            'class' => \yii\symfonymailer\Mailer::class,              
+            'class' => \yii\symfonymailer\Mailer::class,
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -65,6 +65,7 @@ $config = [
                 'pi' => 'site/pi',
                 '<module:\w+>/<controller:projects>/<id:\w+>/tasks' => '<module>/<controller>/tasks',
                 '<controller:\w+>/<id:\d+>' => '<controller>/view',
+                'upi/qr' => 'upi-qr/generate',
             ],
         ],
 

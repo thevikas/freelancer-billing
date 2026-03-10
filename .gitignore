@@ -3,3 +3,5 @@ config/*.json
 .env
 web/up.*
 gtr2.projects.php
+web/uploads/upi-qr
+vendor

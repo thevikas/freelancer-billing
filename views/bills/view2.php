@@ -5,34 +5,6 @@ use yii\widgets\DetailView;
 
 $billing = $project['billing'];
 
-if (0)
-{
-
-    /* @var $this yii\web\View */
-    /* @var $model app\models\Bill3 */
-
-    $this->title = $model['id_invoice'];
-    $this->params['breadcrumbs'][] = ['label' => 'Bills', 'url' => ['index']];
-    $this->params['breadcrumbs'][] = $this->title;
-    \yii\web\YiiAsset::register($this);
-?>
-    <div class="bill3-view">
-
-        <h1><?= Html::encode($this->title) ?></h1>
-
-        <?= DetailView::widget([
-            'model'      => $model,
-            'attributes' => [
-                'id_invoice',
-                'client',
-                'dated',
-                'hours',
-            ],
-        ]) ?>
-
-    </div>
-<?php }
-
 $conversion = false;
 if (!empty($project['conversion_in_invoice']) && $project['conversion_in_invoice'])
 {
@@ -81,7 +53,7 @@ function prefix_ccy($project, $amount)
                 </text>
                 <!-- Amount text -->
                 <text x="100" y="135" font-family="Arial" font-size="24" fill="#c00" text-anchor="middle" font-weight="bold">
-                    <?= !$conversion ? prefix_ccy($project, $invoice['paid_amount']) : prefix_ccy('INR', $invoice['total_inr']) ?>
+                    <?= !$conversion ? prefix_ccy($project, $invoice['paid_amount']) . " /-" : (prefix_ccy('INR', $invoice['total_inr']) . " /-") ?>
                 </text>
             </g>
         </svg>
@@ -190,10 +162,10 @@ function prefix_ccy($project, $amount)
 
 <div class="row">
     <div class="col-lg-4 col-md-4 col-12 bottom-left d-none d-md-block">
-        <table class="table">
+        <table class="table" background="#1b71c8">
             <thead>
                 <tr>
-                    <th><strong>Payment Method:</strong> Cheque, Wire, and Bitcoin.</th>
+                    <th><strong>Payment Method:</strong> Cheque, Wire.</th>
                 </tr>
             </thead>
             <tbody>
@@ -204,11 +176,6 @@ function prefix_ccy($project, $amount)
                 <?php endif; ?>
                 <tr>
                     <td>
-                        <?php /* <p><strong>payments@websitename.com</strong> </p> */ ?>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
                         <?php if (1)
                         { ?>
                             <div class="row">
@@ -217,11 +184,16 @@ function prefix_ccy($project, $amount)
                                     <p><strong>Payment</strong></p>
                                 </div>
                                 <div class="col-8">
+                                    <?php
+                                    $company = $this->params['issuing_company'];
+                                    if(isset($company['btcpay']) && $company['btcpay']):
+                                    ?>
                                     <p>
                                         <a href="<?= htmlspecialchars($btcpayurl) ?>">
                                             <img src="/images/btcpay.svg" width="209" height="57" alt="Bitcoin Payment">
                                         </a>
                                     </p>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         <?php } ?>
@@ -237,13 +209,15 @@ function prefix_ccy($project, $amount)
                         <?php if (!empty($project['showbankdetails']))
                         {
                             $bankname = $project['showbankdetails']; ?>
-                            <div style="margin-bottom: -50px">
+                            <div style="margin-bottom: 0px">
                                 <p><strong>Bank Details</strong></p>
                                 <p>Account Name: <?= htmlspecialchars($bankdetails[$bankname]['AccountName']) ?></p>
                                 <p>Account Number: <?= htmlspecialchars($bankdetails[$bankname]['AccountNumber']) ?></p>
                                 <p>Bank Name: <?= htmlspecialchars($bankdetails[$bankname]['Bank']) ?></p>
                                 <p>Branch: <?= htmlspecialchars($bankdetails[$bankname]['Branch']) ?></p>
                                 <?php
+                                if (!empty($bankdetails[$bankname]['UPI']))
+                                    echo "<p>UPI ID: " . htmlspecialchars($bankdetails[$bankname]['UPI']) . "</p>";
                                 if (!empty($bankdetails[$bankname]['SwitftCode']))
                                     echo "<p>SWIFT Code: " . htmlspecialchars($bankdetails[$bankname]['SwitftCode']) . "</p>";
                                 if (!empty($bankdetails[$bankname]['IBAN']))

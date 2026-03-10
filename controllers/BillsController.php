@@ -224,11 +224,25 @@ class BillsController extends Controller
 
         $btcpayurl .= "&" . http_build_query($params);
 
+        if (empty($invoice['issuing_company']))
+        {
+            $issuing_company =
+                Yii::$app->params['companies'][Yii::$app->params['defaultCompanyId']];
+        }
+        else
+        {
+            $issuing_company =
+                Yii::$app->params['companies'][$invoice['issuing_company']];
+        }
+
+        // Pass issuing_company to layout
+        $this->view->params['issuing_company'] = $issuing_company;
 
         return $this->render('view2', [
             'ccy_precision' => $ccy_precision,
             'id_invoice'    => $id,
             'btcpayurl'     =>  $btcpayurl,
+            'issuing_company' => $issuing_company,
             'invoice'       => $invoice,
             'project'       => $project,
             'bankdetails'   => $clients['bankdetails'],

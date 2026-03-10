@@ -5,34 +5,6 @@ use yii\widgets\DetailView;
 
 $billing = $project['billing'];
 
-if (0) {
-
-    /* @var $this yii\web\View */
-    /* @var $model app\models\Bill3 */
-
-    $this->title = $model['id_invoice'];
-    $this->params['breadcrumbs'][] = ['label' => 'Bills', 'url' => ['index']];
-    $this->params['breadcrumbs'][] = $this->title;
-    \yii\web\YiiAsset::register($this);
-    ?>
-    <div class="bill3-view">
-
-        <h1><?=Html::encode($this->title)?></h1>
-
-        <?=DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            'id_invoice',
-            'client',
-            'dated',
-            'hours',
-        ],
-    ])?>
-
-    </div>
-<?php
-}
-
 $conversion = false;
 if (!empty($project['conversion_in_invoice']) && $project['conversion_in_invoice']) {
     $conversion = true;
