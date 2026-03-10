@@ -38,26 +38,26 @@ function prefix_ccy($project, $amount)
 
 <div class="paid-stamp-container" style="position: relative;">
     <?php if (!empty($invoice['paid'])): ?>
-    <div class="paid-stamp" style="position: absolute; top: 100px; right: 300px; transform: rotate(-30deg); z-index: 1000; opacity: 0.5;">
-        <svg width="200" height="200" viewBox="0 0 200 200">
-            <g>
-                <!-- Outer circle -->
-                <circle cx="100" cy="100" r="90" fill="none" stroke="#c00" stroke-width="5"/>
-                <!-- Inner circle -->
-                <circle cx="100" cy="100" r="85" fill="none" stroke="#c00" stroke-width="2"/>
-                <!-- PAID text -->
-                <text x="100" y="75" font-family="Arial" font-size="40" fill="#c00" text-anchor="middle" font-weight="bold">PAID</text>
-                <!-- Date text -->
-                <text x="100" y="105" font-family="Arial" font-size="24" fill="#c00" text-anchor="middle" font-weight="bold">
-                    <?= date('d M Y', strtotime($invoice['paid'])) ?>
-                </text>
-                <!-- Amount text -->
-                <text x="100" y="135" font-family="Arial" font-size="24" fill="#c00" text-anchor="middle" font-weight="bold">
-                    <?= !$conversion ? prefix_ccy($project, $invoice['paid_amount']) . " /-" : (prefix_ccy('INR', $invoice['total_inr']) . " /-") ?>
-                </text>
-            </g>
-        </svg>
-    </div>
+        <div class="paid-stamp" style="position: absolute; top: 100px; right: 300px; transform: rotate(-30deg); z-index: 1000; opacity: 0.5;">
+            <svg width="200" height="200" viewBox="0 0 200 200">
+                <g>
+                    <!-- Outer circle -->
+                    <circle cx="100" cy="100" r="90" fill="none" stroke="#c00" stroke-width="5" />
+                    <!-- Inner circle -->
+                    <circle cx="100" cy="100" r="85" fill="none" stroke="#c00" stroke-width="2" />
+                    <!-- PAID text -->
+                    <text x="100" y="75" font-family="Arial" font-size="40" fill="#c00" text-anchor="middle" font-weight="bold">PAID</text>
+                    <!-- Date text -->
+                    <text x="100" y="105" font-family="Arial" font-size="24" fill="#c00" text-anchor="middle" font-weight="bold">
+                        <?= date('d M Y', strtotime($invoice['paid'])) ?>
+                    </text>
+                    <!-- Amount text -->
+                    <text x="100" y="135" font-family="Arial" font-size="24" fill="#c00" text-anchor="middle" font-weight="bold">
+                        <?= !$conversion ? prefix_ccy($project, $invoice['paid_amount']) . " /-" : (prefix_ccy('INR', $invoice['total_inr']) . " /-") ?>
+                    </text>
+                </g>
+            </svg>
+        </div>
     <?php endif; ?>
 </div>
 
@@ -186,13 +186,13 @@ function prefix_ccy($project, $amount)
                                 <div class="col-8">
                                     <?php
                                     $company = $this->params['issuing_company'];
-                                    if(isset($company['btcpay']) && $company['btcpay']):
+                                    if (isset($company['btcpay']) && $company['btcpay']):
                                     ?>
-                                    <p>
-                                        <a href="<?= htmlspecialchars($btcpayurl) ?>">
-                                            <img src="/images/btcpay.svg" width="209" height="57" alt="Bitcoin Payment">
-                                        </a>
-                                    </p>
+                                        <p>
+                                            <a href="<?= htmlspecialchars($btcpayurl) ?>">
+                                                <img src="/images/btcpay.svg" width="209" height="57" alt="Bitcoin Payment">
+                                            </a>
+                                        </p>
                                     <?php endif; ?>
                                 </div>
                             </div>
@@ -208,25 +208,13 @@ function prefix_ccy($project, $amount)
                     <td>
                         <?php if (!empty($project['showbankdetails']))
                         {
-                            $bankname = $project['showbankdetails']; ?>
-                            <div style="margin-bottom: 0px">
-                                <p><strong>Bank Details</strong></p>
-                                <p>Account Name: <?= htmlspecialchars($bankdetails[$bankname]['AccountName']) ?></p>
-                                <p>Account Number: <?= htmlspecialchars($bankdetails[$bankname]['AccountNumber']) ?></p>
-                                <p>Bank Name: <?= htmlspecialchars($bankdetails[$bankname]['Bank']) ?></p>
-                                <p>Branch: <?= htmlspecialchars($bankdetails[$bankname]['Branch']) ?></p>
-                                <?php
-                                if (!empty($bankdetails[$bankname]['UPI']))
-                                    echo "<p>UPI ID: " . htmlspecialchars($bankdetails[$bankname]['UPI']) . "</p>";
-                                if (!empty($bankdetails[$bankname]['SwitftCode']))
-                                    echo "<p>SWIFT Code: " . htmlspecialchars($bankdetails[$bankname]['SwitftCode']) . "</p>";
-                                if (!empty($bankdetails[$bankname]['IBAN']))
-                                    echo "<p>IBAN: " . htmlspecialchars($bankdetails[$bankname]['IBAN']) . "</p>";
-                                if (!empty($bankdetails[$bankname]['IFSC']))
-                                    echo "<p>IFSC Code: " . htmlspecialchars($bankdetails[$bankname]['IFSC']) . "</p>";
-                                ?>
-                            </div>
-                        <?php } ?>
+                            echo $this->render('_bank_details', [
+                                'company' => $this->params['issuing_company'],
+                                'invoice' => $invoice,
+                                'bankname' => $project['showbankdetails'],
+                                'bankdetails' => $bankdetails
+                            ]);
+                        } ?>
                     </td>
                 </tr>
             </tbody>
@@ -341,4 +329,5 @@ function prefix_ccy($project, $amount)
     body {
         margin: 20px;
     }
-</div>
+
+    </div>

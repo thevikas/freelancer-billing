@@ -65,7 +65,7 @@ class UpiQrController extends Controller
         }
 
         // Validate VPA format  (something@something)
-        if (!preg_match('/^[a-zA-Z0-9.\-_]+@[a-zA-Z0-9]+$/', $pa))
+        if (!preg_match('/^[a-zA-Z0-9.\-_]+@[a-zA-Z0-9\.]+$/', $pa))
         {
             throw new BadRequestHttpException('Invalid VPA format for parameter: pa');
         }
