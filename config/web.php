@@ -63,6 +63,7 @@ $config = [
             'showScriptName' => false,
             'rules' => [
                 'pi' => 'site/pi',
+                'bills/<company:\w+>/<id:\d+>' => 'bills/view',
                 '<module:\w+>/<controller:projects>/<id:\w+>/tasks' => '<module>/<controller>/tasks',
                 '<controller:\w+>/<id:\d+>' => '<controller>/view',
                 'upi/qr' => 'upi-qr/generate',

@@ -77,9 +77,9 @@ class BillsController extends Controller
      * Lists all Bill models.
      * @return mixed
      */
-    public function actionEmail($id_invoice)
+    public function actionEmail($company,$id_invoice)
     {
-        $bills = Bill::loadfiles();
+        $bills = Bill::loadfiles(null,$company);
         $clients = $this->clients;
         $invoice = $bills[$id_invoice];
         $project = $clients['projects'][$bills[$id_invoice]['client']];
@@ -139,10 +139,11 @@ class BillsController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($id)
+    public function actionView($company = 'default',$id)
     {
-        [$bills, $payments] = Bill::loadfiles();
+        [$bills, $payments] = Bill::loadfiles(null,$company);
         $clients = $this->clients;
+        $id = sprintf("%02d",$id);
         $invoice = $bills[$id];
         $project = $clients['projects'][$bills[$id]['client']];
         if (empty($project['layout']))

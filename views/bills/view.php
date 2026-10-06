@@ -6,7 +6,8 @@ use yii\widgets\DetailView;
 $billing = $project['billing'];
 
 $conversion = false;
-if (!empty($project['conversion_in_invoice']) && $project['conversion_in_invoice']) {
+if (!empty($project['conversion_in_invoice']) && $project['conversion_in_invoice'])
+{
     $conversion = true;
 }
 
@@ -21,9 +22,12 @@ function prefix_ccy($project, $amount)
         'BTC' => 'BTC',
         'Sats' => '(BTC) Satoshis',
     ];
-    if (is_array($project)) {
+    if (is_array($project))
+    {
         $rate = $symbols[$project['ccy']];
-    } else if (is_string($project)) {
+    }
+    else if (is_string($project))
+    {
         $rate = $symbols[$project];
     }
 
@@ -34,304 +38,316 @@ function prefix_ccy($project, $amount)
 
 <div class="paid-stamp-container" style="position: relative;">
     <?php if (true || !empty($invoice['paid'])): ?>
-    <div class="paid-stamp" style="position: absolute; top: 50px; right: 100px; transform: rotate(-30deg); z-index: 1000; opacity: 0.5;">
-        <svg width="200" height="200" viewBox="0 0 200 200">
-            <g>
-                <!-- Outer circle -->
-                <circle cx="100" cy="100" r="90" fill="none" stroke="#c00" stroke-width="5"/>
-                <!-- Inner circle -->
-                <circle cx="100" cy="100" r="85" fill="none" stroke="#c00" stroke-width="2"/>
-                <!-- PAID text -->
-                <text x="100" y="85" font-family="Arial" font-size="40" fill="#c00" text-anchor="middle" font-weight="bold">PAID</text>
-                <!-- Date text -->
-                <text x="100" y="115" font-family="Arial" font-size="16" fill="#c00" text-anchor="middle">
-                    <?= date('d M Y', strtotime($invoice['paid'])) ?>
-                </text>
-            </g>
-        </svg>
-    </div>
+        <div class="paid-stamp" style="position: absolute; top: 50px; right: 100px; transform: rotate(-30deg); z-index: 1000; opacity: 0.5;">
+            <svg width="200" height="200" viewBox="0 0 200 200">
+                <g>
+                    <!-- Outer circle -->
+                    <circle cx="100" cy="100" r="90" fill="none" stroke="#c00" stroke-width="5" />
+                    <!-- Inner circle -->
+                    <circle cx="100" cy="100" r="85" fill="none" stroke="#c00" stroke-width="2" />
+                    <!-- PAID text -->
+                    <text x="100" y="85" font-family="Arial" font-size="40" fill="#c00" text-anchor="middle" font-weight="bold">PAID</text>
+                    <!-- Date text -->
+                    <text x="100" y="115" font-family="Arial" font-size="16" fill="#c00" text-anchor="middle">
+                        <?= date('d M Y', strtotime($invoice['paid'])) ?>
+                    </text>
+                </g>
+            </svg>
+        </div>
     <?php endif; ?>
 
-<div class="header-bottom row">
+    <div class="header-bottom row">
 
-    <div class="large-6 medium-6 columns header-bottom-left">
+        <div class="large-6 medium-6 columns header-bottom-left">
 
-        <h3><img class="icon-invoice" src="/images/invoice.png"></i>INVOICE TO</h3>
-        <h2><?=$billing['name']?></h2>
-        <p style="margin-bottom:10px;line-height:22px;">
-            <?=str_replace("\n", "<br/>", $billing['address'])?>
-        </p>
+            <h3><img class="icon-invoice" src="/images/invoice.png"></i>INVOICE TO</h3>
+            <h2><?= $billing['name'] ?></h2>
+            <p style="margin-bottom:10px;line-height:22px;">
+                <?= str_replace("\n", "<br/>", $billing['address']) ?>
+            </p>
 
-        <p style="margin-bottom:10px;"><img class="icon-mail" src="/images/mail.png"></i><?=$billing['email']?></p>
-        <?php if (!empty($billing['phone'])) {?>
-            <p><img class="icon-mobile" src="/images/mobile.png"></i><?=$billing['phone']?></p>
-        <?php }?>
+            <p style="margin-bottom:10px;"><img class="icon-mail" src="/images/mail.png"></i><?= $billing['email'] ?></p>
+            <?php if (!empty($billing['phone']))
+            { ?>
+                <p><img class="icon-mobile" src="/images/mobile.png"></i><?= $billing['phone'] ?></p>
+            <?php } ?>
 
-    </div>
+        </div>
 
-    <div class="large-6 medium-6 columns invoice-header">
+        <div class="large-6 medium-6 columns invoice-header">
 
-        <h1>INVOICE</h1>
+            <h1>INVOICE</h1>
 
-        <table>
-            <thead>
-                <tr>
-                    <td>
-                        <div class="circle"><img class="icon-dollar" src="/images/dollar.png"></div>
-                    </td>
-                    <td>
-                        <div class="circle"><img class="icon-calendar" src="/images/calendar.png"></div>
-                    </td>
-                    <td>
-                        <div class="circle" style="padding-top:20px;"><img class="icon-barcode" src="/images/barcode.png"></div>
-                    </td>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        Total Due:<br>
-                        <strong><?=!$conversion ? prefix_ccy($project, $invoice['total']) : prefix_ccy('INR', $invoice['total_inr'])?></strong>
-                    </td>
-                    <td>
-                        Invoice Date:<br>
-                        <strong><?=date('F j, Y', strtotime($invoice['dated']))?></strong>
-                    </td>
-                    <td>
-                        Invoice #:<br>
-                        <strong><?=$id_invoice?></strong>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-
-    </div>
-
-</div><!--header-bottom-->
-
-
-<div class="row">
-    <div class="large-12 columns">
-        <table class="products-table" border=1>
-            <thead>
-                <tr>
-                    <th>Item Description</th>
-                    <?php if (!empty($invoice['items'][0]['quantity'])): ?>
-                        <th>Unit Price</th>
-                        <th>Hours</th>
-                    <?php endif;?>
-                    <th class="t">Total</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-foreach ($invoice['items'] as $item) {
-    ?>
+            <table>
+                <thead>
                     <tr>
                         <td>
-                            <h5><?=$item['name']?></h5>
-                            <p><?=!empty($item['des']) ? $item['des'] : ''?></p>
+                            <div class="circle"><img class="icon-dollar" src="/images/dollar.png"></div>
                         </td>
-                        <?php if (!empty($item['quantity'])): ?>
-                            <td><?=!empty(trim($item['price'])) ? prefix_ccy($project, $item['price']) : ''?></td>
-                            <td><?=!empty($item['quantity']) ? $item['quantity'] : ''?></td>
-                        <?php endif;?>
-                        <td class="t"><?=prefix_ccy($project, $item['amount'])?></td>
+                        <td>
+                            <div class="circle"><img class="icon-calendar" src="/images/calendar.png"></div>
+                        </td>
+                        <td>
+                            <div class="circle" style="padding-top:20px;"><img class="icon-barcode" src="/images/barcode.png"></div>
+                        </td>
                     </tr>
-
-                <?php
-}
-?>
-            </tbody>
-        </table>
-    </div>
-</div>
-
-
-<div class="row">
-    <div class="large-4 medium-4 small-12 columns bottom-left show-for-medium-up ">
-        <table>
-            <thead>
-                <tr>
-                    <th><strong>Payment Method:</strong> Cheque, Wire and Bitcoin.</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php if (!empty($invoice['note'])): ?>
+                </thead>
+                <tbody>
                     <tr>
-                        <td><?=$invoice['note']?></p>
+                        <td>
+                            Total Due:<br>
+                            <strong><?= !$conversion ? prefix_ccy($project, $invoice['total']) : prefix_ccy('INR', $invoice['total_inr']) ?></strong>
+                        </td>
+                        <td>
+                            Invoice Date:<br>
+                            <strong><?= date('F j, Y', strtotime($invoice['dated'])) ?></strong>
+                        </td>
+                        <td>
+                            Invoice #:<br>
+                            <strong><?= $id_invoice ?></strong>
                         </td>
                     </tr>
-                <?php endif;?>
-                <tr>
-                    <td><?php /*<p><strong>payments@websitename.com</strong> */?></p>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <?php if (1) {
-    ?>
-                            <img class="icon-cc" src="/images/cc.png">
-                            <p><strong>Payment</strong></p>
-                            <br/>
-                            <p><a href="<?=$btcpayurl?>"><img src="/images/btcpay.svg" width="209" height="57"/></a></p>
-                        <?php
-}?>
-                        <?php if (!empty($invoice['unused_pay2addr'])) {
-    //massive privacy breach bro tro leak out addresses
-    //echo Html::img("/site/qr1?size=150&addr=" . $invoice['unused_pay2addr']);
-}?>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                    <?php if (!empty($project['showbankdetails'])) {
-    $bankname = $project['showbankdetails'];
-    ?>
-                        <div style="margin-bottom: -50px">
-                        <p><strong>Bank Details</strong></p>
-                        <p>Account Name: <?=$bankdetails[$bankname]['AccountName']?></p>
-                        <p>Account Number: <?=$bankdetails[$bankname]['AccountNumber']?></p>
-                        <p>Bank Name: <?=$bankdetails[$bankname]['Bank']?></p>
-                        <p>Branch: <?=$bankdetails[$bankname]['Branch']?></p>
-                        <?php
-if (!empty($bankdetails[$bankname]['SwitftCode'])) {
-        echo "<p>SWIFT Code: " . $bankdetails[$bankname]['SwitftCode'] . "</p>";
-    }
+                </tbody>
+            </table>
 
-    if (!empty($bankdetails[$bankname]['IBAN'])) {
-        echo "<p>IBAN: " . $bankdetails[$bankname]['IBAN'] . "</p>";
-    }
+        </div>
 
-    if (!empty($bankdetails[$bankname]['IFSC'])) {
-        echo "<p>IFSC Code: " . $bankdetails[$bankname]['IFSC'] . "</p>";
-    }
+    </div><!--header-bottom-->
 
-    ?>
-                        </div>
-                        <?php
-}?>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+
+    <div class="row">
+        <div class="large-12 columns">
+            <table class="products-table" border=1>
+                <thead>
+                    <tr>
+                        <th>Item Description</th>
+                        <?php if (!empty($invoice['items'][0]['quantity'])): ?>
+                            <th>Unit Price</th>
+                            <th>Hours</th>
+                        <?php endif; ?>
+                        <th class="t">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    foreach ($invoice['items'] as $item)
+                    {
+                    ?>
+                        <tr>
+                            <td>
+                                <h5><?= $item['name'] ?></h5>
+                                <p><?= !empty($item['des']) ? $item['des'] : '' ?></p>
+                            </td>
+                            <?php if (!empty($item['quantity'])): ?>
+                                <td><?= !empty(trim($item['price'])) ? prefix_ccy($project, $item['price']) : '' ?></td>
+                                <td><?= !empty($item['quantity']) ? $item['quantity'] : '' ?></td>
+                            <?php endif; ?>
+                            <td class="t"><?= prefix_ccy($project, $item['amount']) ?></td>
+                        </tr>
+
+                    <?php
+                    }
+                    ?>
+                </tbody>
+            </table>
+        </div>
     </div>
-    <div class="large-5 medium-5 small-12 large-offset-3 columns totals">
-        <table>
-            <tbody>
-                <tr>
-                    <td>SUB TOTAL:</td>
-                    <td><?=prefix_ccy($project, $invoice['total'])?></td>
-                </tr>
-                <?php /*<tr>
+
+
+    <div class="row">
+        <div class="large-4 medium-4 small-12 columns bottom-left show-for-medium-up ">
+            <table>
+                <thead>
+                    <tr>
+                        <th><strong>Payment Method:</strong> Cheque, Wire and Bitcoin.</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (!empty($invoice['note'])): ?>
+                        <tr>
+                            <td><?= $invoice['note'] ?></p>
+                            </td>
+                        </tr>
+                    <?php endif; ?>
+                    <tr>
+                        <td><?php /*<p><strong>payments@websitename.com</strong> */ ?></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <?php if (1)
+                            {
+                            ?>
+                                <img class="icon-cc" src="/images/cc.png">
+                                <p><strong>Payment</strong></p>
+                                <br />
+                                <p><a href="<?= $btcpayurl ?>"><img src="/images/btcpay.svg" width="209" height="57" /></a></p>
+                            <?php
+                            } ?>
+                            <?php if (!empty($invoice['unused_pay2addr']))
+                            {
+                                //massive privacy breach bro tro leak out addresses
+                                //echo Html::img("/site/qr1?size=150&addr=" . $invoice['unused_pay2addr']);
+                            } ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <?php if (!empty($project['showbankdetails']))
+                            {
+                                $bankname = $project['showbankdetails'];
+                            ?>
+                                <div style="margin-bottom: -50px">
+                                    <p><strong>Bank Details</strong></p>
+                                    <p>Account Name: <?= $bankdetails[$bankname]['AccountName'] ?></p>
+                                    <p>Account Number: <?= $bankdetails[$bankname]['AccountNumber'] ?></p>
+                                    <p>Bank Name: <?= $bankdetails[$bankname]['Bank'] ?></p>
+                                    <p>Branch: <?= $bankdetails[$bankname]['Branch'] ?></p>
+                                    <?php
+                                    if (!empty($bankdetails[$bankname]['SwitftCode']))
+                                    {
+                                        echo "<p>SWIFT Code: " . $bankdetails[$bankname]['SwitftCode'] . "</p>";
+                                    }
+
+                                    if (!empty($bankdetails[$bankname]['IBAN']))
+                                    {
+                                        echo "<p>IBAN: " . $bankdetails[$bankname]['IBAN'] . "</p>";
+                                    }
+
+                                    if (!empty($bankdetails[$bankname]['IFSC']))
+                                    {
+                                        echo "<p>IFSC Code: " . $bankdetails[$bankname]['IFSC'] . "</p>";
+                                    }
+
+                                    ?>
+                                </div>
+                            <?php
+                            } ?>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="large-5 medium-5 small-12 large-offset-3 columns totals">
+            <table>
+                <tbody>
+                    <tr>
+                        <td>SUB TOTAL:</td>
+                        <td><?= prefix_ccy($project, $invoice['total']) ?></td>
+                    </tr>
+                    <?php /*<tr>
 <td>Tax: VAT 20%</td>
 <td>$460.40</td>
 </tr>
 <tr class="discount">
 <td><span>DISCOUNT 5%:</span></td>
 <td><span>-$138.12</span></td>
-</tr>*/?>
-                <?php if ($conversion) {
+</tr>*/ ?>
+                    <?php if ($conversion)
+                    {
 
-    ?>
+                    ?>
+                        <tr>
+                            <td><span>Currency conversion @ INR <?= $invoice['ccy'][$project['ccy']] ?>:</span></td>
+                            <td><span><?= prefix_ccy('INR', $invoice['total_inr']); ?></span></td>
+                        </tr><?php
+                            } ?>
+
+                </tbody>
+                <tfoot>
                     <tr>
-                        <td><span>Currency conversion @ INR <?=$invoice['ccy'][$project['ccy']]?>:</span></td>
-                        <td><span><?=prefix_ccy('INR', $invoice['total_inr']);?></span></td>
-                    </tr><?php
-}?>
-
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td>Total Due:</td>
-                    <td><?php
-echo !$conversion ? prefix_ccy($project, $invoice['total']) : prefix_ccy('INR', $invoice['total_inr']);
-?></td>
-                </tr>
-            </tfoot>
-        </table>
-        <div class="signature">
-            <!-- <img class="icon-signature" src="/images/sign.png">
+                        <td>Total Due:</td>
+                        <td><?php
+                            echo !$conversion ? prefix_ccy($project, $invoice['total']) : prefix_ccy('INR', $invoice['total_inr']);
+                            ?></td>
+                    </tr>
+                </tfoot>
+            </table>
+            <div class="signature">
+                <!-- <img class="icon-signature" src="/images/sign.png">
 			<p>Terry Brown</p>
 			<p><strong>Accounts Manager</strong></p> -->
+            </div>
         </div>
     </div>
-</div>
 
-<?php if (1) {
+    <?php if (1)
+    {
     ?>
-    <!--This section enables for smaller screens and phones-->
-    <div class="large-5 medium-5 small-12 columns bottom-left show-for-small-only">
-        <table>
-            <thead>
-                <tr>
-                    <th><strong>Payment Method:</strong> Cheque, Wire and Bitcoin.</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <p><!-- <strong>payments@websitename.com</strong> --></p>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <?php /*
+        <!--This section enables for smaller screens and phones-->
+        <div class="large-5 medium-5 small-12 columns bottom-left show-for-small-only">
+            <table>
+                <thead>
+                    <tr>
+                        <th><strong>Payment Method:</strong> Cheque, Wire and Bitcoin.</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <p><!-- <strong>payments@websitename.com</strong> --></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <?php /*
     <img class="icon-cc" src="/images/cc.png">
     <p><strong>Card Payment</strong></p>
     <p>We Accept:</p>
     <p>Visa, Master card, American Express</p>
-     */?>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <p>
-                            <?php /*
+     */ ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                <?php /*
     <strong>Active Interactive</strong><br>
     256 highland garden,<br>
     london SW1235,<br>
     United Kingdom
     </p>
-    <*/?>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+    <*/ ?>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    <?php
+    } ?>
+
+    <div class="row terms">
+        <div class="large-12 columns">
+            <?php if (!empty($project['terms'])): ?>
+                <p><strong>Terms:</strong> <?= $project['terms'] ?></p>
+            <?php endif; ?>
+        </div>
     </div>
-<?php
-}?>
 
-<div class="row terms">
-    <div class="large-12 columns">
-        <?php if (!empty($project['terms'])): ?>
-            <p><strong>Terms:</strong> <?=$project['terms']?></p>
-        <?php endif;?>
-    </div>
-</div>
+    <style type="text/css">
+        @page {
+            size: auto;
+            /* Default size */
+        }
 
-<style type="text/css">
-    @page {
-        size: auto; /* Default size */
-    }
-
-    @page portrait {
-        size: portrait;
-    }
-
-    @page landscape {
-        size: landscape;
-    }
-
-    @media print {
-        /* Add specific styles for portrait */
         @page portrait {
-            margin: 0cm;
+            size: portrait;
         }
 
-        /* Add specific styles for landscape */
         @page landscape {
-            margin: 0cm;
+            size: landscape;
         }
-    }
-</style>
+
+        @media print {
+
+            /* Add specific styles for portrait */
+            @page portrait {
+                margin: 0cm;
+            }
+
+            /* Add specific styles for landscape */
+            @page landscape {
+                margin: 0cm;
+            }
+        }
+    </style>

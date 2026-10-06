@@ -15,7 +15,7 @@ class Bill extends Model
     public $hours;
     public $json;
 
-    static function loadfiles($filter_project = null)
+    static function loadfiles($filter_project = null,$issuing_company = null)
     {
         $dotenv = \Dotenv\Dotenv::createImmutable(Yii::getAlias('@app'));
         $dotenv->load();
@@ -44,6 +44,9 @@ class Bill extends Model
             }
             else
             {
+                if ($issuing_company && (!isset($bill['issuing_company']) || $issuing_company != $bill['issuing_company']))
+                    continue;
+
                 $bill['jsonfile'] = $jsonfile;
                 if ($filter_project && $bill['client'] != $filter_project)
                     continue;
