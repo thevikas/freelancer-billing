@@ -1,5 +1,14 @@
 #!/bin/bash
 XDEBUG_MODE=off
-# cd to cur dir
-cd $(dirname $0)
-(php ./gt.php last;php ./gt.php -r -c -m this_month) > /dev/null;php ./gtr2.php
+month="${1:-this_month}"
+case "$month" in
+    this_month|last_month) ;;
+    *) echo "Usage: $0 [this_month|last_month]" >&2; exit 1 ;;
+esac
+
+cd "$(dirname "$0")" || exit 1
+if [ "$month" = this_month ]; then
+    php ./gt.php last > /dev/null || exit 1
+fi
+php ./gt.php -r -c -m "$month" > /dev/null || exit 1
+php ./gtr2.php "$month"

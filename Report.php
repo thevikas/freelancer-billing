@@ -120,6 +120,40 @@ class MonthReport
         return $this->reportData = $rep;
     }
 
+    public function printProjectTotals()
+    {
+        foreach ($this->projects as $project_name => $project)
+        {
+            $subprojects = [];
+            $main_seconds = 0;
+            $total_seconds = 0;
+            foreach ($project->task_times as $task => $seconds)
+            {
+                $total_seconds += $seconds;
+                $parts = explode(':', $task, 2);
+                $subproject = trim($parts[0]);
+                if (count($parts) == 2 && $subproject !== '')
+                {
+                    $subprojects[$subproject] = ($subprojects[$subproject] ?? 0) + $seconds;
+                }
+                else
+                {
+                    $main_seconds += $seconds;
+                }
+            }
+
+            if ($subprojects)
+            {
+                foreach ($subprojects as $subproject => $seconds)
+                {
+                    echo sprintf("     %s %s\n", round($seconds / 3600, 2), $subproject);
+                }
+                echo sprintf("     %s %s\n", round($main_seconds / 3600, 2), $project_name);
+            }
+            echo sprintf("%s   %s\n", round($total_seconds / 3600, 2), $project_name);
+        }
+    }
+
     function getEarnings($dates)
     {
         $earnings = [];

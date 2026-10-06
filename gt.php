@@ -200,7 +200,10 @@ if ($hello_cmd['report'] || $hello_cmd['bill'] || $hello_cmd['earning'] || $hell
         //print_r($report_data);
         $summary = $rep->summary($FirstDayOfMonth);
         if (!$hello_cmd['silent'])
+        {
+            $rep->printProjectTotals();
             print_r($summary);
+        }
         if ($hello_cmd['graph'])
         {
             $rep->makeGraph($summary);
